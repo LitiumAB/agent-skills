@@ -1,0 +1,5 @@
+samples/
+.DS_Store
+.env*.local
+.agents/
+skills-lock.json

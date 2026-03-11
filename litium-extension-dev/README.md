@@ -5,7 +5,7 @@ A skill for building, maintaining, and deploying Litium backoffice extensions us
 ## Install
 
 ```bash
-npx skills add https://github.com/LitiumAB/litium-agent-skills --skill litium-extension-dev
+npx skills add https://github.com/LitiumAB/agent-skills --skill litium-extension-dev
 ```
 
 ## What it does

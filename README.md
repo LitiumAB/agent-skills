@@ -13,13 +13,13 @@ A collection of AI agent skills for building on the Litium platform. Works with 
 Skills are installed with the [`skills` CLI](https://www.npmjs.com/package/skills):
 
 ```bash
-npx skills add https://github.com/LitiumAB/litium-agent-skills --skill <skill-name>
+npx skills add https://github.com/LitiumAB/agent-skills --skill <skill-name>
 ```
 
 ### Install `litium-extension-dev`
 
 ```bash
-npx skills add https://github.com/LitiumAB/litium-agent-skills --skill litium-extension-dev
+npx skills add https://github.com/LitiumAB/agent-skills --skill litium-extension-dev
 ```
 
 This copies the skill files into your project's `.agents/skills/litium-extension-dev/` directory and registers it in your `skills-lock.json`.
