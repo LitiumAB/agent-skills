@@ -86,6 +86,17 @@ The `@litium/platform-extension-sdk` package requires the Litium private npm reg
 @litium:registry=https://packages.litium.com/Npm/
 ```
 
+### Use the `admin-fetch` Subpath for `createAdminFetch`
+Always import `createAdminFetch` from `@litium/platform-extension-sdk/admin-fetch`, **not** from the package root. The root entry re-exports CLI helpers (`scaffold`, `migrate`) that import `fs-extra` at the top level. Importing from the root causes Vite to pull `fs-extra` → `graceful-fs` into the browser bundle, producing Node.js compatibility errors at runtime.
+
+```typescript
+// ✓ Correct
+import { createAdminFetch } from '@litium/platform-extension-sdk/admin-fetch';
+
+// ✗ Wrong — pulls fs-extra into the browser bundle
+import { createAdminFetch } from '@litium/platform-extension-sdk';
+```
+
 ## Quick Workflows
 
 ### Creating a New Extension
@@ -153,6 +164,7 @@ The `@litium/platform-extension-sdk` package requires the Litium private npm reg
 | Infinite re-renders | Calling `navigate()` inside a `routeChanged` handler | Only call `navigate()` in response to user actions |
 | Hot-reload error: element already defined | Missing `customElements.get()` guard | Wrap `customElements.define()` with the guard pattern |
 | `npm ERR! 404 Not Found` for SDK | Missing `.npmrc` registry config | Add `@litium:registry=https://packages.litium.com/Npm/` to `.npmrc` |
+| Vite bundle error: `fs`, `graceful-fs`, or Node built-ins in browser | `createAdminFetch` imported from package root, pulling `fs-extra` | Change import to `@litium/platform-extension-sdk/admin-fetch` |
 | Extension not in Settings menu | Extension not installed or disabled | Install via Settings > Extensions or POST to API; enable if disabled |
 | Deep links load root page instead | Not reading `sub-path` attribute on first render | Read `getAttribute('sub-path')` in `connectedCallback` |
 | Stale context after channel switch | Caching `getContext()` result forever | Subscribe to `contextChanged` event |
