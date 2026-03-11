@@ -68,9 +68,6 @@ if (!customElements.get('litium-ext-my-extension')) {
 }
 ```
 
-### Use `window.litiumExtension.fetch()` — Not Native `fetch()`
-Native `fetch` will fail CSRF validation (403 Forbidden). Always use `window.litiumExtension.fetch()` for Litium API calls.
-
 ### Cleanup Event Subscriptions
 Always unsubscribe from `window.litiumExtension.on()` in your cleanup lifecycle hook (`disconnectedCallback` / `onUnmounted` / `ngOnDestroy`). Failing to do so causes memory leaks.
 

@@ -81,34 +81,6 @@ window.litiumExtension.showNotification({
 
 ---
 
-### `fetch(input, init?)`
-
-Authenticated HTTP request to the Litium backend. Automatically attaches CSRF tokens and auth headers. Mirrors the native `fetch` API signature.
-
-| Parameter | Type | Required | Description |
-|---|---|---|---|
-| `input` | `RequestInfo \| URL` | Yes | Use relative paths like `/Litium/api/...` |
-| `init` | `RequestInit` | No | Standard fetch options |
-
-**Returns:** `Promise<Response>`
-
-```typescript
-// GET
-const res = await window.litiumExtension.fetch('/Litium/api/my-endpoint');
-const data = await res.json();
-
-// POST with JSON body
-const res = await window.litiumExtension.fetch('/Litium/api/my-endpoint', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ orderId: '123' }),
-});
-```
-
-**Critical:** Always use `window.litiumExtension.fetch()` instead of native `fetch()` for Litium API calls. Native `fetch` will fail CSRF validation and return 403 Forbidden.
-
----
-
 ### `getContext()`
 
 Retrieve the current extension context.

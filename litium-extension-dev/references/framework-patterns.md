@@ -106,13 +106,14 @@ export function PageA() {
 
 ```tsx
 import type { LitiumExtensionAPI } from '@litium/platform-extension-sdk';
+import { adminFetch } from '../lib/adminFetch.js';
 declare global { interface Window { litiumExtension: LitiumExtensionAPI; } }
 
 export function PageA() {
   const context = window.litiumExtension.getContext();
 
   const handleSave = async () => {
-    const res = await window.litiumExtension.fetch('/Litium/api/my-endpoint', {
+    const res = await adminFetch('/Litium/app/api/my-endpoint', {
       method: 'POST',
       body: JSON.stringify({ foo: 'bar' }),
     });
@@ -412,7 +413,7 @@ export class PageAComponent {
   }
 
   async save() {
-    const res = await window.litiumExtension.fetch('/Litium/api/my-endpoint', {
+    const res = await adminFetch('/Litium/api/my-endpoint', {
       method: 'POST',
     });
     if (res.ok) {

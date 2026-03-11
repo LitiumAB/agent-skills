@@ -48,7 +48,7 @@ npx @litium/platform-extension-sdk migrate --source ./my-extension
 | Converts NgModules | `ModuleFederationPlugin` exposed modules | `@angular/elements` Custom Element registrations |
 | Replaces host service calls | `NotificationActions.dispatch(...)` | `window.litiumExtension.showNotification(...)` |
 | Replaces host navigation | `Router.navigate(...)` (shared) | `window.litiumExtension.navigate(...)` |
-| Replaces authenticated HTTP | `HttpClient.get/post/...` | `window.litiumExtension.fetch(...)` |
+| Replaces authenticated HTTP | `HttpClient.get/post/...` | native `fetch()` (replace with `adminFetch` for authenticated endpoints) |
 | Updates manifest | `frameworkType: 'angular-module'` | `frameworkType: 'web-component'` |
 | Updates dependencies | `webpack`, `@angular-architects/module-federation` | `vite`, `@litium/platform-extension-sdk` |
 | Configures registry | (may be missing) | `.npmrc` with `@litium:registry=https://packages.litium.com/Npm/` |
@@ -81,8 +81,9 @@ window.litiumExtension.navigate('/my-extension/detail');
 import { HttpClient } from '@angular/common/http';
 this.http.get('/Litium/api/my-endpoint').subscribe(...);
 
-// After
-const res = await window.litiumExtension.fetch('/Litium/api/my-endpoint');
+// After (migration output — replace with adminFetch for authenticated endpoints)
+import { adminFetch } from '../lib/adminFetch.js';
+const res = await adminFetch('/Litium/api/my-endpoint', { method: 'GET' });
 const data = await res.json();
 ```
 
@@ -103,7 +104,7 @@ The CLI replaces `TranslateService.instant()` with a `// TODO` comment. Options:
 - Use `window.litiumExtension.getContext().language` and maintain your own translation map
 
 **Shared state (NgRx / Redux):**
-Host-provided store state is not accessible from a Web Component. Refactor to use the bridge API (`getContext()`, `fetch()`) or bundle your own state management.
+Host-provided store state is not accessible from a Web Component. Refactor to use `adminFetch` for data fetching or bundle your own state management.
 
 **`litium-ui` components:**
 Visual components from `litium-ui` (tables, buttons, form controls) are part of the host app and cannot be used in a bundled Custom Element. Replace with your own components or a UI library (PrimeNG, Material, Radix UI, etc.).
@@ -127,7 +128,7 @@ Fix any TypeScript errors — the most common are unresolved imports referencing
 1. Start the dev server: `npm run dev`
 2. Register in **Settings > Extensions** with `bundleUrl: 'http://localhost:3000/src/main.ts'`
 3. Verify each route loads correctly
-4. Click every link and button — confirm `showNotification`, `navigate`, `fetch` work
+4. Click every link and button — confirm `showNotification`, `navigate`, `adminFetch` work
 5. Test browser back/forward navigation
 
 ---
@@ -139,4 +140,4 @@ Fix any TypeScript errors — the most common are unresolved imports referencing
 | `Cannot find module 'litium-ui'` | Unreplaced `litium-ui` imports | Remove all `litium-ui` imports (flagged in `MIGRATION_REPORT.md`) |
 | Blank screen, no console errors | `zone.js` imported after Angular imports | Import `zone.js` **before** any Angular import in `main.ts` |
 | `customElements.define` called twice | Missing guard on hot-reload | Wrap with `if (!customElements.get('litium-ext-...'))` |
-| Shared state unavailable | NgRx store was host-provided | Refactor to use bridge API `getContext()` / `fetch()` |
+| Shared state unavailable | NgRx store was host-provided | Refactor to use `getContext()` / `adminFetch` or bundle your own state management |
