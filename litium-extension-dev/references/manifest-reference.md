@@ -1,0 +1,339 @@
+# Extension Manifest Reference
+
+Complete field-by-field reference for `extension.manifest.json` — the deployment descriptor that tells Litium how to load and register your extension.
+
+## Minimal Example
+
+```json
+{
+  "id": "my-extension",
+  "name": "My Extension",
+  "version": "1.0.0",
+  "type": "ui",
+  "targets": [
+    {
+      "target": "common.web-component",
+      "name": "my-extension",
+      "bundleUrl": "https://cdn.example.com/my-extension/extension.js",
+      "customElementTag": "litium-ext-my-extension"
+    }
+  ]
+}
+```
+
+---
+
+## Top-Level Fields
+
+### `id`
+
+| | |
+|---|---|
+| **Type** | `string` |
+| **Required** | Yes |
+| **Format** | Lowercase kebab-case |
+
+System-unique identifier. Used as the primary key when registering, updating, or deleting.
+
+> Changing `id` after deployment creates a new extension entry rather than updating the existing one.
+
+### `name`
+
+| | |
+|---|---|
+| **Type** | `string` |
+| **Required** | Yes |
+
+Display name shown in the Extensions list. Prefix with `t:` to reference a translation key from `texts`:
+```json
+"name": "t:extensions.my-extension.name"
+```
+
+### `version`
+
+| | |
+|---|---|
+| **Type** | `string` |
+| **Required** | No |
+| **Format** | Semantic version (e.g. `"1.2.3"`) |
+
+Displayed in the Extensions list. Useful for auditing.
+
+### `type`
+
+| | |
+|---|---|
+| **Type** | `"ui" \| "admission_review"` |
+| **Required** | Yes |
+
+- `"ui"` — Admin-panel extension (bundles, menu items, API proxies)
+- `"admission_review"` — Server-side webhook for admission review flows
+
+All new backoffice UI extensions use `"ui"`.
+
+### `description`
+
+| | |
+|---|---|
+| **Type** | `string` |
+| **Required** | No |
+
+Short description displayed in the backoffice. Supports `t:` prefix for translation.
+
+### `targets`
+
+| | |
+|---|---|
+| **Type** | `ExtensionManifestTarget[]` |
+| **Required** | No |
+
+Array of target registrations. Each entry wires up one extension point.
+
+### `texts`
+
+| | |
+|---|---|
+| **Type** | `Record<string, Record<string, string>>` |
+| **Required** | No |
+
+Translations keyed by locale:
+
+```json
+"texts": {
+  "en-US": {
+    "extensions.my-extension.name": "My Order Widget",
+    "extensions.my-extension.description": "Order management panel"
+  },
+  "sv-SE": {
+    "extensions.my-extension.name": "Min orderwidget",
+    "extensions.my-extension.description": "Orderhanteringspanel"
+  }
+}
+```
+
+---
+
+## Targets Reference
+
+Each object in the `targets` array must include a `target` field that selects the registered target definition.
+
+### `common.web-component`
+
+Registers a Web Component (Custom Element) bundle.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `target` | `"common.web-component"` | Yes | Target type |
+| `name` | `string` | Yes | Unique name for this target entry |
+| `bundleUrl` | `string` | Yes | Absolute URL to the IIFE JS bundle. Must be HTTPS in production; `http://localhost` accepted during local dev. |
+| `customElementTag` | `string` | Yes | Custom element tag. Must start with `litium-ext-`. |
+
+```json
+{
+  "target": "common.web-component",
+  "name": "my-extension",
+  "bundleUrl": "https://cdn.example.com/my-extension/extension.js",
+  "customElementTag": "litium-ext-my-extension"
+}
+```
+
+### `settings.menu.item`
+
+Adds an item to the Settings sidebar navigation.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `target` | `"settings.menu.item"` | Yes | Target type |
+| `name` | `string` | Yes | Translation key for the menu label |
+| `url` | `string` | Yes | Path to activate when clicked |
+| `permission` | `string` | No | Permission key required to see this item |
+
+```json
+{
+  "target": "settings.menu.item",
+  "name": "t:extensions.my-extension.menu",
+  "url": "/Litium/UI/settings/extensions/my-extension",
+  "permission": "extensions:my-extension:read"
+}
+```
+
+### `{area}.menu.item`
+
+Registers a web component panel in a backoffice area navigation panel. Replace `{area}` with: `customers`, `products`, `sales`, `media`, or `websites`.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `target` | `"customers.menu.item"` etc. | Yes | Area-specific target |
+| `name` | `string` | Yes | Display name in the area panel |
+| `component` | `string` | Yes | Custom element tag. Must start with `litium-ext-`. |
+
+```json
+{
+  "target": "products.menu.item",
+  "name": "Pricing Rules",
+  "component": "litium-ext-my-extension-panel-pricing-rules"
+}
+```
+
+Panels are single-view — the host does not pass a `sub-path` attribute.
+
+### `fieldtype.editor`
+
+Registers a custom field type with a web component editor.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `target` | `"fieldtype.editor"` | Yes | Target type |
+| `fieldTypeId` | `string` | Yes | System-unique field type ID. Letters, digits, `-` and `_` only. |
+| `name` | `string` | Yes | Display name in the field type selector |
+| `component` | `string` | Yes | Custom element tag for the editor. Must start with `litium-ext-`. |
+| `jsonType` | `"string" \| "number" \| "boolean" \| "object" \| "array"` | Yes | JSON value type stored by this field |
+| `settingsComponent` | `string` | No | Custom element tag for the settings component (field definition config) |
+| `canBeGridColumn` | `"true"` | No | Field type can appear as a grid column |
+| `canBeGridFilter` | `"true"` | No | Field type can appear as a grid filter |
+| `canSort` | `"true"` | No | Field type supports sorting |
+
+```json
+{
+  "target": "fieldtype.editor",
+  "fieldTypeId": "ProductRating",
+  "name": "Product Rating",
+  "component": "litium-ext-my-extension-fieldtype-product-rating-editor",
+  "jsonType": "number",
+  "canBeGridColumn": "true"
+}
+```
+
+**Editor web component protocol:**
+
+Attributes set by the host:
+
+| Attribute | Type | Description |
+|---|---|---|
+| `value` | `string` | Current field value. For `object`/`array`, JSON-serialized string. |
+| `label` | `string` | Field label text |
+| `readonly` | boolean (presence) | Present when in view mode |
+| `errors` | `string` | JSON `string[]` of validation error messages |
+
+Reporting changes — dispatch `"litium-field-change"`:
+```typescript
+this.dispatchEvent(
+  new CustomEvent('litium-field-change', {
+    detail: { value: newValue },
+    bubbles: true,
+  }),
+);
+```
+
+**`object`/`array` round-trip pattern:**
+```typescript
+// Normalize incoming (may be string or parsed object)
+function normalizeIncoming(value: unknown): string {
+  if (value == null) return '';
+  if (typeof value === 'string') {
+    try { return JSON.stringify(JSON.parse(value), null, 2); }
+    catch { return value; }
+  }
+  return JSON.stringify(value, null, 2);
+}
+
+// Outgoing — always send JSON string
+const nextJsonText = JSON.stringify(nextObjectOrArray);
+dispatchEvent(new CustomEvent('litium-field-change', {
+  detail: { value: nextJsonText },
+  bubbles: true,
+}));
+```
+
+**`<litium-field-editor>` wrapper component:**
+
+Import `@litium/platform-extension-sdk/ui` (side-effect import) to register the `<litium-field-editor>` web component for consistent field UX:
+
+```typescript
+import '@litium/platform-extension-sdk/ui';
+```
+
+Attributes: `label`, `tooltip`, `readonly`, `errors`.
+Slots: default (edit UI), `preview` (read-only display), `additional-info`.
+
+### `common.api.proxy`
+
+Registers a transparent API proxy that forwards authenticated requests to your extension backend.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `target` | `"common.api.proxy"` | Yes | Target type |
+| `name` | `string` | Yes | Unique name |
+| `url` | `string` | Yes | Base URL of your extension backend |
+
+### `common.angular.module` *(deprecated)*
+
+Angular Module Federation bundle. Use `common.web-component` for new extensions. See [migration.md](migration.md) to migrate.
+
+---
+
+## Local Dev Manifest
+
+During development, point `bundleUrl` at the Vite dev server:
+
+```json
+{
+  "target": "common.web-component",
+  "name": "my-extension",
+  "bundleUrl": "http://localhost:3000/src/index.ts",
+  "customElementTag": "litium-ext-my-extension"
+}
+```
+
+Switch `bundleUrl` back to the production CDN URL before deploying.
+
+---
+
+## Full Example
+
+```json
+{
+  "id": "order-dashboard",
+  "name": "t:extensions.order-dashboard.name",
+  "version": "1.0.0",
+  "type": "ui",
+  "targets": [
+    {
+      "target": "common.web-component",
+      "name": "order-dashboard",
+      "bundleUrl": "https://cdn.example.com/order-dashboard/extension.js",
+      "customElementTag": "litium-ext-order-dashboard"
+    },
+    {
+      "target": "settings.menu.item",
+      "name": "t:extensions.order-dashboard.menu",
+      "ref_id": "system.settings",
+      "url": "/Litium/UI/settings/extensions/order-dashboard"
+    },
+    {
+      "target": "sales.menu.item",
+      "name": "Order Dashboard",
+      "component": "litium-ext-order-dashboard-panel-dashboard"
+    },
+    {
+      "target": "fieldtype.editor",
+      "fieldTypeId": "OrderPriority",
+      "name": "Order Priority",
+      "component": "litium-ext-order-dashboard-fieldtype-order-priority-editor",
+      "jsonType": "number",
+      "canBeGridColumn": "true",
+      "canSort": "true"
+    }
+  ],
+  "texts": {
+    "en-US": {
+      "extensions.order-dashboard.name": "Order Dashboard",
+      "extensions.order-dashboard.menu": "Order Dashboard"
+    },
+    "sv-SE": {
+      "extensions.order-dashboard.name": "Orderöversikt",
+      "extensions.order-dashboard.menu": "Orderöversikt"
+    }
+  }
+}
+```
