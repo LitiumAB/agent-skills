@@ -53,6 +53,11 @@ Load the relevant reference when working on a task:
 
 These rules MUST be followed in every extension. Violating them causes runtime failures.
 
+### Always Use the CLI — Never Create Files Manually
+When scaffolding a new project, adding a panel, adding a settings page, or adding a field type, you **MUST** use the `@litium/platform-extension-sdk` CLI (see [references/cli-commands.md](references/cli-commands.md)). Do **NOT** manually create component files, manifest entries, or index imports for these operations — the CLI handles all three correctly and consistently.
+
+Only write code manually _inside_ the generated component files (implementing the UI logic). Never manually scaffold the file structure, manifest entries, or index imports that the CLI would otherwise create.
+
 ### Custom Element Tag Naming
 - All tags MUST start with `litium-ext-`
 - Pattern: `litium-ext-{extension-id}` for the main element
@@ -98,6 +103,9 @@ import { createAdminFetch } from '@litium/platform-extension-sdk';
 
 ### Creating a New Extension
 
+> **Always scaffold with the CLI.** Do not create project files manually.
+
+
 1. Read [references/cli-commands.md](references/cli-commands.md)
 2. Ask the user which framework they want: `react`, `vue`, `angular`, or `vanilla`
 3. Run: `npx @litium/platform-extension-sdk create <name> --framework <framework>`
@@ -108,6 +116,9 @@ import { createAdminFetch } from '@litium/platform-extension-sdk';
 
 ### Adding a Panel / Field Type / Settings Page
 
+> **Always use the CLI.** Do not manually create component files, manifest entries, or index imports — the CLI handles all three correctly.
+
+
 1. Read [references/cli-commands.md](references/cli-commands.md)
 2. Run `npx @litium/platform-extension-sdk add` from the extension project root (interactive) or use:
    - `npx @litium/platform-extension-sdk add panel`
@@ -117,6 +128,9 @@ import { createAdminFetch } from '@litium/platform-extension-sdk';
 4. For settings pages: add the route in the framework router (see [references/routing.md](references/routing.md))
 
 ### Implementing a Custom Field Type
+
+> **Always scaffold with the CLI first.** Do not manually create the field type component file or manifest entry.
+
 
 1. Read [references/cli-commands.md](references/cli-commands.md) and [references/manifest-reference.md](references/manifest-reference.md)
 2. Run `npx @litium/platform-extension-sdk add field-type`
