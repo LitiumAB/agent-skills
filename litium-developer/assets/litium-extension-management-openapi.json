@@ -1,0 +1,1073 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Litium Extension Management API",
+    "version": "8.24.1"
+  },
+  "servers": [
+    {
+      "url": "https://demoadmin.litium.com"
+    }
+  ],
+  "paths": {
+    "/Litium/api/extension-management/extensions": {
+      "get": {
+        "tags": [
+          "Extensions"
+        ],
+        "operationId": "Extensions_GetExtensions",
+        "x-mint": {
+          "metadata": {
+            "title": "List Extensions"
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "BadRequest",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00",
+                  "errors": {
+                    "property1": [
+                      "The property field is required"
+                    ]
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.3",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7235#section-3.1",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+                  "title": "Not Found",
+                  "status": 404,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Extensions"
+        ],
+        "operationId": "Extensions_CreateExtension",
+        "x-mint": {
+          "metadata": {
+            "title": "Create Extension"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "BadRequest",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00",
+                  "errors": {
+                    "property1": [
+                      "The property field is required"
+                    ]
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.3",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7235#section-3.1",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Litium/api/extension-management/extensions/{id}": {
+      "get": {
+        "tags": [
+          "Extensions"
+        ],
+        "operationId": "Extensions_GetExtension",
+        "x-mint": {
+          "metadata": {
+            "title": "Get Extension"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "BadRequest",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00",
+                  "errors": {
+                    "property1": [
+                      "The property field is required"
+                    ]
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.3",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7235#section-3.1",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+                  "title": "Not Found",
+                  "status": 404,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Extensions"
+        ],
+        "operationId": "Extensions_UpdateExtension",
+        "x-mint": {
+          "metadata": {
+            "title": "Update Extension"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "BadRequest",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00",
+                  "errors": {
+                    "property1": [
+                      "The property field is required"
+                    ]
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.3",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7235#section-3.1",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.AppManagement.AppMetadata.Extension"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+                  "title": "Not Found",
+                  "status": 404,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Extensions"
+        ],
+        "operationId": "Extensions_DeleteExtension",
+        "x-mint": {
+          "metadata": {
+            "title": "Delete Extension"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "BadRequest",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00",
+                  "errors": {
+                    "property1": [
+                      "The property field is required"
+                    ]
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.3",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7235#section-3.1",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "NotFound",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+                  "title": "Not Found",
+                  "status": 404,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Litium/api/extension-management/targets": {
+      "get": {
+        "tags": [
+          "Targets"
+        ],
+        "operationId": "Targets_GetTargets",
+        "x-mint": {
+          "metadata": {
+            "title": "List Targets"
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "BadRequest",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00",
+                  "errors": {
+                    "property1": [
+                      "The property field is required"
+                    ]
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.3",
+                  "title": "Forbidden",
+                  "status": 403,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                },
+                "example": {
+                  "type": "https://tools.ietf.org/html/rfc7235#section-3.1",
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "traceId": "00-982607166a542147b435be3a847ddd71-fc75498eb9f09d48-00"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Litium.Web.WebApi.ExtensionManagement.Controllers.TargetsController.TargetItem"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Litium.Web.WebApi.ExtensionManagement.Controllers.TargetsController.TargetItem"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Litium.Web.WebApi.ExtensionManagement.Controllers.TargetsController.TargetItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Litium.AppManagement.AppMetadata.Extension": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "targets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "nullable": true
+            },
+            "nullable": true
+          },
+          "texts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "nullable": true
+            },
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Web.WebApi.ExtensionManagement.Controllers.TargetsController.TargetField": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Web.WebApi.ExtensionManagement.Controllers.TargetsController.TargetItem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "target": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Web.WebApi.ExtensionManagement.Controllers.TargetsController.TargetField"
+            },
+            "nullable": true
+          },
+          "requiredFields": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Microsoft.AspNetCore.Mvc.ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "extensions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            },
+            "nullable": true
+          }
+        },
+        "nullable": true
+      }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "description": "Litium Account",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "oauth2": {
+        "type": "oauth2",
+        "description": "Litium OAuth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "/Litium/OAuth/Token",
+            "scopes": { }
+          }
+        }
+      },
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
+    }
+  },
+  "security": [
+    {
+      "oauth2": [ ],
+      "bearer": [ ],
+      "apiKey": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Extensions"
+    },
+    {
+      "name": "Targets"
+    }
+  ]
+}

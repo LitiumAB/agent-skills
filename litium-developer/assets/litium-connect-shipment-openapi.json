@@ -1,0 +1,2114 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Litium Connect Shipments",
+    "version": "1.3"
+  },
+  "servers": [
+    {
+      "url": "https://demoadmin.litium.com"
+    }
+  ],
+  "paths": {
+    "/Litium/api/connect/shipments/providers": {
+      "post": {
+        "tags": [
+          "Shipping providers"
+        ],
+        "operationId": "CreateShippingProvider",
+        "x-mint": {
+          "metadata": {
+            "title": "Create Shipping Provider"
+          }
+        },
+        "parameters": [
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "1.3",
+              "nullable": true
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "1.3",
+              "nullable": true
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "BadRequest",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "UnprocessableEntity",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+                }
+              }
+            }
+          }
+        },
+        "callbacks": {
+          "InitializeSession": {
+            "{$request.body#baseUrl}/api/shipments/initializeSession": {
+              "post": {
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/Litium.Connect.Shipments.InitializeSessionRequest"
+                      }
+                    }
+                  },
+                  "required": true
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "$ref": "#/components/schemas/Litium.Connect.Shipments.InitializeSessionResponse"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "UpdateSession": {
+            "{$request.body#baseUrl}/api/shipments/updateSession": {
+              "post": {
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/Litium.Connect.Shipments.UpdateSessionRequest"
+                      }
+                    }
+                  },
+                  "required": true
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "$ref": "#/components/schemas/Litium.Connect.Shipments.UpdateSessionResponse"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "CloseSession": {
+            "{$request.body#baseUrl}/api/shipments/closeSession": {
+              "post": {
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/Litium.Connect.Shipments.CloseSessionRequest"
+                      }
+                    }
+                  },
+                  "required": true
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "$ref": "#/components/schemas/Litium.Connect.Shipments.CloseSessionResponse"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Litium/api/connect/shipments/providers/{id}": {
+      "get": {
+        "tags": [
+          "Shipping providers"
+        ],
+        "operationId": "GetShippingProvider",
+        "x-mint": {
+          "metadata": {
+            "title": "Get Shipping Provider"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "1.3",
+              "nullable": true
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "1.3",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "BadRequest",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "UnprocessableEntity",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Shipping providers"
+        ],
+        "operationId": "UpdateShippingProvider",
+        "x-mint": {
+          "metadata": {
+            "title": "Update Shipping Provider"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "1.3",
+              "nullable": true
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "1.3",
+              "nullable": true
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "BadRequest",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "UnprocessableEntity",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingProvider"
+                }
+              }
+            }
+          }
+        },
+        "callbacks": {
+          "InitializeSession": {
+            "{$request.body#baseUrl}/api/shipments/initializeSession": {
+              "post": {
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/Litium.Connect.Shipments.InitializeSessionRequest"
+                      }
+                    }
+                  },
+                  "required": true
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "$ref": "#/components/schemas/Litium.Connect.Shipments.InitializeSessionResponse"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "UpdateSession": {
+            "{$request.body#baseUrl}/api/shipments/updateSession": {
+              "post": {
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/Litium.Connect.Shipments.UpdateSessionRequest"
+                      }
+                    }
+                  },
+                  "required": true
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "$ref": "#/components/schemas/Litium.Connect.Shipments.UpdateSessionResponse"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "CloseSession": {
+            "{$request.body#baseUrl}/api/shipments/closeSession": {
+              "post": {
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/Litium.Connect.Shipments.CloseSessionRequest"
+                      }
+                    }
+                  },
+                  "required": true
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "$ref": "#/components/schemas/Litium.Connect.Shipments.CloseSessionResponse"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Shipping providers"
+        ],
+        "operationId": "DeleteShippingProvider",
+        "x-mint": {
+          "metadata": {
+            "title": "Delete Shipping Provider"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "1.3",
+              "nullable": true
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "1.3",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "BadRequest",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "UnprocessableEntity",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Litium.Common.Range__System.DateTimeOffset": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "to": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.Address": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "careOf": {
+            "type": "string",
+            "nullable": true
+          },
+          "address1": {
+            "type": "string",
+            "nullable": true
+          },
+          "address2": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "fax": {
+            "type": "string",
+            "nullable": true
+          },
+          "mobilePhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "zipCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "houseExtension": {
+            "type": "string",
+            "nullable": true
+          },
+          "houseNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "organizationName": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.CheckoutFlowInfo": {
+        "type": "object",
+        "properties": {
+          "additionalInfo": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          },
+          "shippingTags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.CloseSessionRequest": {
+        "type": "object",
+        "properties": {
+          "shippingProviderId": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingOptionId": {
+            "type": "string",
+            "nullable": true
+          },
+          "cartConfirmed": {
+            "type": "boolean"
+          },
+          "orderId": {
+            "type": "string",
+            "nullable": true
+          },
+          "cartContextSystemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "shippingGroupId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.CloseSessionResponse": {
+        "type": "object",
+        "properties": {
+          "draftShipment": {
+            "$ref": "#/components/schemas/Litium.Connect.Shipments.DraftShipment"
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.CustomerInfo": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "mobile": {
+            "type": "string",
+            "nullable": true
+          },
+          "organizationCustomerNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalInfo": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            },
+            "nullable": true
+          },
+          "type": {
+            "enum": [
+              "person",
+              "organization"
+            ],
+            "type": "string"
+          },
+          "businessRegistrationNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "nationalIdentificationNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "vatRegistrationNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.DeliveryAddOn": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "carrierCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingFeeId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.DeliveryAddOnOption": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "priceIncludingVat": {
+            "type": "number",
+            "format": "double"
+          },
+          "vatRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "preselected": {
+            "type": "boolean"
+          },
+          "required": {
+            "type": "boolean"
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.DeliveryDate": {
+        "type": "object",
+        "properties": {
+          "earliest": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "latest": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "earliestTimeOfDay": {
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
+          },
+          "latestTimeOfDay": {
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
+          },
+          "cutoff": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.DeliveryOption": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryCarrierId": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryCarrierName": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryCarrierServiceId": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryCarrierServiceName": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingMethod": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryDate": {
+            "$ref": "#/components/schemas/Litium.Connect.Shipments.DeliveryDate"
+          },
+          "deliveryTimeSlots": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.DeliveryTimeSlot"
+            },
+            "nullable": true
+          },
+          "priceIncludingVat": {
+            "type": "number",
+            "format": "double"
+          },
+          "vatRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "deliveryAddOns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.DeliveryAddOnOption"
+            },
+            "nullable": true
+          },
+          "pickupLocations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.PickupLocation"
+            },
+            "nullable": true
+          },
+          "additionalInfo": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.DeliveryOptionGroup": {
+        "type": "object",
+        "properties": {
+          "shippingGroupId": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryOptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.DeliveryOption"
+            },
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.DeliveryTimeSlot": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "start": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "cutoff": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.DraftShipment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "tmsReference": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalInfo": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.InitializeSessionRequest": {
+        "type": "object",
+        "properties": {
+          "shippingProviderId": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingOptionId": {
+            "type": "string",
+            "nullable": true
+          },
+          "orderId": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerInfo": {
+            "$ref": "#/components/schemas/Litium.Connect.Shipments.CustomerInfo"
+          },
+          "billingAddress": {
+            "$ref": "#/components/schemas/Litium.Connect.Shipments.Address"
+          },
+          "countryCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "locale": {
+            "type": "string",
+            "nullable": true
+          },
+          "checkoutFlowInfo": {
+            "$ref": "#/components/schemas/Litium.Connect.Shipments.CheckoutFlowInfo"
+          },
+          "shippingGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingGroup"
+            },
+            "nullable": true
+          },
+          "cartContextSystemId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.InitializeSessionResponse": {
+        "type": "object",
+        "properties": {
+          "shippingFlowResult": {
+            "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingFlowResult"
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.OperationalHours": {
+        "type": "object",
+        "properties": {
+          "openingTime": {
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
+          },
+          "closingTime": {
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
+          },
+          "closed": {
+            "type": "boolean"
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.PickupLocation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "$ref": "#/components/schemas/Litium.Connect.Shipments.Address"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "type": {
+            "enum": [
+              "pickupStore",
+              "pickupPoint",
+              "automatedPickupStation",
+              "other"
+            ],
+            "type": "string"
+          },
+          "operationalHours": {
+            "type": "object",
+            "properties": {
+              "Sunday": {
+                "$ref": "#/components/schemas/Litium.Connect.Shipments.OperationalHours"
+              },
+              "Monday": {
+                "$ref": "#/components/schemas/Litium.Connect.Shipments.OperationalHours"
+              },
+              "Tuesday": {
+                "$ref": "#/components/schemas/Litium.Connect.Shipments.OperationalHours"
+              },
+              "Wednesday": {
+                "$ref": "#/components/schemas/Litium.Connect.Shipments.OperationalHours"
+              },
+              "Thursday": {
+                "$ref": "#/components/schemas/Litium.Connect.Shipments.OperationalHours"
+              },
+              "Friday": {
+                "$ref": "#/components/schemas/Litium.Connect.Shipments.OperationalHours"
+              },
+              "Saturday": {
+                "$ref": "#/components/schemas/Litium.Connect.Shipments.OperationalHours"
+              }
+            },
+            "nullable": true
+          },
+          "operationalHoursOverrides": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.OperationalHours"
+            },
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.ProductData": {
+        "type": "object",
+        "properties": {
+          "length": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "width": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "height": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "weight": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.ShipmentInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingOptionId": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingProviderId": {
+            "type": "string",
+            "nullable": true
+          },
+          "expectedDeliveryDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deliveryCarrierId": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryCarrierName": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryCarrierClass": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryCarrierServiceName": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryCarrierServiceCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "selectedDeliveryTime": {
+            "$ref": "#/components/schemas/Litium.Common.Range__System.DateTimeOffset"
+          },
+          "shippingAddress": {
+            "$ref": "#/components/schemas/Litium.Connect.Shipments.Address"
+          },
+          "additionalInfo": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          },
+          "tmsShippingOptionName": {
+            "type": "string",
+            "nullable": true
+          },
+          "tmsShippingOptionReferenceId": {
+            "type": "string",
+            "nullable": true
+          },
+          "tmsReference": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryAddOns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.DeliveryAddOn"
+            },
+            "nullable": true
+          },
+          "orderRowInfo": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "nullable": true
+          },
+          "deliveryNotificationMobilePhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryNotificationEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "pickupLocation": {
+            "$ref": "#/components/schemas/Litium.Connect.Shipments.Address"
+          },
+          "fees": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingFee"
+            },
+            "nullable": true
+          },
+          "totalShipmentFeeIncludingVat": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "totalShipmentFeeExcludingVat": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "totalShipmentFeeVat": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.ShippingFee": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "feeIncludingVat": {
+            "type": "number",
+            "format": "double"
+          },
+          "feeExcludingVat": {
+            "type": "number",
+            "format": "double"
+          },
+          "feeVat": {
+            "type": "number",
+            "format": "double"
+          },
+          "feeVatRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "additionalInfo": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          },
+          "vatDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.VatDetail"
+            },
+            "nullable": true
+          },
+          "taxDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.TaxDetail"
+            },
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.ShippingFlowResult": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          },
+          "resultAction": {
+            "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingInfoResultAction"
+          },
+          "additionalInfo": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.ShippingGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "expectedShippingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fees": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingFee"
+            },
+            "nullable": true
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingRow"
+            },
+            "nullable": true
+          },
+          "tmsReference": {
+            "type": "string",
+            "nullable": true
+          },
+          "tmsShippingOptionReferenceId": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalShipmentFeeIncludingVat": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "totalShipmentFeeExcludingVat": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "totalShipmentFeeVat": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "totalShipmentValueIncludingVat": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "totalShipmentValueExcludingVat": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "totalShipmentValueVat": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "additionalInfo": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.ShippingInfoResultAction": {
+        "type": "object",
+        "properties": {
+          "htmlSnippet": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryOptionGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.DeliveryOptionGroup"
+            },
+            "nullable": true
+          },
+          "shipmentInfos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.ShipmentInfo"
+            },
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.ShippingOption": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryCountries": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          },
+          "merchantAccountId": {
+            "type": "string",
+            "nullable": true
+          },
+          "deliveryTimeInDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "shippingMethod": {
+            "enum": [
+              "deliverToDoorStep",
+              "pickUpStore",
+              "pickUpPoint",
+              "automatedPickupStation",
+              "digitalDelivery",
+              "normalPost",
+              "registeredPost",
+              "other"
+            ],
+            "type": "string"
+          },
+          "feeType": {
+            "enum": [
+              "fixed",
+              "calculated"
+            ],
+            "type": "string"
+          },
+          "integrationType": {
+            "enum": [
+              "inline",
+              "deliveryCheckout",
+              "paymentCheckout",
+              "deliveryOptions"
+            ],
+            "type": "string"
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.ShippingProvider": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "baseUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalInfoKeys": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          },
+          "shippingOptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingOption"
+            },
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.ShippingRow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "articleNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "orderRowId": {
+            "type": "string",
+            "nullable": true
+          },
+          "productData": {
+            "$ref": "#/components/schemas/Litium.Connect.Shipments.ProductData"
+          },
+          "unitPriceIncludingVat": {
+            "type": "number",
+            "format": "double"
+          },
+          "unitPriceExcludingVat": {
+            "type": "number",
+            "format": "double"
+          },
+          "unitOfMeasurementId": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalIncludingVat": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalExcludingVat": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalVat": {
+            "type": "number",
+            "format": "double"
+          },
+          "additionalInfo": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          },
+          "vatDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.VatDetail"
+            },
+            "nullable": true
+          },
+          "taxDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.TaxDetail"
+            },
+            "nullable": true
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.TaxDetail": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "taxableAmount": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "taxRate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "tax": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.UpdateSessionRequest": {
+        "type": "object",
+        "properties": {
+          "shippingProviderId": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingOptionId": {
+            "type": "string",
+            "nullable": true
+          },
+          "orderId": {
+            "type": "string",
+            "nullable": true
+          },
+          "updateSessionData": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerInfo": {
+            "$ref": "#/components/schemas/Litium.Connect.Shipments.CustomerInfo"
+          },
+          "billingAddress": {
+            "$ref": "#/components/schemas/Litium.Connect.Shipments.Address"
+          },
+          "countryCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "locale": {
+            "type": "string",
+            "nullable": true
+          },
+          "checkoutFlowInfo": {
+            "$ref": "#/components/schemas/Litium.Connect.Shipments.CheckoutFlowInfo"
+          },
+          "shippingGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingGroup"
+            },
+            "nullable": true
+          },
+          "cartContextSystemId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.UpdateSessionResponse": {
+        "type": "object",
+        "properties": {
+          "shippingFlowResult": {
+            "$ref": "#/components/schemas/Litium.Connect.Shipments.ShippingFlowResult"
+          }
+        },
+        "nullable": true
+      },
+      "Litium.Connect.Shipments.VatDetail": {
+        "type": "object",
+        "properties": {
+          "vatRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "amountIncludingVat": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "vat": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "nullable": true
+      },
+      "Microsoft.AspNetCore.Mvc.ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "extensions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            },
+            "nullable": true
+          }
+        },
+        "nullable": true
+      }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "description": "Litium Account",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "oauth2": {
+        "type": "oauth2",
+        "description": "Litium OAuth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "/Litium/OAuth/Token",
+            "scopes": { }
+          }
+        }
+      },
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
+    }
+  },
+  "security": [
+    {
+      "oauth2": [ ],
+      "bearer": [ ],
+      "apiKey": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Shipping providers"
+    }
+  ]
+}
