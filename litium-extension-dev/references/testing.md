@@ -189,11 +189,11 @@ jobs:
           cache: 'npm'
 
       - name: Configure npm registry
-        run: echo "@litium:registry=https://packages.litium.com/Npm/" >> .npmrc
+        run: echo "@litiumab:registry=https://registry.npmjs.org/" >> .npmrc
 
       # If registry requires auth:
       # - name: Authenticate
-      #   run: echo "//packages.litium.com/Npm/:_authToken=${{ secrets.LITIUM_NPM_TOKEN }}" >> .npmrc
+      #   run: echo "//registry.npmjs.org/:_authToken=${{ secrets.LITIUM_NPM_TOKEN }}" >> .npmrc
 
       - run: npm ci
       - run: npm run build

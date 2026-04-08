@@ -105,7 +105,7 @@ export function PageA() {
 ### Bridge API Usage in React
 
 ```tsx
-import type { LitiumExtensionAPI } from '@litium/platform-extension-sdk';
+import type { LitiumExtensionAPI } from '@litiumab/platform-extension-sdk';
 import { adminFetch } from '../lib/adminFetch.js';
 declare global { interface Window { litiumExtension: LitiumExtensionAPI; } }
 
@@ -204,7 +204,7 @@ export function ProductRatingEditor({ value, label, readonly, errors, onChange }
 ```typescript
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { litiumExtension } from '@litium/platform-extension-sdk/vite-plugin';
+import { litiumExtension } from '@litiumab/platform-extension-sdk/vite-plugin';
 
 export default defineConfig({
   plugins: [
@@ -233,7 +233,7 @@ Vue's `defineCustomElement` compiles an SFC into a Web Component with shadow DOM
 
 ```typescript
 import { defineCustomElement } from 'vue';
-import type { LitiumExtensionAPI } from '@litium/platform-extension-sdk';
+import type { LitiumExtensionAPI } from '@litiumab/platform-extension-sdk';
 import App from './App.vue';
 
 declare global { interface Window { litiumExtension: LitiumExtensionAPI; } }
@@ -257,7 +257,7 @@ Creates a per-instance `vue-router` with `createMemoryHistory` and syncs with th
 <script setup lang="ts">
 import { createRouter, createMemoryHistory, RouterView } from 'vue-router';
 import { getCurrentInstance, watch, onUnmounted } from 'vue';
-import { syncRouterFromHost } from '@litium/platform-extension-sdk/vue';
+import { syncRouterFromHost } from '@litiumab/platform-extension-sdk/vue';
 import PageA from './pages/PageA.vue';
 import PageB from './pages/PageB.vue';
 
@@ -295,10 +295,10 @@ onUnmounted(() => offRouteChanged?.());
 
 ### Navigation from Page Components (Vue)
 
-Use `createNavigate` from `@litium/platform-extension-sdk/vue`:
+Use `createNavigate` from `@litiumab/platform-extension-sdk/vue`:
 
 ```typescript
-import { createNavigate } from '@litium/platform-extension-sdk/vue';
+import { createNavigate } from '@litiumab/platform-extension-sdk/vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -314,7 +314,7 @@ Do NOT call `router.push()` alone — it updates Vue state but not the host brow
 ```typescript
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import { litiumExtension } from '@litium/platform-extension-sdk/vite-plugin';
+import { litiumExtension } from '@litiumab/platform-extension-sdk/vite-plugin';
 
 export default defineConfig({
   plugins: [
@@ -345,7 +345,7 @@ Creates a completely separate Angular platform — no dependency conflicts with 
 import 'zone.js';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
-import type { LitiumExtensionAPI } from '@litium/platform-extension-sdk';
+import type { LitiumExtensionAPI } from '@litiumab/platform-extension-sdk';
 
 declare global { interface Window { litiumExtension: LitiumExtensionAPI; } }
 
@@ -432,7 +432,7 @@ Any Angular version works. The extension's `platformBrowserDynamic()` creates a 
 ```typescript
 import { defineConfig } from 'vite';
 import angular from '@analogjs/vite-plugin-angular';
-import { litiumExtension } from '@litium/platform-extension-sdk/vite-plugin';
+import { litiumExtension } from '@litiumab/platform-extension-sdk/vite-plugin';
 
 export default defineConfig({
   plugins: [
@@ -518,7 +518,7 @@ The scaffold generates this file automatically. If adding manually:
 
 ```typescript
 /// <reference types="vite/client" />
-import { createAdminFetch } from '@litium/platform-extension-sdk/admin-fetch';
+import { createAdminFetch } from '@litiumab/platform-extension-sdk/admin-fetch';
 
 export const adminFetch = createAdminFetch(
   import.meta.env.VITE_LITIUM_CLIENT_ID,

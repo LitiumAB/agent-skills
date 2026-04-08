@@ -177,85 +177,6 @@ Registers a web component panel in a backoffice area navigation panel. Replace `
 
 Panels are single-view — the host does not pass a `sub-path` attribute.
 
-### `fieldtype.editor`
-
-Registers a custom field type with a web component editor.
-
-| Field | Type | Required | Description |
-|---|---|---|---|
-| `target` | `"fieldtype.editor"` | Yes | Target type |
-| `fieldTypeId` | `string` | Yes | System-unique field type ID. Letters, digits, `-` and `_` only. |
-| `name` | `string` | Yes | Display name in the field type selector |
-| `component` | `string` | Yes | Custom element tag for the editor. Must start with `litium-ext-`. |
-| `jsonType` | `"string" \| "number" \| "boolean" \| "object" \| "array"` | Yes | JSON value type stored by this field |
-| `settingsComponent` | `string` | No | Custom element tag for the settings component (field definition config) |
-| `canBeGridColumn` | `"true"` | No | Field type can appear as a grid column |
-| `canBeGridFilter` | `"true"` | No | Field type can appear as a grid filter |
-| `canSort` | `"true"` | No | Field type supports sorting |
-
-```json
-{
-  "target": "fieldtype.editor",
-  "fieldTypeId": "ProductRating",
-  "name": "Product Rating",
-  "component": "litium-ext-my-extension-fieldtype-product-rating-editor",
-  "jsonType": "number",
-  "canBeGridColumn": "true"
-}
-```
-
-**Editor web component protocol:**
-
-Attributes set by the host:
-
-| Attribute | Type | Description |
-|---|---|---|
-| `value` | `string` | Current field value. For `object`/`array`, JSON-serialized string. |
-| `label` | `string` | Field label text |
-| `readonly` | boolean (presence) | Present when in view mode |
-| `errors` | `string` | JSON `string[]` of validation error messages |
-
-Reporting changes — dispatch `"litium-field-change"`:
-```typescript
-this.dispatchEvent(
-  new CustomEvent('litium-field-change', {
-    detail: { value: newValue },
-    bubbles: true,
-  }),
-);
-```
-
-**`object`/`array` round-trip pattern:**
-```typescript
-// Normalize incoming (may be string or parsed object)
-function normalizeIncoming(value: unknown): string {
-  if (value == null) return '';
-  if (typeof value === 'string') {
-    try { return JSON.stringify(JSON.parse(value), null, 2); }
-    catch { return value; }
-  }
-  return JSON.stringify(value, null, 2);
-}
-
-// Outgoing — always send JSON string
-const nextJsonText = JSON.stringify(nextObjectOrArray);
-dispatchEvent(new CustomEvent('litium-field-change', {
-  detail: { value: nextJsonText },
-  bubbles: true,
-}));
-```
-
-**`<litium-field-editor>` wrapper component:**
-
-Import `@litium/platform-extension-sdk/ui` (side-effect import) to register the `<litium-field-editor>` web component for consistent field UX:
-
-```typescript
-import '@litium/platform-extension-sdk/ui';
-```
-
-Attributes: `label`, `tooltip`, `readonly`, `errors`.
-Slots: default (edit UI), `preview` (read-only display), `additional-info`.
-
 ### `common.api.proxy`
 
 Registers a transparent API proxy that forwards authenticated requests to your extension backend.
@@ -314,15 +235,6 @@ Switch `bundleUrl` back to the production CDN URL before deploying.
       "target": "sales.menu.item",
       "name": "Order Dashboard",
       "component": "litium-ext-order-dashboard-panel-dashboard"
-    },
-    {
-      "target": "fieldtype.editor",
-      "fieldTypeId": "OrderPriority",
-      "name": "Order Priority",
-      "component": "litium-ext-order-dashboard-fieldtype-order-priority-editor",
-      "jsonType": "number",
-      "canBeGridColumn": "true",
-      "canSort": "true"
     }
   ],
   "texts": {

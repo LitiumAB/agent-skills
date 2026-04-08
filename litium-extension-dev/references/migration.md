@@ -26,7 +26,7 @@ git checkout -b migrate/module-federation-to-web-component
 Preview every change without writing to disk:
 
 ```bash
-npx @litium/platform-extension-sdk migrate --source ./my-extension --dry-run
+npx @litiumab/platform-extension-sdk migrate --source ./my-extension --dry-run
 ```
 
 Review the output — it lists each file that will be created or modified.
@@ -36,7 +36,7 @@ Review the output — it lists each file that will be created or modified.
 ## Step 3 — Run the Migration
 
 ```bash
-npx @litium/platform-extension-sdk migrate --source ./my-extension
+npx @litiumab/platform-extension-sdk migrate --source ./my-extension
 ```
 
 ### What the CLI Does Automatically
@@ -50,8 +50,8 @@ npx @litium/platform-extension-sdk migrate --source ./my-extension
 | Replaces host navigation | `Router.navigate(...)` (shared) | `window.litiumExtension.navigate(...)` |
 | Replaces authenticated HTTP | `HttpClient.get/post/...` | native `fetch()` (replace with `adminFetch` for authenticated endpoints) |
 | Updates manifest | `frameworkType: 'angular-module'` | `frameworkType: 'web-component'` |
-| Updates dependencies | `webpack`, `@angular-architects/module-federation` | `vite`, `@litium/platform-extension-sdk` |
-| Configures registry | (may be missing) | `.npmrc` with `@litium:registry=https://packages.litium.com/Npm/` |
+| Updates dependencies | `webpack`, `@angular-architects/module-federation` | `vite`, `@litiumab/platform-extension-sdk` |
+| Configures registry | (may be missing) | `.npmrc` with `@litiumab:registry=https://registry.npmjs.org/` |
 | Documents remaining steps | — | `MIGRATION_REPORT.md` |
 
 ### Before/After Examples

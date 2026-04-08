@@ -56,10 +56,6 @@ Create a new Litium backoffice extension called "product-labels" using React.
 ```
 
 ```
-Add a custom field type called "color-picker" to my extension.
-```
-
-```
 Migrate my existing Angular Module Federation extension to the new Web Component format.
 ```
 

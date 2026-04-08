@@ -10,7 +10,7 @@ import type {
   ExtensionContext,
   NotificationOptions,
   ExtensionEventType,
-} from '@litium/platform-extension-sdk';
+} from '@litiumab/platform-extension-sdk';
 
 declare global {
   interface Window { litiumExtension: LitiumExtensionAPI; }

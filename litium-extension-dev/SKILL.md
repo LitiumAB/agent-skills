@@ -1,11 +1,11 @@
 ---
 name: litium-extension-dev
-description: "Skill for building, maintaining, and deploying Litium backoffice extensions using the @litium/platform-extension-sdk. Use when: (1) scaffolding a new extension project (React, Vue, Angular, or Vanilla). (2) adding panels, custom field types, or settings pages to an existing extension. (3) working with the extension manifest (extension.manifest.json). (4) using the window.litiumExtension bridge API (navigate, fetch, showNotification, getContext, events). (5) implementing sub-path routing with MemoryRouter / createMemoryHistory / MemoryLocationStrategy. (6) building and deploying an IIFE bundle with the Litium Vite plugin. (7) writing unit tests that mock window.litiumExtension. (8) migrating an Angular Module Federation extension to a Web Component. (9) installing, enabling, or managing extensions via the Extension Management API or the Settings > Extensions UI."
+description: "Skill for building, maintaining, and deploying Litium backoffice extensions using the @litiumab/platform-extension-sdk. Use when: (1) scaffolding a new extension project (React, Vue, Angular, or Vanilla). (2) adding panels or settings pages to an existing extension. (3) working with the extension manifest (extension.manifest.json). (4) using the window.litiumExtension bridge API (navigate, fetch, showNotification, getContext, events). (5) implementing sub-path routing with MemoryRouter / createMemoryHistory / MemoryLocationStrategy. (6) building and deploying an IIFE bundle with the Litium Vite plugin. (7) writing unit tests that mock window.litiumExtension. (8) migrating an Angular Module Federation extension to a Web Component. (9) installing, enabling, or managing extensions via the Extension Management API or the Settings > Extensions UI."
 ---
 
 # Litium Extension Developer
 
-Skill for building Litium backoffice UI extensions using `@litium/platform-extension-sdk`. Covers scaffolding, coding, testing, deploying, and migrating extensions for all supported frameworks.
+Skill for building Litium backoffice UI extensions using `@litiumab/platform-extension-sdk`. Covers scaffolding, coding, testing, deploying, and migrating extensions for all supported frameworks.
 
 ## Architecture Overview
 
@@ -54,7 +54,7 @@ Load the relevant reference when working on a task:
 These rules MUST be followed in every extension. Violating them causes runtime failures.
 
 ### Always Use the CLI — Never Create Files Manually
-When scaffolding a new project, adding a panel, adding a settings page, or adding a field type, you **MUST** use the `@litium/platform-extension-sdk` CLI (see [references/cli-commands.md](references/cli-commands.md)). Do **NOT** manually create component files, manifest entries, or index imports for these operations — the CLI handles all three correctly and consistently.
+When scaffolding a new project, adding a panel, or adding a settings page, you **MUST** use the `@litiumab/platform-extension-sdk` CLI (see [references/cli-commands.md](references/cli-commands.md)). Do **NOT** manually create component files, manifest entries, or index imports for these operations — the CLI handles all three correctly and consistently.
 
 Only write code manually _inside_ the generated component files (implementing the UI logic). Never manually scaffold the file structure, manifest entries, or index imports that the CLI would otherwise create.
 
@@ -62,7 +62,6 @@ Only write code manually _inside_ the generated component files (implementing th
 - All tags MUST start with `litium-ext-`
 - Pattern: `litium-ext-{extension-id}` for the main element
 - Panels: `litium-ext-{extension-id}-panel-{slug}`
-- Field types: `litium-ext-{extension-id}-fieldtype-{slug}-editor`
 - Must match regex: `/^litium-ext-[a-z][a-z0-9-]*$/`
 
 ### Guard `customElements.define`
@@ -83,20 +82,20 @@ This creates an infinite loop. Only call `navigate()` in response to user action
 Extensions must NOT call `history.pushState` directly. Use MemoryRouter (React), createMemoryHistory (Vue), or MemoryLocationStrategy (Angular). The host owns the browser history.
 
 ### NPM Registry Configuration
-The `@litium/platform-extension-sdk` package requires the Litium private npm registry. The `.npmrc` file must contain:
+The `@litiumab/platform-extension-sdk` package requires the Litium private npm registry. The `.npmrc` file must contain:
 ```ini
-@litium:registry=https://packages.litium.com/Npm/
+@litiumab:registry=https://registry.npmjs.org/
 ```
 
 ### Use the `admin-fetch` Subpath for `createAdminFetch`
-Always import `createAdminFetch` from `@litium/platform-extension-sdk/admin-fetch`, **not** from the package root. The root entry re-exports CLI helpers (`scaffold`, `migrate`) that import `fs-extra` at the top level. Importing from the root causes Vite to pull `fs-extra` → `graceful-fs` into the browser bundle, producing Node.js compatibility errors at runtime.
+Always import `createAdminFetch` from `@litiumab/platform-extension-sdk/admin-fetch`, **not** from the package root. The root entry re-exports CLI helpers (`scaffold`, `migrate`) that import `fs-extra` at the top level. Importing from the root causes Vite to pull `fs-extra` → `graceful-fs` into the browser bundle, producing Node.js compatibility errors at runtime.
 
 ```typescript
 // ✓ Correct
-import { createAdminFetch } from '@litium/platform-extension-sdk/admin-fetch';
+import { createAdminFetch } from '@litiumab/platform-extension-sdk/admin-fetch';
 
 // ✗ Wrong — pulls fs-extra into the browser bundle
-import { createAdminFetch } from '@litium/platform-extension-sdk';
+import { createAdminFetch } from '@litiumab/platform-extension-sdk';
 ```
 
 ## Quick Workflows
@@ -108,38 +107,23 @@ import { createAdminFetch } from '@litium/platform-extension-sdk';
 
 1. Read [references/cli-commands.md](references/cli-commands.md)
 2. Ask the user which framework they want: `react`, `vue`, `angular`, or `vanilla`
-3. Run: `npx @litium/platform-extension-sdk create <name> --framework <framework>`
+3. Run: `npx @litiumab/platform-extension-sdk create <name> --framework <framework>`
 4. `cd <name> && npm install`
 5. Read [references/framework-patterns.md](references/framework-patterns.md) for the chosen framework
 6. Start dev server: `npm run dev`
 7. Register in Litium via Settings > Extensions (see [references/deployment.md](references/deployment.md))
 
-### Adding a Panel / Field Type / Settings Page
+### Adding a Panel / Settings Page
 
 > **Always use the CLI.** Do not manually create component files, manifest entries, or index imports — the CLI handles all three correctly.
 
 
 1. Read [references/cli-commands.md](references/cli-commands.md)
-2. Run `npx @litium/platform-extension-sdk add` from the extension project root (interactive) or use:
-   - `npx @litium/platform-extension-sdk add panel`
-   - `npx @litium/platform-extension-sdk add field-type`
-   - `npx @litium/platform-extension-sdk add settings-page`
+2. Run `npx @litiumab/platform-extension-sdk add` from the extension project root (interactive) or use:
+   - `npx @litiumab/platform-extension-sdk add panel`
+   - `npx @litiumab/platform-extension-sdk add settings-page`
 3. The CLI generates the component file, updates the manifest, and injects the import
 4. For settings pages: add the route in the framework router (see [references/routing.md](references/routing.md))
-
-### Implementing a Custom Field Type
-
-> **Always scaffold with the CLI first.** Do not manually create the field type component file or manifest entry.
-
-
-1. Read [references/cli-commands.md](references/cli-commands.md) and [references/manifest-reference.md](references/manifest-reference.md)
-2. Run `npx @litium/platform-extension-sdk add field-type`
-3. Implement the editor component following the web component protocol:
-   - Read `value` attribute (host sets it)
-   - Dispatch `"litium-field-change"` custom event with `detail: { value }` on change
-   - Handle `readonly` attribute for view mode
-   - Handle `errors` attribute for validation messages
-4. Use `<litium-field-editor>` wrapper (from `@litium/platform-extension-sdk/ui`) for consistent UX
 
 ### Building and Deploying
 
@@ -152,8 +136,8 @@ import { createAdminFetch } from '@litium/platform-extension-sdk';
 ### Migrating from Module Federation
 
 1. Read [references/migration.md](references/migration.md)
-2. Run: `npx @litium/platform-extension-sdk migrate --source ./my-extension --dry-run` (preview)
-3. Run: `npx @litium/platform-extension-sdk migrate --source ./my-extension` (apply)
+2. Run: `npx @litiumab/platform-extension-sdk migrate --source ./my-extension --dry-run` (preview)
+3. Run: `npx @litiumab/platform-extension-sdk migrate --source ./my-extension` (apply)
 4. Read `MIGRATION_REPORT.md` for manual TODO items
 5. `npm install && npm run build` — fix TypeScript errors
 6. Test all routes and bridge API calls
@@ -174,8 +158,8 @@ import { createAdminFetch } from '@litium/platform-extension-sdk';
 | Back button doesn't work | Using framework router directly instead of bridge API | Call `window.litiumExtension.navigate()` for cross-boundary navigation |
 | Infinite re-renders | Calling `navigate()` inside a `routeChanged` handler | Only call `navigate()` in response to user actions |
 | Hot-reload error: element already defined | Missing `customElements.get()` guard | Wrap `customElements.define()` with the guard pattern |
-| `npm ERR! 404 Not Found` for SDK | Missing `.npmrc` registry config | Add `@litium:registry=https://packages.litium.com/Npm/` to `.npmrc` |
-| Vite bundle error: `fs`, `graceful-fs`, or Node built-ins in browser | `createAdminFetch` imported from package root, pulling `fs-extra` | Change import to `@litium/platform-extension-sdk/admin-fetch` |
+| `npm ERR! 404 Not Found` for SDK | Missing `.npmrc` registry config | Add `@litiumab:registry=https://registry.npmjs.org/` to `.npmrc` |
+| Vite bundle error: `fs`, `graceful-fs`, or Node built-ins in browser | `createAdminFetch` imported from package root, pulling `fs-extra` | Change import to `@litiumab/platform-extension-sdk/admin-fetch` |
 | Extension not in Settings menu | Extension not installed or disabled | Install via Settings > Extensions or POST to API; enable if disabled |
 | Deep links load root page instead | Not reading `sub-path` attribute on first render | Read `getAttribute('sub-path')` in `connectedCallback` |
 | Stale context after channel switch | Caching `getContext()` result forever | Subscribe to `contextChanged` event |

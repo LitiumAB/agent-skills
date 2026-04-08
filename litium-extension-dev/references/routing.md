@@ -86,7 +86,7 @@ const handleViewDetail = (id: string) => {
 ```vue
 <script setup lang="ts">
 import { createRouter, createMemoryHistory } from 'vue-router';
-import { syncRouterFromHost, createNavigate } from '@litium/platform-extension-sdk/vue';
+import { syncRouterFromHost, createNavigate } from '@litiumab/platform-extension-sdk/vue';
 
 const props = defineProps<{ subPath?: string }>();
 
@@ -111,7 +111,7 @@ onUnmounted(() => offRouteChanged?.());
 
 Navigate from page components:
 ```typescript
-import { createNavigate } from '@litium/platform-extension-sdk/vue';
+import { createNavigate } from '@litiumab/platform-extension-sdk/vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();

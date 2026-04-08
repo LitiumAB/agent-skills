@@ -148,7 +148,7 @@ jobs:
           cache: 'npm'
 
       - name: Configure registry
-        run: echo "@litium:registry=https://packages.litium.com/Npm/" >> .npmrc
+        run: echo "@litiumab:registry=https://registry.npmjs.org/" >> .npmrc
 
       - run: npm ci
       - run: npm run build

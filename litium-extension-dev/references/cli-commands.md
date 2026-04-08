@@ -1,6 +1,6 @@
 # CLI Commands
 
-Complete reference for the `@litium/platform-extension-sdk` CLI.
+Complete reference for the `@litiumab/platform-extension-sdk` CLI.
 
 ## Prerequisites
 
@@ -8,12 +8,12 @@ Configure the Litium private npm registry before running any CLI command:
 
 ```ini
 # .npmrc (project root or ~/.npmrc)
-@litium:registry=https://packages.litium.com/Npm/
+@litiumab:registry=https://registry.npmjs.org/
 ```
 
 Verify access:
 ```bash
-npm show @litium/platform-extension-sdk
+npm show @litiumab/platform-extension-sdk
 ```
 
 ---
@@ -21,7 +21,7 @@ npm show @litium/platform-extension-sdk
 ## `create` — Scaffold a New Extension
 
 ```bash
-npx @litium/platform-extension-sdk create <name> --framework <react|vue|angular|vanilla>
+npx @litiumab/platform-extension-sdk create <name> --framework <react|vue|angular|vanilla>
 ```
 
 | Flag | Required | Description |
@@ -57,10 +57,9 @@ npm run dev    # starts Vite dev server
 Run from the extension project root (directory containing both `package.json` and `extension.manifest.json`).
 
 ```bash
-npx @litium/platform-extension-sdk add              # interactive prompt
-npx @litium/platform-extension-sdk add panel        # add an area panel
-npx @litium/platform-extension-sdk add field-type   # add a custom field type
-npx @litium/platform-extension-sdk add settings-page # add a settings page
+npx @litiumab/platform-extension-sdk add              # interactive prompt
+npx @litiumab/platform-extension-sdk add panel        # add an area panel
+npx @litiumab/platform-extension-sdk add settings-page # add a settings page
 ```
 
 ### `add panel`
@@ -88,35 +87,6 @@ Generates a web component panel for one of the five backoffice areas: **Customer
 ```
 
 Custom element tag pattern: `{customElementTag}-panel-{slug}`.
-
-### `add field-type`
-
-Creates a custom field type with a web component editor.
-
-**Prompts:**
-| Prompt | Example |
-|---|---|
-| Display name | `Product Rating` |
-| Field type ID | `ProductRating` |
-| JSON value type | `number` |
-| Can appear as a grid column? | `Yes` |
-
-**What gets generated:**
-- `src/field-types/<slug>/editor.tsx` (or equivalent) — editor web component
-- `extension.manifest.json` — updated with `fieldtype.editor` target
-- `src/index.ts` — import injected automatically
-
-**Generated manifest entry:**
-```json
-{
-  "target": "fieldtype.editor",
-  "fieldTypeId": "ProductRating",
-  "name": "Product Rating",
-  "component": "litium-ext-my-extension-fieldtype-product-rating-editor",
-  "jsonType": "number",
-  "canBeGridColumn": "true"
-}
-```
 
 ### `add settings-page`
 
@@ -175,7 +145,7 @@ During local development, `bundleUrl` in the manifest should point at the dev se
 npm run build
 ```
 
-Produces `dist/extension.js` — a single IIFE bundle. The Litium Vite plugin (`@litium/platform-extension-sdk/vite-plugin`) handles:
+Produces `dist/extension.js` — a single IIFE bundle. The Litium Vite plugin (`@litiumab/platform-extension-sdk/vite-plugin`) handles:
 - Validating `customElementTag` starts with `litium-ext-`
 - Building as a single-file IIFE
 - Generating `dist/extension.manifest.json` with production `bundleUrl`
@@ -185,8 +155,8 @@ Produces `dist/extension.js` — a single IIFE bundle. The Litium Vite plugin (`
 ## `migrate` — Migrate from Module Federation
 
 ```bash
-npx @litium/platform-extension-sdk migrate --source ./my-mf-extension --dry-run  # preview
-npx @litium/platform-extension-sdk migrate --source ./my-mf-extension            # apply
+npx @litiumab/platform-extension-sdk migrate --source ./my-mf-extension --dry-run  # preview
+npx @litiumab/platform-extension-sdk migrate --source ./my-mf-extension            # apply
 ```
 
 | Flag | Required | Description |

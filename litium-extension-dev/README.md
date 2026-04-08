@@ -1,6 +1,6 @@
 # litium-extension-dev
 
-A skill for building, maintaining, and deploying Litium backoffice extensions using `@litium/platform-extension-sdk`. Covers all four supported frameworks: React, Vue, Angular, and Vanilla JS.
+A skill for building, maintaining, and deploying Litium backoffice extensions using `@litiumab/platform-extension-sdk`. Covers all four supported frameworks: React, Vue, Angular, and Vanilla JS.
 
 ## Install
 
@@ -11,7 +11,7 @@ npx skills add https://github.com/LitiumAB/agent-skills --skill litium-extension
 ## What it does
 
 - Scaffolds new extension projects with the `create` CLI command
-- Adds panels, custom field types, and settings pages with the `add` CLI command
+- Adds panels and settings pages with the `add` CLI command
 - Explains the `extension.manifest.json` deployment descriptor
 - Covers the `window.litiumExtension` bridge API (navigate, fetch, notifications, events)
 - Provides framework-specific patterns for React, Vue, Angular, and Vanilla JS
