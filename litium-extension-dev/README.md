@@ -13,7 +13,7 @@ npx skills add https://github.com/LitiumAB/agent-skills --skill litium-extension
 - Scaffolds new extension projects with the `create` CLI command
 - Adds panels and settings pages with the `add` CLI command
 - Explains the `extension.manifest.json` deployment descriptor
-- Covers the `window.litiumExtension` bridge API (navigate, fetch, notifications, events)
+- Covers the `window.litiumExtension` bridge API (navigate, notifications, getContext, events)
 - Provides framework-specific patterns for React, Vue, Angular, and Vanilla JS
 - Implements sub-path routing (MemoryRouter, createMemoryHistory, MemoryLocationStrategy)
 - Guides IIFE bundle builds with the Litium Vite plugin

@@ -1,6 +1,6 @@
 ---
 name: litium-extension-dev
-description: "Skill for building, maintaining, and deploying Litium backoffice extensions using the @litiumab/platform-extension-sdk. Use when: (1) scaffolding a new extension project (React, Vue, Angular, or Vanilla). (2) adding panels or settings pages to an existing extension. (3) working with the extension manifest (extension.manifest.json). (4) using the window.litiumExtension bridge API (navigate, fetch, showNotification, getContext, events). (5) implementing sub-path routing with MemoryRouter / createMemoryHistory / MemoryLocationStrategy. (6) building and deploying an IIFE bundle with the Litium Vite plugin. (7) writing unit tests that mock window.litiumExtension. (8) migrating an Angular Module Federation extension to a Web Component. (9) installing, enabling, or managing extensions via the Extension Management API or the Settings > Extensions UI."
+description: "Skill for building, maintaining, and deploying Litium backoffice extensions using the @litiumab/platform-extension-sdk. Use when: (1) scaffolding a new extension project (React, Vue, Angular, or Vanilla). (2) adding panels or settings pages to an existing extension. (3) working with the extension manifest (extension.manifest.json). (4) using the window.litiumExtension bridge API (navigate, showNotification, getContext, events). (5) implementing sub-path routing with MemoryRouter / createMemoryHistory / MemoryLocationStrategy. (6) building and deploying an IIFE bundle with the Litium Vite plugin. (7) writing unit tests that mock window.litiumExtension. (8) migrating an Angular Module Federation extension to a Web Component. (9) installing, enabling, or managing extensions via the Extension Management API or the Settings > Extensions UI."
 ---
 
 # Litium Extension Developer
@@ -27,7 +27,7 @@ Skill for building Litium backoffice UI extensions using `@litiumab/platform-ext
 │  └─────────────────────────────┘                         │
 │              │                                            │
 │              ▼                                            │
-│  navigate() · showNotification() · fetch() · getContext() │
+│  navigate() · showNotification() · getContext() │
 │  on('routeChanged') · on('contextChanged') · off()        │
 └───────────────────────────────────────────────────────────┘
 ```
@@ -153,7 +153,7 @@ import { createAdminFetch } from '@litiumab/platform-extension-sdk';
 
 | Symptom | Root cause | Fix |
 |---------|-----------|-----|
-| 403 Forbidden on API calls | Using native `fetch` instead of `window.litiumExtension.fetch()` | Replace with `window.litiumExtension.fetch()` |
+| 403 Forbidden on admin API calls | Calling `/Litium/api/admin/` without a service-account–aware client | Use `createAdminFetch` from `@litiumab/platform-extension-sdk/admin-fetch` (see [references/framework-patterns.md](references/framework-patterns.md)) |
 | Extension blank / not rendering | Custom element tag mismatch between manifest and code | Ensure tag in `customElements.define()` matches `customElementTag` in manifest |
 | Back button doesn't work | Using framework router directly instead of bridge API | Call `window.litiumExtension.navigate()` for cross-boundary navigation |
 | Infinite re-renders | Calling `navigate()` inside a `routeChanged` handler | Only call `navigate()` in response to user actions |
