@@ -26,10 +26,6 @@ beforeEach(() => {
     navigate: vi.fn(),
     replaceUrl: vi.fn(),
     showNotification: vi.fn(),
-    fetch: vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ items: [] }),
-    }),
     getContext: vi.fn(() => ({
       language: 'en-US',
       channelSystemId: 'test-channel',
@@ -50,10 +46,6 @@ beforeEach(() => {
     navigate: jest.fn(),
     replaceUrl: jest.fn(),
     showNotification: jest.fn(),
-    fetch: jest.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({}),
-    }),
     getContext: jest.fn(() => ({
       language: 'en-US',
       channelSystemId: '',
@@ -166,7 +158,7 @@ Run through before each deployment:
 - [ ] Browser **Forward** button works after navigating back
 - [ ] Page refresh with a deep-link URL renders the correct page (not the root)
 - [ ] `showNotification()` displays banner with correct message and type
-- [ ] `fetch()` calls succeed (check Network tab — should include auth headers)
+- [ ] Admin API calls (e.g. via `createAdminFetch`) succeed (check Network tab for expected requests)
 - [ ] `getContext()` returns correct values after switching channel/language
 - [ ] Unmounting extension (navigating away) logs no memory-leak warnings
 
