@@ -8,6 +8,7 @@ A collection of AI agent skills for building on the Litium platform. Works with 
 |-------|-------------|
 | [litium-developer](./litium-developer/README.md) | Comprehensive development skill for Litium partner developers — covers React Accelerator (Next.js), MVC Accelerator (.NET), back office UI extensions, data modelling, APIs, local setup, and troubleshooting. |
 | [litium-extension-dev](./litium-extension-dev/README.md) | Build, maintain, and deploy Litium backoffice UI extensions using `@litium/platform-extension-sdk`. Covers React, Vue, Angular, and Vanilla JS. |
+| [litium-cloud-cli](./litium-cloud-cli/README.md) | Manage Litium Serverless Cloud environments using the `litium-cloud` CLI. Covers environment creation, app installation (Platform, CDN, Insights, Storefront), artifact deployment, CI/CD with service principals, access control, backups, and environment copying. |
 
 ## Installing a Skill
 
@@ -29,7 +30,13 @@ npx skills add https://github.com/LitiumAB/agent-skills --skill litium-developer
 npx skills add https://github.com/LitiumAB/agent-skills --skill litium-extension-dev
 ```
 
-This copies the skill files into your project's `.agents/skills/litium-extension-dev/` directory and registers it in your `skills-lock.json`.
+### Install `litium-cloud-cli`
+
+```bash
+npx skills add https://github.com/LitiumAB/agent-skills --skill litium-cloud-cli
+```
+
+This copies the skill files into your project's `.agents/skills/litium-cloud-cli/` directory and registers it in your `skills-lock.json`.
 
 ## Sample Usage
 
@@ -57,6 +64,12 @@ Create a new Litium backoffice extension called "product-labels" using React.
 
 ```
 Migrate my existing Angular Module Federation extension to the new Web Component format.
+```
+
+**litium-cloud-cli:**
+
+```
+Create a new staging environment and install Litium Platform.
 ```
 
 The agent will follow the skill's instructions — scaffolding projects, generating code, explaining patterns, and guiding deployments — without any extra configuration.
