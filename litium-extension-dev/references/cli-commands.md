@@ -150,18 +150,4 @@ Produces `dist/extension.js` — a single IIFE bundle. The Litium Vite plugin (`
 - Building as a single-file IIFE
 - Generating `dist/extension.manifest.json` with production `bundleUrl`
 
----
 
-## `migrate` — Migrate from Module Federation
-
-```bash
-npx @litiumab/platform-extension-sdk migrate --source ./my-mf-extension --dry-run  # preview
-npx @litiumab/platform-extension-sdk migrate --source ./my-mf-extension            # apply
-```
-
-| Flag | Required | Description |
-|------|----------|-------------|
-| `--source` | Yes | Path to the existing Module Federation extension |
-| `--dry-run` | No | Preview changes without writing to disk |
-
-See [migration.md](migration.md) for the full migration workflow.

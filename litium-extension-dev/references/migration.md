@@ -1,6 +1,6 @@
 # Migrating from Module Federation
 
-Automated migration from Angular Module Federation extensions to the Web Component approach.
+Manual migration from Angular Module Federation extensions to the Web Component approach.
 
 ## Should You Migrate?
 
@@ -21,38 +21,69 @@ git checkout -b migrate/module-federation-to-web-component
 
 ---
 
-## Step 2 — Dry Run
+## Step 2 — Migrate Manually
 
-Preview every change without writing to disk:
+### Archive the webpack config
+
+Rename (do not delete) the existing webpack config so it is no longer active:
 
 ```bash
-npx @litiumab/platform-extension-sdk migrate --source ./my-extension --dry-run
+mv webpack.config.js webpack.config.mf-backup.js
 ```
 
-Review the output — it lists each file that will be created or modified.
+### Add Vite and the SDK
+
+```bash
+npm remove webpack @angular-architects/module-federation
+npm install --save-dev vite @litiumab/platform-extension-sdk
+```
+
+Create `vite.config.ts`:
+
+```typescript
+import { defineConfig } from 'vite';
+import { litiumExtensionPlugin } from '@litiumab/platform-extension-sdk/vite-plugin';
+
+export default defineConfig({
+  plugins: [litiumExtensionPlugin()],
+  build: { lib: { entry: 'src/index.ts', formats: ['iife'], name: 'extension' } },
+});
+```
+
+### Configure the npm registry
+
+Ensure `.npmrc` contains:
+
+```ini
+@litiumab:registry=https://registry.npmjs.org/
+```
+
+### Convert NgModules to Custom Elements
+
+Replace `ModuleFederationPlugin` exposed modules with `@angular/elements` Custom Element registrations in `src/index.ts`:
+
+```typescript
+import { createApplication } from '@angular/platform-browser';
+import { createCustomElement } from '@angular/elements';
+import { MyComponent } from './app/my.component';
+
+if (!customElements.get('litium-ext-my-extension')) {
+  createApplication().then(app => {
+    const el = createCustomElement(MyComponent, { injector: app.injector });
+    customElements.define('litium-ext-my-extension', el);
+  });
+}
+```
+
+### Replace host service calls
+
+Replace all calls to host-provided Angular services with `window.litiumExtension` equivalents. See the Before/After examples below.
+
+### Update `extension.manifest.json`
+
+Change `frameworkType` from `'angular-module'` to `'web-component'`.
 
 ---
-
-## Step 3 — Run the Migration
-
-```bash
-npx @litiumab/platform-extension-sdk migrate --source ./my-extension
-```
-
-### What the CLI Does Automatically
-
-| Action | Before | After |
-|---|---|---|
-| Archives webpack config | `webpack.config.js` active | `webpack.config.mf-backup.js` (inactive) |
-| Creates Vite config | — | `vite.config.ts` (IIFE build) |
-| Converts NgModules | `ModuleFederationPlugin` exposed modules | `@angular/elements` Custom Element registrations |
-| Replaces host service calls | `NotificationActions.dispatch(...)` | `window.litiumExtension.showNotification(...)` |
-| Replaces host navigation | `Router.navigate(...)` (shared) | `window.litiumExtension.navigate(...)` |
-| Replaces authenticated HTTP | `HttpClient.get/post/...` | native `fetch()` (replace with `adminFetch` for authenticated endpoints) |
-| Updates manifest | `frameworkType: 'angular-module'` | `frameworkType: 'web-component'` |
-| Updates dependencies | `webpack`, `@angular-architects/module-federation` | `vite`, `@litiumab/platform-extension-sdk` |
-| Configures registry | (may be missing) | `.npmrc` with `@litiumab:registry=https://registry.npmjs.org/` |
-| Documents remaining steps | — | `MIGRATION_REPORT.md` |
 
 ### Before/After Examples
 
@@ -89,14 +120,7 @@ const data = await res.json();
 
 ---
 
-## Step 4 — Read `MIGRATION_REPORT.md`
-
-The CLI generates `MIGRATION_REPORT.md` in the extension root. It lists:
-- All automatic changes applied
-- Items marked `TODO` requiring manual attention
-- `litium-ui` component usage that could not be automatically replaced
-
-### Common Manual Items
+## Step 3 — Address Common Manual Items
 
 **TranslateService:**
 The CLI replaces `TranslateService.instant()` with a `// TODO` comment. Options:
@@ -111,7 +135,7 @@ Visual components from `litium-ui` (tables, buttons, form controls) are part of 
 
 ---
 
-## Step 5 — Install and Build
+## Step 4 — Install and Build
 
 ```bash
 cd my-extension
@@ -123,7 +147,7 @@ Fix any TypeScript errors — the most common are unresolved imports referencing
 
 ---
 
-## Step 6 — Test
+## Step 5 — Test
 
 1. Start the dev server: `npm run dev`
 2. Register in **Settings > Extensions** with `bundleUrl: 'http://localhost:3000/src/main.ts'`
@@ -137,7 +161,7 @@ Fix any TypeScript errors — the most common are unresolved imports referencing
 
 | Symptom | Root cause | Fix |
 |---------|-----------|-----|
-| `Cannot find module 'litium-ui'` | Unreplaced `litium-ui` imports | Remove all `litium-ui` imports (flagged in `MIGRATION_REPORT.md`) |
+| `Cannot find module 'litium-ui'` | Unreplaced `litium-ui` imports | Remove all `litium-ui` imports |
 | Blank screen, no console errors | `zone.js` imported after Angular imports | Import `zone.js` **before** any Angular import in `main.ts` |
 | `customElements.define` called twice | Missing guard on hot-reload | Wrap with `if (!customElements.get('litium-ext-...'))` |
 | Shared state unavailable | NgRx store was host-provided | Refactor to use `getContext()` / `adminFetch` or bundle your own state management |

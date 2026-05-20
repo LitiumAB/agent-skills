@@ -40,13 +40,12 @@ Load the relevant reference when working on a task:
 
 | Task | Reference |
 |------|-----------|
-| SDK CLI commands: create, add, dev, migrate | [references/cli-commands.md](references/cli-commands.md) |
+| SDK CLI commands: create, add, dev | [references/cli-commands.md](references/cli-commands.md) |
 | extension.manifest.json fields and targets | [references/manifest-reference.md](references/manifest-reference.md) |
 | window.litiumExtension bridge API | [references/bridge-api.md](references/bridge-api.md) |
 | Framework-specific patterns (React, Vue, Angular, Vanilla) | [references/framework-patterns.md](references/framework-patterns.md) |
 | Sub-path routing (MemoryRouter, etc.) | [references/routing.md](references/routing.md) |
 | Unit testing, mocking, CI | [references/testing.md](references/testing.md) |
-| Migrating from Module Federation | [references/migration.md](references/migration.md) |
 | Installing/deploying extensions | [references/deployment.md](references/deployment.md) |
 
 ## Critical Rules
@@ -88,7 +87,7 @@ The `@litiumab/platform-extension-sdk` package requires the Litium private npm r
 ```
 
 ### Use the `admin-fetch` Subpath for `createAdminFetch`
-Always import `createAdminFetch` from `@litiumab/platform-extension-sdk/admin-fetch`, **not** from the package root. The root entry re-exports CLI helpers (`scaffold`, `migrate`) that import `fs-extra` at the top level. Importing from the root causes Vite to pull `fs-extra` → `graceful-fs` into the browser bundle, producing Node.js compatibility errors at runtime.
+Always import `createAdminFetch` from `@litiumab/platform-extension-sdk/admin-fetch`, **not** from the package root. The root entry re-exports CLI helpers (`scaffold`) that import `fs-extra` at the top level. Importing from the root causes Vite to pull `fs-extra` → `graceful-fs` into the browser bundle, producing Node.js compatibility errors at runtime.
 
 ```typescript
 // ✓ Correct
@@ -132,15 +131,6 @@ import { createAdminFetch } from '@litiumab/platform-extension-sdk';
 3. Upload `extension.js` to a CDN or hosting server (HTTPS required for production)
 4. Update `bundleUrl` in `extension.manifest.json` to the production URL
 5. Install via Settings > Extensions in the backoffice, or POST to the Extension Management API
-
-### Migrating from Module Federation
-
-1. Read [references/migration.md](references/migration.md)
-2. Run: `npx @litiumab/platform-extension-sdk migrate --source ./my-extension --dry-run` (preview)
-3. Run: `npx @litiumab/platform-extension-sdk migrate --source ./my-extension` (apply)
-4. Read `MIGRATION_REPORT.md` for manual TODO items
-5. `npm install && npm run build` — fix TypeScript errors
-6. Test all routes and bridge API calls
 
 ### Writing Unit Tests
 
