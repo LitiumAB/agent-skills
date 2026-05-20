@@ -189,7 +189,7 @@ Registers a transparent API proxy that forwards authenticated requests to your e
 
 ### `common.angular.module` *(deprecated)*
 
-Angular Module Federation bundle. Use `common.web-component` for new extensions. See [migration.md](migration.md) to migrate.
+Angular Module Federation bundle. Use `common.web-component` for new extensions. See [migration.md](migration.md) for the manual migration guide.
 
 ---
 
