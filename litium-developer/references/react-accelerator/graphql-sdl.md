@@ -148,7 +148,7 @@ Features:
 ## API Documentation
 
 Full Storefront API documentation:
-- [Overview](https://litium.mintlify.app/apis/storefront/overview)
-- [Queries](https://litium.mintlify.app/apis/storefront/queries)
-- [Mutations](https://litium.mintlify.app/apis/storefront/mutations)
-- [Types](https://litium.mintlify.app/apis/storefront/types)
+- [Overview](https://docs.litium.dev/apis/storefront/overview)
+- [Queries](https://docs.litium.dev/apis/storefront/queries)
+- [Mutations](https://docs.litium.dev/apis/storefront/mutations)
+- [Types](https://docs.litium.dev/apis/storefront/types)

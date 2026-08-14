@@ -29,7 +29,7 @@ Partners **can** create new payment/shipment apps using the SDKs:
 
 - Custom payment integrations → use `Litium.Apps.Payment` SDK
 - Custom shipment integrations → use `Litium.Apps.Shipment` SDK
-- App Development Guide: https://litium.mintlify.app/apps/development-guide/overview
+- App Development Guide: https://docs.litium.dev/apps/development-guide/overview
 
 ## Correct Extension Patterns
 
@@ -67,7 +67,7 @@ GraphQL Federation is not yet available. The correct pattern is:
 
 - Use the Litium Extensions system (see `references/extensions/core-rules.md`)
 - Use `Litium.Client.UI` npm package from `packages.litium.com/Npm/`
-- See: https://litium.mintlify.app/platform/guides/back-office-ui-extensions
+- See: https://docs.litium.dev/platform/guides/back-office-ui-extensions
 
 ## Public vs. Internal API Namespaces
 
@@ -123,6 +123,5 @@ dotnet nuget add source https://nuget-release.litium.com/nuget/ --name LitiumRel
 
 ## Finding Documentation
 
-1. **Primary**: https://litium.mintlify.app/
-2. **Fallback**: https://docs.litium.com/
-3. **Community forum**: https://forum.litium.com/ (see `references/forum-api.md` for API search)
+1. **Primary**: https://docs.litium.dev/
+2. **Community forum**: https://forum.litium.com/ (see `references/forum-api.md` for API search)

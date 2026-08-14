@@ -169,8 +169,8 @@ Always add `data-testid` for e2e selection:
 
 ## Documentation
 
-- [React Accelerator Docs](https://litium.mintlify.app/accelerators/react/overview)
-- [Storefront API Docs](https://litium.mintlify.app/apis/storefront/overview)
-- [Routing Fundamentals](https://litium.mintlify.app/accelerators/react/routing-fundamentals)
-- [How to create pages](https://litium.mintlify.app/platform/guides/how-to-create-pages-in-react-accelerator)
-- [How to create blocks](https://litium.mintlify.app/platform/guides/how-to-create-blocks-in-react-accelerator)
+- [React Accelerator Docs](https://docs.litium.dev/accelerators/react/overview)
+- [Storefront API Docs](https://docs.litium.dev/apis/storefront/overview)
+- [Routing Fundamentals](https://docs.litium.dev/accelerators/react/routing-fundamentals)
+- [How to create pages](https://docs.litium.dev/platform/guides/how-to-create-pages-in-react-accelerator)
+- [How to create blocks](https://docs.litium.dev/platform/guides/how-to-create-blocks-in-react-accelerator)
