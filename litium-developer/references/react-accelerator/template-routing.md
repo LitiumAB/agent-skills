@@ -288,7 +288,7 @@ If `templateName` is null, `__typename` is used directly for routing.
 ## Official Documentation
 
 For step-by-step tutorials with screenshots:
-- [Routing Fundamentals](https://litium.mintlify.app/accelerators/react/routing-fundamentals) — How URL-to-template mapping works
-- [How to create pages](https://litium.mintlify.app/platform/guides/how-to-create-pages-in-react-accelerator) — Creating page templates tutorial
-- [How to create blocks](https://litium.mintlify.app/platform/guides/how-to-create-blocks-in-react-accelerator) — Creating block templates tutorial
+- [Routing Fundamentals](https://docs.litium.dev/accelerators/react/routing-fundamentals) — How URL-to-template mapping works
+- [How to create pages](https://docs.litium.dev/platform/guides/how-to-create-pages-in-react-accelerator) — Creating page templates tutorial
+- [How to create blocks](https://docs.litium.dev/platform/guides/how-to-create-blocks-in-react-accelerator) — Creating block templates tutorial
 ```

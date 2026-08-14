@@ -50,9 +50,8 @@ Read these files **only** when the user's task requires that area:
 
 ## Documentation search priority
 
-1. **Primary**: https://litium.mintlify.app/ — always try first for official docs.
-2. **Fallback**: https://docs.litium.com/ — use if Mintlify search returns no result.
-3. **Community**: https://forum.litium.com/ — for real-world solutions; load `references/forum-api.md` to search programmatically.
+1. **Primary**: https://docs.litium.dev/ — always try first for official docs.
+2. **Community**: https://forum.litium.com/ — for real-world solutions; load `references/forum-api.md` to search programmatically.
 
 ## Quick-start routing
 

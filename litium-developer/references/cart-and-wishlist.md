@@ -18,7 +18,7 @@ Reference for working with cart, checkout, and wishlists in Litium using the Sto
 
 ## Cart — Storefront API
 
-Docs: https://litium.mintlify.app/platform/guides/how-to-work-with-cart-and-checkout-using-the-storefront-api
+Docs: https://docs.litium.dev/platform/guides/how-to-work-with-cart-and-checkout-using-the-storefront-api
 
 ### Create a Cart
 
@@ -228,7 +228,7 @@ mutation {
 
 ## Cart — React Accelerator
 
-Docs: https://litium.mintlify.app/accelerators/react/working-with-shopping-cart-and-checkout
+Docs: https://docs.litium.dev/accelerators/react/working-with-shopping-cart-and-checkout
 
 ### How It Works
 
@@ -284,7 +284,7 @@ After each step, `checkoutService.client` sends a request to save data. Payment 
 
 ## Wishlists — Storefront API
 
-Docs: https://litium.mintlify.app/platform/guides/how-to-work-with-wishlists-using-the-storefront-api
+Docs: https://docs.litium.dev/platform/guides/how-to-work-with-wishlists-using-the-storefront-api
 
 > **Authentication required.** All wishlist mutations require the `litium_graphql_storefront` authorization policy. Anonymous users cannot create/manage wishlists.
 
@@ -376,14 +376,14 @@ enum WishlistSortOrder { ASCENDING  DESCENDING }
 
 ### React wishlist integration
 
-See: https://litium.mintlify.app/accelerators/react/working-with-wishlists
+See: https://docs.litium.dev/accelerators/react/working-with-wishlists
 
 ---
 
 ## Useful Links
 
-- Cart & Checkout (Storefront API): https://litium.mintlify.app/platform/guides/how-to-work-with-cart-and-checkout-using-the-storefront-api
-- Cart & Checkout (React Accelerator): https://litium.mintlify.app/accelerators/react/working-with-shopping-cart-and-checkout
-- Wishlists (Storefront API): https://litium.mintlify.app/platform/guides/how-to-work-with-wishlists-using-the-storefront-api
-- Wishlists (React Accelerator): https://litium.mintlify.app/accelerators/react/working-with-wishlists
-- Storefront API overview: https://litium.mintlify.app/apis/storefront/overview
+- Cart & Checkout (Storefront API): https://docs.litium.dev/platform/guides/how-to-work-with-cart-and-checkout-using-the-storefront-api
+- Cart & Checkout (React Accelerator): https://docs.litium.dev/accelerators/react/working-with-shopping-cart-and-checkout
+- Wishlists (Storefront API): https://docs.litium.dev/platform/guides/how-to-work-with-wishlists-using-the-storefront-api
+- Wishlists (React Accelerator): https://docs.litium.dev/accelerators/react/working-with-wishlists
+- Storefront API overview: https://docs.litium.dev/apis/storefront/overview

@@ -70,7 +70,7 @@ Used by the React Accelerator and custom storefronts for all customer-facing ope
 - **Endpoint**: `/storefront.graphql`
 - **Schema (SDL)**: `/storefront.graphql?sdl`
 - **Authentication**: Session cookie (cart) or OAuth for user-specific operations
-- **Docs**: https://litium.mintlify.app/apis/storefront/overview
+- **Docs**: https://docs.litium.dev/apis/storefront/overview
 
 Key capabilities: products, pages, cart, checkout, wishlists, search, user account.
 
@@ -115,7 +115,7 @@ open https://localhost:5001/storefront.graphql
 Used to build ERP integrations (e.g., Dynamics 365, SAP, custom ERPs) that sync orders, customers, products, and inventory.
 
 - **OpenAPI spec**: `assets/litium-connect-erp-openapi.json`
-- **Docs**: https://litium.mintlify.app/apps/erp-connect/overview
+- **Docs**: https://docs.litium.dev/apps/erp-connect/overview
 - **SDK**: `Litium.Connect.Erp.Sdk` NuGet package
 
 The SDK provides event-based hooks and services for order export, customer sync, product import, and inventory updates.
@@ -127,7 +127,7 @@ The SDK provides event-based hooks and services for order export, customer sync,
 Used by custom payment app implementations to receive payment callbacks and process payment events.
 
 - **OpenAPI spec**: `assets/litium-connect-payment-openapi.json`
-- **Docs**: https://litium.mintlify.app/apps/development-guide/overview
+- **Docs**: https://docs.litium.dev/apps/development-guide/overview
 - **SDK**: `Litium.Apps.Payment` NuGet package
 
 Use this when building a custom payment provider. Use the SDK to implement `IPaymentProvider` and handle callbacks.
@@ -139,7 +139,7 @@ Use this when building a custom payment provider. Use the SDK to implement `IPay
 Used by custom shipment app implementations to process shipping events and callbacks.
 
 - **OpenAPI spec**: `assets/litium-connect-shipment-openapi.json`
-- **Docs**: https://litium.mintlify.app/apps/development-guide/overview
+- **Docs**: https://docs.litium.dev/apps/development-guide/overview
 - **SDK**: `Litium.Apps.Shipment` NuGet package
 
 ---
@@ -149,7 +149,7 @@ Used by custom shipment app implementations to process shipping events and callb
 Used to manage installed Litium Extensions (install, uninstall, list).
 
 - **OpenAPI spec**: `assets/litium-extension-management-openapi.json`
-- **Docs**: https://litium.mintlify.app/platform/guides/back-office-ui-extensions
+- **Docs**: https://docs.litium.dev/platform/guides/back-office-ui-extensions
 
 ---
 
@@ -176,8 +176,8 @@ To make API calls based on a spec:
 
 ## Useful Links
 
-- Admin Web API guide: https://litium.mintlify.app/apis/admin/overview
-- Storefront API guide: https://litium.mintlify.app/apis/storefront/overview
-- ERP Connect: https://litium.mintlify.app/apps/erp-connect/overview
-- App Development (Payment/Shipment): https://litium.mintlify.app/apps/development-guide/overview
-- Back Office extensions: https://litium.mintlify.app/platform/guides/back-office-ui-extensions
+- Admin Web API guide: https://docs.litium.dev/apis/admin/overview
+- Storefront API guide: https://docs.litium.dev/apis/storefront/overview
+- ERP Connect: https://docs.litium.dev/apps/erp-connect/overview
+- App Development (Payment/Shipment): https://docs.litium.dev/apps/development-guide/overview
+- Back Office extensions: https://docs.litium.dev/platform/guides/back-office-ui-extensions
