@@ -115,7 +115,7 @@ open https://localhost:5001/storefront.graphql
 Used to build ERP integrations (e.g., Dynamics 365, SAP, custom ERPs) that sync orders, customers, products, and inventory.
 
 - **OpenAPI spec**: `assets/litium-connect-erp-openapi.json`
-- **Docs**: https://docs.litium.dev/apps/erp-connect/overview
+- **Docs**: https://docs.litium.dev/apis/connect-apis/domain-areas/erp-domain/erp-app-sdk/overview
 - **SDK**: `Litium.Connect.Erp.Sdk` NuGet package
 
 The SDK provides event-based hooks and services for order export, customer sync, product import, and inventory updates.
@@ -127,7 +127,7 @@ The SDK provides event-based hooks and services for order export, customer sync,
 Used by custom payment app implementations to receive payment callbacks and process payment events.
 
 - **OpenAPI spec**: `assets/litium-connect-payment-openapi.json`
-- **Docs**: https://docs.litium.dev/apps/development-guide/overview
+- **Docs**: https://docs.litium.dev/apis/connect-apis/domain-areas/payments-domain/overview
 - **SDK**: `Litium.Apps.Payment` NuGet package
 
 Use this when building a custom payment provider. Use the SDK to implement `IPaymentProvider` and handle callbacks.
@@ -139,7 +139,7 @@ Use this when building a custom payment provider. Use the SDK to implement `IPay
 Used by custom shipment app implementations to process shipping events and callbacks.
 
 - **OpenAPI spec**: `assets/litium-connect-shipment-openapi.json`
-- **Docs**: https://docs.litium.dev/apps/development-guide/overview
+- **Docs**: https://docs.litium.dev/apis/connect-apis/domain-areas/shipments-domain/overview
 - **SDK**: `Litium.Apps.Shipment` NuGet package
 
 ---
@@ -176,8 +176,8 @@ To make API calls based on a spec:
 
 ## Useful Links
 
-- Admin Web API guide: https://docs.litium.dev/apis/admin/overview
+- Admin Web API guide: https://docs.litium.dev/apis/admin-web-api/overview
 - Storefront API guide: https://docs.litium.dev/apis/storefront/overview
-- ERP Connect: https://docs.litium.dev/apps/erp-connect/overview
-- App Development (Payment/Shipment): https://docs.litium.dev/apps/development-guide/overview
+- ERP Connect: https://docs.litium.dev/apis/connect-apis/domain-areas/erp-domain/erp-app-sdk/overview
+- App Development (Payment/Shipment): https://docs.litium.dev/apis/connect-apis/overview
 - Back Office extensions: https://docs.litium.dev/platform/guides/back-office-ui-extensions
