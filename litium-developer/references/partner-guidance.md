@@ -29,7 +29,7 @@ Partners **can** create new payment/shipment apps using the SDKs:
 
 - Custom payment integrations → use `Litium.Apps.Payment` SDK
 - Custom shipment integrations → use `Litium.Apps.Shipment` SDK
-- App Development Guide: https://docs.litium.dev/apps/development-guide/overview
+- App Development Guide: https://docs.litium.dev/add-ons/get-started/app-development-guide/overview
 
 ## Correct Extension Patterns
 
