@@ -2,7 +2,7 @@
 
 Complete guide for setting up a Litium MVC Accelerator local environment.
 
-> **Version note:** This guide uses Litium 8.28.0 as an example. Replace version numbers with the latest available version from the [Litium NuGet feed](https://nuget-release.litium.com/nuget/). Check with `dotnet new search litium --nuget-source https://nuget-release.litium.com/nuget/`.
+> **Version note:** This guide uses Litium 8.28.0 as an example. Replace version numbers with the latest available version from the [Litium NuGet feed](https://nuget.litium.com/nuget/). Check with `dotnet new search litium --nuget-source https://nuget.litium.com/nuget/`.
 
 ## Purpose
 
@@ -31,13 +31,13 @@ Official docs: https://docs.litium.dev/accelerators/mvc/install-litium-accelerat
 ### Step 1: Add Litium NuGet Source
 
 ```powershell
-dotnet nuget add source https://nuget-release.litium.com/nuget/ --name LitiumRelease
+dotnet nuget add source https://nuget.litium.com/nuget/ --name LitiumRelease
 ```
 
 ### Step 2: Install Template
 
 ```powershell
-dotnet new install Litium.Accelerator.Templates::8.28.0 --nuget-source https://nuget-release.litium.com/nuget/
+dotnet new install Litium.Accelerator.Templates::8.28.0 --nuget-source https://nuget.litium.com/nuget/
 ```
 
 ### Step 3: Create Project

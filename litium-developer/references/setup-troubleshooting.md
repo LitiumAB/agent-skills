@@ -11,7 +11,7 @@ Common issues when setting up Litium installations locally.
 dotnet nuget list source
 
 # Add Litium release feed if missing
-dotnet nuget add source https://nuget-release.litium.com/nuget/ --name LitiumRelease
+dotnet nuget add source https://nuget.litium.com/nuget/ --name LitiumRelease
 ```
 
 ### Template already installed
