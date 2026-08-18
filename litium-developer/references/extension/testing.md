@@ -158,7 +158,7 @@ Run through before each deployment:
 - [ ] Browser **Forward** button works after navigating back
 - [ ] Page refresh with a deep-link URL renders the correct page (not the root)
 - [ ] `showNotification()` displays banner with correct message and type
-- [ ] Admin API calls (e.g. via `createAdminFetch`) succeed (check Network tab for expected requests)
+- [ ] Admin API calls using an OAuth bearer token succeed (check Network tab for expected requests)
 - [ ] `getContext()` returns correct values after switching channel/language
 - [ ] Unmounting extension (navigating away) logs no memory-leak warnings
 

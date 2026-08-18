@@ -106,14 +106,13 @@ export function PageA() {
 
 ```tsx
 import type { LitiumExtensionAPI } from '@litiumab/platform-extension-sdk';
-import { adminFetch } from '../lib/adminFetch.js';
 declare global { interface Window { litiumExtension: LitiumExtensionAPI; } }
 
 export function PageA() {
   const context = window.litiumExtension.getContext();
 
   const handleSave = async () => {
-    const res = await adminFetch('/Litium/app/api/my-endpoint', {
+    const res = await fetch('/Litium/app/api/my-endpoint', {
       method: 'POST',
       body: JSON.stringify({ foo: 'bar' }),
     });
@@ -413,7 +412,7 @@ export class PageAComponent {
   }
 
   async save() {
-    const res = await adminFetch('/Litium/api/my-endpoint', {
+    const res = await fetch('/Litium/api/my-endpoint', {
       method: 'POST',
     });
     if (res.ok) {
@@ -508,22 +507,16 @@ if (!customElements.get('litium-ext-my-extension')) {
 
 ---
 
-## Admin Web API (`createAdminFetch`)
+## Admin Web API
 
-Endpoints under `/Litium/api/admin/` require a service account token. Use `createAdminFetch` from the **`/admin-fetch` subpath** — never from the package root, which would pull `fs-extra` into the browser bundle.
+Endpoints under `/Litium/api/admin/` require an OAuth 2.0 bearer token. Read the service account credentials from the Vite environment variables, request a token from `/Litium/OAuth/Token`, then include the token in the Admin Web API request.
 
-### Setup (`src/lib/adminFetch.ts`)
-
-The scaffold generates this file automatically. If adding manually:
+### Environment variables
 
 ```typescript
 /// <reference types="vite/client" />
-import { createAdminFetch } from '@litiumab/platform-extension-sdk/admin-fetch';
-
-export const adminFetch = createAdminFetch(
-  import.meta.env.VITE_LITIUM_CLIENT_ID,
-  import.meta.env.VITE_LITIUM_CLIENT_SECRET,
-);
+const clientId = import.meta.env.VITE_LITIUM_CLIENT_ID;
+const clientSecret = import.meta.env.VITE_LITIUM_CLIENT_SECRET;
 ```
 
 Add to `.env`:
@@ -533,17 +526,37 @@ VITE_LITIUM_CLIENT_ID=your-service-account-id
 VITE_LITIUM_CLIENT_SECRET=your-service-account-secret
 ```
 
-### Usage in any framework
+### Token and Admin Web API request
 
 ```typescript
-import { adminFetch } from '../lib/adminFetch.js';
+async function getAdminAccessToken(): Promise<string> {
+  const tokenResponse = await fetch('/Litium/OAuth/Token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: clientId,
+      client_secret: clientSecret,
+    }),
+  });
 
-const res = await adminFetch('/Litium/api/admin/sales/salesOrders/search', {
+  if (!tokenResponse.ok) {
+    throw new Error(`Token request failed: ${tokenResponse.status}`);
+  }
+
+  const token = await tokenResponse.json() as { access_token: string };
+  return token.access_token;
+}
+
+const accessToken = await getAdminAccessToken();
+const res = await fetch('/Litium/api/admin/sales/salesOrders/search', {
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+    'Content-Type': 'application/json',
+  },
   body: JSON.stringify({ take: 20, skip: 0 }),
 });
+
 const data = await res.json();
 ```
-
-`adminFetch` acquires an OAuth2 token via the `client_credentials` grant on first call, caches it, and refreshes automatically before expiry.
