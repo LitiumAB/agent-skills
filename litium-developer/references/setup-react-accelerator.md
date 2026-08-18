@@ -2,7 +2,7 @@
 
 Complete guide for setting up the Litium React Accelerator (Next.js storefront).
 
-> **Version note:** This guide uses React Accelerator 1.13.0 as an example. Replace version numbers with the latest available version. Check with `dotnet new search litium --nuget-source https://nuget-release.litium.com/nuget/`.
+> **Version note:** This guide uses React Accelerator 1.13.0 as an example. Replace version numbers with the latest available version. Check with `dotnet new search litium --nuget-source https://nuget.litium.com/nuget/`.
 
 ## Purpose
 
@@ -32,13 +32,13 @@ Official docs: https://docs.litium.dev/accelerators/react/get-started
 ### Step 1: Add Litium NuGet Source (if not already done)
 
 ```powershell
-dotnet nuget add source https://nuget-release.litium.com/nuget/ --name LitiumRelease
+dotnet nuget add source https://nuget.litium.com/nuget/ --name LitiumRelease
 ```
 
 ### Step 2: Install Template
 
 ```powershell
-dotnet new install Litium.Accelerator.React.Templates::1.13.0 --nuget-source https://nuget-release.litium.com/nuget/
+dotnet new install Litium.Accelerator.React.Templates::1.13.0 --nuget-source https://nuget.litium.com/nuget/
 ```
 
 ### Step 3: Create Project

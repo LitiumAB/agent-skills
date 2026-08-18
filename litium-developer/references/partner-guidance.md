@@ -102,13 +102,12 @@ After providing an internal API solution, always mention if there is a public AP
 ## NuGet Packages
 
 Public Litium NuGet feeds:
-- **Release**: `https://nuget-release.litium.com/nuget/`
 - **Production**: `https://nuget.litium.com/nuget/`
 - **npm packages**: `https://packages.litium.com/Npm/`
 
 Add the release feed:
 ```powershell
-dotnet nuget add source https://nuget-release.litium.com/nuget/ --name LitiumRelease
+dotnet nuget add source https://nuget.litium.com/nuget/ --name LitiumRelease
 ```
 
 ## Elasticsearch — MVC vs. React Accelerator (Separate Indices)
