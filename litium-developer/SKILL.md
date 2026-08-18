@@ -43,7 +43,7 @@ Read these files **only** when the user's task requires that area:
 | `references/extension/cli-commands.md` | scaffold new extension, `create` command, `add` command, `dev` command, `@litiumab/platform-extension-sdk` CLI |
 | `references/extension/manifest-reference.md` | `extension.manifest.json` fields, targets, `common.web-component`, `admin.menu-item`, `admin.settings-page`, `api.proxy`, `customElementTag`, `bundleUrl` |
 | `references/extension/bridge-api.md` | `window.litiumExtension`, `navigate()`, `replaceUrl()`, `showNotification()`, `getContext()`, `on()`, `off()`, `routeChanged`, `contextChanged` |
-| `references/extension/framework-patterns.md` | Custom Element entry point, React extension, Vue extension, Angular extension, Vanilla extension, panel component, `adminFetch`, `createAdminFetch` |
+| `references/extension/framework-patterns.md` | Custom Element entry point, React extension, Vue extension, Angular extension, Vanilla extension, panel component, Admin Web API requests |
 | `references/extension/routing.md` | sub-path routing, MemoryRouter, `createMemoryHistory`, MemoryLocationStrategy, `sub-path` attribute, `routeChanged`, deep link |
 | `references/extension/testing.md` | unit testing extensions, mock `window.litiumExtension`, Vitest, Jest, `@testing-library/react`, `@vue/test-utils` |
 | `references/extension/deployment.md` | install extension, enable extension, Extension Management API, `bundleUrl`, HTTPS, CDN, Settings > Extensions, IIFE bundle |
@@ -130,15 +130,6 @@ Extensions must NOT call `history.pushState` directly. Use `MemoryRouter` (React
 @litiumab:registry=https://registry.npmjs.org/
 ```
 
-### Use the `admin-fetch` Subpath for `createAdminFetch`
-```typescript
-// ✓ Correct
-import { createAdminFetch } from '@litiumab/platform-extension-sdk/admin-fetch';
-
-// ✗ Wrong — pulls fs-extra into the browser bundle
-import { createAdminFetch } from '@litiumab/platform-extension-sdk';
-```
-
 ## Extension Quick Workflows
 
 ### Creating a New Extension
@@ -167,13 +158,12 @@ import { createAdminFetch } from '@litiumab/platform-extension-sdk';
 
 | Symptom | Root cause | Fix |
 |---------|-----------|-----|
-| 403 Forbidden on admin API calls | Calling `/Litium/api/admin/` without a service-account–aware client | Use `createAdminFetch` from `@litiumab/platform-extension-sdk/admin-fetch` |
+| 403 Forbidden on admin API calls | Calling `/Litium/api/admin/` without a valid bearer token | Request an OAuth token with `VITE_LITIUM_CLIENT_ID` and `VITE_LITIUM_CLIENT_SECRET`, then send it in the `Authorization` header |
 | Extension blank / not rendering | Custom element tag mismatch between manifest and code | Ensure tag in `customElements.define()` matches `customElementTag` in manifest |
 | Back button doesn't work | Using framework router instead of bridge API | Call `window.litiumExtension.navigate()` for cross-boundary navigation |
 | Infinite re-renders | Calling `navigate()` inside a `routeChanged` handler | Only call `navigate()` in response to user actions |
 | Hot-reload error: element already defined | Missing `customElements.get()` guard | Wrap `customElements.define()` with the guard pattern |
 | `npm ERR! 404 Not Found` for SDK | Missing `.npmrc` registry config | Add `@litiumab:registry=https://registry.npmjs.org/` to `.npmrc` |
-| Vite bundle error: Node built-ins in browser | `createAdminFetch` imported from package root | Change import to `@litiumab/platform-extension-sdk/admin-fetch` |
 | Deep links load root page instead | Not reading `sub-path` attribute on first render | Read `getAttribute('sub-path')` in `connectedCallback` |
 | Stale context after channel switch | Caching `getContext()` result forever | Subscribe to `contextChanged` event |
 | Memory leak warnings on unmount | Not unsubscribing from events | Call the unsubscribe function in `disconnectedCallback` / cleanup hook |

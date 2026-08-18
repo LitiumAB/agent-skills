@@ -50,16 +50,16 @@ Invoke-RestMethod -Method Post `
 
 ### Authentication
 
-Use OAuth 2.0 with the `/litium/oauth/token` endpoint:
+Use OAuth 2.0 with the `/Litium/OAuth/Token` endpoint:
 
 ```http
-POST /litium/oauth/token
+POST /Litium/OAuth/Token
 Content-Type: application/x-www-form-urlencoded
 
-grant_type=client_credentials&client_id=<id>&client_secret=<secret>&scope=litium.api
+grant_type=client_credentials&client_id=<id>&client_secret=<secret>
 ```
 
-> **Note:** The `scope=litium.api` parameter is typically required. Client credentials are configured in Litium Back Office under Settings → System → OAuth.
+> **Note:** Client credentials are configured in Litium Back Office under Settings → System settings → Service accounts.
 
 ---
 
