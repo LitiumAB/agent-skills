@@ -54,7 +54,7 @@ create or connect those. Everything else in the diagram is an app you install fr
 |---|------|----------|---------------------------|----------|
 | 1 | Environment | — | `new-environment` | Everything is scoped to it |
 | 2 | Litium CDN | `litium-cdn` | `install-cdn-insights` | Apps installed afterwards get their system domain configured automatically |
-| 3 | Litium Insights | `litium-insights` | `install-cdn-insights` | Installed before the platform so the first startup logs are already collected |
+| 3 | Litium Insights | `litium-insights` | `install-cdn-insights` | Installed before the platform so the first startup logs are already collected (the docs get-started guide installs it after the platform; both orders work) |
 | 4 | Litium platform | `litium-platform` | `install-litium-platform`, `restore` | Restores the legacy database and media; every dependent app needs it |
 | 5 | Storefront | `litium-nextjs-web` | `deploy-nextjs` | Connects to the platform automatically once both exist |
 | 6 | Payment and delivery apps | one per provider | `app-lifecycle` | Legacy registrations must be force-deleted from the restored database first |
