@@ -125,7 +125,7 @@ After: a configuration key (`LITIUM__ACCELERATOR__ERP__INBOXPATH=/app_storage/in
 
 ### Culture in background work
 
-Web requests get their culture from the channel, as before. Scheduled jobs, Connect handlers and other background work do not: the operating system culture is not set in Serverless Cloud, so `decimal.Parse("1,5")`, `date.ToString("d")` and currency formatting silently produce different results than on the Swedish or English Windows server. Set the culture at the start of every job that formats or parses, either from the website or channel the job works for, or a fixed one:
+Web requests get their culture from the channel, as before. Scheduled jobs, Connect handlers and other background work do not: the operating system culture is not set in Serverless Cloud, so `decimal.Parse("1,5")`, `date.ToString("d")` and currency formatting silently produce different results than on the Swedish or English Windows server. A job that looks up a channel, website or language from `CultureInfo.CurrentCulture.Name`, or reads anything from a web request (`HttpContext`, the request model), gets null instead and fails with a `NullReferenceException` that never happened on Windows. Set the culture at the start of every job that formats or parses, either from the website or channel the job works for, or a fixed one:
 
 Before:
 

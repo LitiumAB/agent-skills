@@ -280,5 +280,5 @@ Filled in live on the day. Actual times, job ids, artifact ids, deviations, who 
 - sFTP: host, user and folders per external system, and the IP allow list (passwords are read with the CLI).
 - Webhook inventory: the table under *Cutover plan*, kept current.
 - Measured durations: the tables under *Rehearsal record* and *Cutover log*.
-- Runbooks the customer needs: backups and restore, deploying a release, adding a domain, reading logs in
-  Litium Insights, opening a support case.
+- Runbooks the customer needs: backups and restore, deploying a release (database backup first, previous artifact
+  id noted for rollback), adding a domain, reading logs in Litium Insights, opening a support case.

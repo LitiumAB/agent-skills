@@ -1,6 +1,6 @@
 ---
 name: litium-cloud-migration
-description: "Guide Litium partner developers through migrating a customer's Litium 8 site from Litium legacy cloud (Windows/IIS, deployed with Web Deploy or SFTP) to Litium Serverless Cloud: assess the solution and inventory the repo, make the code Linux-ready, build a test environment from legacy backups, replace the Web Deploy pipeline, rehearse with production data, run the cutover, and decommission the legacy site. Tracks progress in a MIGRATION.md file in the customer repo. Triggers: migrate to serverless, legacy cloud, move site, cutover, go-live, WebDeploy, msdeploy, publishsettings, IdentityServer folder, CurrentCulture in scheduled jobs, sql_backup_file, storage_backup_file, Linux-ready, Windows-only package, Fastly or LCC switch, old payment webhook URLs, MIGRATION.md. Delegates all litium-cloud CLI syntax to the litium-cloud-cli skill."
+description: "Guide Litium partner developers through migrating a customer's Litium 8 site from Litium legacy cloud (Windows/IIS, Web Deploy or SFTP) to Litium Serverless Cloud: assess and inventory the solution, make the code Linux-ready, build a test environment from legacy backups, replace the Web Deploy pipeline, rehearse with production data, run the cutover, and decommission the legacy site. Tracks progress in MIGRATION.md in the customer repo. Triggers: migrate to serverless, legacy cloud, move site, cutover, go-live runbook, WebDeploy, msdeploy, publishsettings, appsettings.Staging.json or config transforms to serverless, IdentityServer folder, cannot uninstall legacy Klarna or payment app after restore, job NullReferenceException around culture that worked on Windows, sql_backup_file, storage_backup_file, Linux-ready, Windows-only package, Fastly or LCC switch, old payment webhook URLs, Portal instead of CLI, MIGRATION.md. Delegates all litium-cloud CLI syntax to the litium-cloud-cli skill."
 ---
 
 # Litium Cloud Migration
@@ -27,6 +27,8 @@ For these areas, delegate entirely to the named skill — do not duplicate its c
 | General Litium development: accelerator code, data model, APIs, upgrading Litium 7 to 8, back office | `litium-developer` |
 
 When a step needs a command, say **what** to run and **why**, name the `litium-cloud-cli` recipe, and check `litium-cloud <command> --help` before claiming any flag exists.
+
+The Litium Cloud Portal (https://portal.litium.cloud, same Litium Account sign-in as the CLI) covers every migration step **except uploading artifacts** and running the pipeline: environments, app installs and actions, secrets, access control and service principals can all be done there. The `dotnet`, `sqlbackup` and `storage` uploads always need `litium-cloud artifact create`, so the backup uploads on T-1 and T-0 and the deployment pipeline stay on the CLI. After a change made in the Portal, export the manifest with `app show -o manifest` and commit it.
 
 ## Phases
 
@@ -87,7 +89,7 @@ Fetch a page as Markdown by appending `.md` to its URL (for example `https://doc
 ## How to use documentation
 
 1. **Live tool output for volatile facts.** Versions, flags, artifact type ids, app type ids and manifest properties change. Use `litium-cloud <command> --help`, `litium-cloud marketplace manifest`, `litium-cloud marketplace list --details` and `litium-cloud artifact artifact-type list` instead of memory. Do not rely on anything the CLI help marks as power-user only.
-2. **Bundled references for process knowledge.** The files under `references/` are the migration procedure; load the one for the current phase.
+2. **Bundled references for process knowledge.** The files under `references/` are the migration procedure; load the one for the current phase. When an answer comes from a reference, name the file and section (for example `references/code-changes.md`, section 5) so the user can read the full text.
 3. **Live docs for detail.** Fetch the page from the Docs index (with `.md` appended) when a reference points to it or when the user asks about something the references do not cover. Some pages are still being written; when a page is a stub, fall back to the bundled reference and say so.
 4. **Litium docs MCP server, if configured.** Prefer its search tool over fetching URLs. It is not required.
 
@@ -96,7 +98,9 @@ Fetch a page as Markdown by appending `.md` to its URL (for example `https://doc
 - **Destructive actions need an explicit yes.** Never run `app delete`, `environment delete`, `artifact delete`, the `uninstall-app` action, a write `execute-database-script`, or `apply` against a **production** environment without first showing the exact command and getting an explicit yes from the user for that command.
 - **Never add `--auto-yes`** unless the user is writing a pipeline and asks for it.
 - **Before any production action** run `litium-cloud context show` and `litium-cloud environment show`, and state the target subscription, environment and its production flag in your reply.
+- **Back up before a production deploy.** Before `app deploy` or `apply` against a production environment, run the `backup-database` action (`litium-cloud-cli` recipe `backups`), wait for the `sqlbackup` artifact to be **Ready**, and note the currently deployed artifact id from `app show` as the rollback target. A newer Litium version in the artifact upgrades the database on deploy, and redeploying the old artifact does not undo that.
 - **Never put secrets** in manifests, in `MIGRATION.md`, in pipeline YAML or in chat. Secrets go into environment or subscription secrets and are referenced with `secretRef`.
+- **Never set `ASPNETCORE_ENVIRONMENT` to `Development`**, and never use it to load an extra `appsettings.<Env>.json`: only `appsettings.json` and `appsettings.production.json` are read. Everything else becomes manifest configurations and secrets.
 - **Never author a manifest from memory.** Start from `litium-cloud marketplace manifest` (or `app show -o manifest` for an installed app) and edit.
 - **Never set `ASPNETCORE_ENVIRONMENT=Development`**; the app does not start.
 - **Never copy the legacy `IdentityServer` folder** into a storage artifact. It holds the legacy app registrations and can break the live legacy site when the apps are force-deleted in the new one.
@@ -131,11 +135,13 @@ Fetch a page as Markdown by appending `.md` to its URL (for example `https://doc
 | Symptom | Root cause | Fix |
 |---------|-----------|-----|
 | Build or startup fails on Linux with a `PlatformNotSupportedException` or missing native library | A Windows-only package (`System.Drawing.Common`, `Microsoft.Web.Administration`, `System.DirectoryServices*`, `System.Management`, ...) is still referenced | Replace it (see `references/code-changes.md`) and rebuild the artifact |
-| Wrong number, date or currency formats in scheduled job output | The OS culture is not set in Serverless Cloud; only web requests get the channel culture | Set `CultureInfo.CurrentCulture` explicitly at the start of every job |
-| A legacy payment app cannot be uninstalled, or the legacy site's payment app breaks | The `IdentityServer` folder was copied into the storage artifact | Rebuild the storage artifact without it; never copy that folder |
+| Wrong number, date or currency formats in scheduled job output, or a `NullReferenceException` in a job that worked on Windows (a channel, website or format looked up from `CultureInfo.CurrentCulture` comes back null) | The OS culture is not set in Serverless Cloud; only web requests get the channel culture | Set `CultureInfo.CurrentCulture` and `CurrentUICulture` explicitly at the start of every job, from the channel or website it works for or a fixed culture (`references/code-changes.md`, section 5); read the stack trace in Litium Insights (Analytics > Dashboard > App Logs) |
+| A legacy payment or delivery app cannot be uninstalled in the back office after a restore ("the app is still installed") | The restored database still holds the legacy registration; the app does not exist in this environment | Force-delete it in the back office (Uninstall, then the force option) or with the `uninstall-app` action with `force=true`, after checking that `IdentityServer` was excluded from the storage artifact; if it was included, rebuild the storage artifact without it and reinstall the platform app first (`references/troubleshooting.md`) |
+| The still-live legacy site's payment app breaks after a force-delete | The `IdentityServer` folder was copied into the storage artifact | Rebuild the storage artifact without it and reinstall; never copy that folder |
 | A new `sql_backup_file` or `storage_backup_file` in the manifest has no effect | The properties are create-only; `apply` ignores them on an existing app | Uninstall the Litium platform app (and its dependents) and reinstall from the manifest (`litium-cloud-cli` recipe `restore`) |
 | Litium < 8.8 app never becomes ready after install or deploy | No built-in health endpoints; the probes never succeed | Set the probe paths to `"none"` or implement the endpoints, see `references/code-changes.md` |
-| Values from `appsettings.Staging.json` (or any other environment file) are missing | Only `appsettings.json` and `appsettings.production.json` are loaded | Move the values to configurations and secrets in the manifest |
+| Values from `appsettings.Staging.json` (or any other environment file) are missing | Only `appsettings.json` and `appsettings.production.json` are loaded | Move the values to manifest configurations (`LITIUM__SECTION__KEY` naming) and environment secrets referenced with `secretRef`; do not set `ASPNETCORE_ENVIRONMENT` to load the file, and never to `Development` |
+| A production deploy has no rollback path | No database backup was taken before `app deploy`, and the database upgrade is one-way | Run the `backup-database` action and note the running artifact id before every production deploy (Hard rules) |
 | `File not found` for a file that is in the artifact | Linux paths are case-sensitive | Match folder and file name case exactly in code and configuration |
 | Payment callbacks for orders placed before go-live return 404 | The old webhook URLs were not mapped in the new Fastly service | Send the old URL list to support before go-live (`references/support-requests.md`) and verify on T-0 |
 | The storage artifact is gone on go-live day | Uploaded too early and never referenced; removed by retention | Upload on T-1, verify **Ready**, note the id; download a copy you must keep |

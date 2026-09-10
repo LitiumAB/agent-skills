@@ -96,15 +96,23 @@ Verify: the file is present in the downloaded artifact and the app finds it.
 
 **Values from `appsettings.Staging.json` (or any other environment file) are missing.**
 Cause: only `appsettings.json` and `appsettings.production.json` are loaded, in every environment.
-Fix: move the values into manifest `configurations` (`ENV__VAR` naming) and secrets referenced with `secretRef`.
+Fix: move the values into manifest `configurations` (`ENV__VAR` naming) and secrets referenced with `secretRef`. Do
+not set `ASPNETCORE_ENVIRONMENT` to make the file load; `Development` stops the app from starting.
 Verify: `litium-cloud app show --app <app-id>` lists the configurations, and the feature behaves in test.
 
-**Wrong number, date or currency formats in a scheduled job's output.**
+**Wrong number, date or currency formats in a scheduled job's output, or a `NullReferenceException` in a job that
+worked on Windows.**
 Cause: the operating system culture is not set in Serverless Cloud. Web requests are unaffected because Litium
-sets the culture from the channel, but background work is not.
-Fix: set `CultureInfo.CurrentCulture` explicitly at the start of every job, before any culture-dependent
-formatting or parsing.
-Verify: run the job once and check its output in Insights, including the exported or imported files.
+sets the culture from the channel, but background work is not. On the legacy Windows server the job inherited the
+server's regional setting, so a channel, website, language or format looked up from `CultureInfo.CurrentCulture.Name`
+resolved; in Serverless Cloud that lookup returns null and the next line throws. Anything read from a web request
+(`HttpContext`, the accelerator's request model) is null in a job as well.
+Fix: read the full stack trace in Litium Insights (**Analytics > Dashboard > App Logs**) to find the frame, then set
+`CultureInfo.CurrentCulture` and `CurrentUICulture` explicitly at the start of the job, from the channel or website it
+works for or a fixed culture, before any culture-dependent lookup, formatting or parsing (`references/code-changes.md`,
+section 5). Turn the silent null into an explicit exception so the next difference is diagnosed in one run.
+Verify: run the job once in the test environment and check its output in Insights, including the exported or imported
+files.
 
 **Integration files are missing after go-live.**
 Cause: the code still reads a legacy disk path, and no File storage folder is mounted.

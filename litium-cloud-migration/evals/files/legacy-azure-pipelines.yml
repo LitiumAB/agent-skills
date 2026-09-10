@@ -1,0 +1,105 @@
+# Legacy build + release pipeline (Web Deploy). Fictional example used by the skill evals.
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: windows-latest
+
+variables:
+  - group: litium-legacy-release
+  - name: buildConfiguration
+    value: Release
+  - name: PublishName
+    value: example-shop
+  - name: PublishServer
+    value: https://web01.example.com:8172/msdeploy.axd
+  - name: Source
+    value: $(Pipeline.Workspace)/LitiumBuildArtifact
+  - name: ExtractedSource
+    value: $(Pipeline.Workspace)/extracted
+
+stages:
+  - stage: Build
+    jobs:
+      - job: Build
+        steps:
+          - task: NuGetAuthenticate@1
+            inputs:
+              nuGetServiceConnections: LitiumNuGet
+
+          - task: Cache@2
+            inputs:
+              key: yarn | "$(Agent.OS)" | Src/yarn.lock
+              path: Src/node_modules
+
+          - pwsh: |
+              yarn install
+              yarn run prod
+            displayName: Client build
+            workingDirectory: Src/Litium.Accelerator.Mvc
+
+          - pwsh: |
+              yarn install
+              yarn run prod
+            displayName: Email client build
+            workingDirectory: Src/Litium.Accelerator.Email
+
+          - task: DotNetCoreCLI@2
+            displayName: Publish solution
+            inputs:
+              command: publish
+              publishWebProjects: false
+              projects: "*.sln"
+              arguments: -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/publish
+              zipAfterPublish: true
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathToPublish: $(Build.ArtifactStagingDirectory)/publish
+              artifactName: LitiumBuildArtifact
+
+  - stage: Release
+    dependsOn: Build
+    jobs:
+      - deployment: Deploy
+        environment: legacy-production
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: ExtractFiles@1
+                  inputs:
+                    archiveFilePatterns: $(Source)/**/*.zip
+                    destinationFolder: $(ExtractedSource)
+
+                - task: DownloadSecureFile@1
+                  name: license
+                  inputs:
+                    secureFile: license.json
+
+                - task: CopyFiles@2
+                  inputs:
+                    sourceFolder: $(Agent.TempDirectory)
+                    contents: license.json
+                    targetFolder: $(ExtractedSource)/Litium.Accelerator.Mvc
+
+                - task: MagicChunks@2
+                  displayName: Set connection string
+                  inputs:
+                    sourcePath: $(ExtractedSource)/Litium.Accelerator.Mvc/appsettings.json
+                    fileType: Json
+                    targetPathType: source
+                    transformationType: json
+                    transformations: |
+                      {
+                        "Litium/Data/ConnectionString": "$(ConnectionString)"
+                      }
+
+                - pwsh: |
+                    $msdeploy = "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe"
+                    & $msdeploy -verb:sync -source:recycleApp -dest:"recycleApp='$(PublishName)',recycleMode='StopAppPool',computerName='$(PublishServer)?site=$(PublishName)',userName='$(PublishUsername)',password='$(PublishPassword)',authType='Basic'" -allowUntrusted
+                    & $msdeploy -verb:sync -source:contentPath="$(ExtractedSource)/Litium.Accelerator.Mvc" -dest:"contentPath='$(PublishName)',computerName='$(PublishServer)?site=$(PublishName)',userName='$(PublishUsername)',password='$(PublishPassword)',authType='Basic'" -allowUntrusted -enableRule:AppOffline -retryAttempts:3
+                    & $msdeploy -verb:sync -source:recycleApp -dest:"recycleApp='$(PublishName)',recycleMode='StartAppPool',computerName='$(PublishServer)?site=$(PublishName)',userName='$(PublishUsername)',password='$(PublishPassword)',authType='Basic'" -allowUntrusted
+                  displayName: Web Deploy sync

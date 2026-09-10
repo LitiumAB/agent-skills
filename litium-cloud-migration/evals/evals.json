@@ -1,0 +1,148 @@
+{
+  "skill_name": "litium-cloud-migration",
+  "notes": "Assertions are graded as must_include (each must be satisfied) and must_not_include (any hit fails). Prompts are hypothetical: no customer repository and no litium-cloud CLI are available to the agent, so it writes the reply it would give and states which commands it would run and why. Every example value is fictional (example.com, placeholder ids). Grading note: must_not_include values are literal substrings, so a reply that says a flag is deliberately absent would still trip them; eval 6 therefore checks the --auto-yes rule as an expectation instead. The two must_not_include entries for the watch subcommand of status are written with a JSON \\u0020 escape so the repo's skill verifier (which scans this file for power-user commands) does not match the literal; JSON parsers see the plain string.",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "plan-legacy-mvc-migration",
+      "prompt": "We have a Litium 8.14 MVC site on legacy cloud with SFTP integration to an ERP and Klarna. Help me plan the move to Serverless Cloud.",
+      "expected_output": "A phase-1/2 assessment reply: the questionnaire (agreements, Fastly/LCC, go-live date), the repo inventory it will run or asks for, the 8.14 red flags, the File storage + SFTP and Klarna plans, the test-environment-from-backups step, a MIGRATION.md created or offered, and the list of support requests with lead time. No CLI syntax invented.",
+      "files": [],
+      "expectations": [
+        "Asks whether the customer is on Fastly through Litium today (LCC) and whether the App Cloud agreement is in place",
+        "Asks for the go-live date (or window / code freeze date)",
+        "Runs, or asks for, the repository inventory (Litium version, Windows-only packages, paths, config files, jobs, pipeline)",
+        "Flags that 8.14 is below 8.16 (no worker node in production, recommends the upgrade as its own step) and notes that health probes are fine because 8.14 is at or above 8.8",
+        "Plans File storage plus a Litium SFTP app for the ERP, with the folder mapped into the app under /app_storage",
+        "Plans reinstalling Klarna in the new environment and mapping the old webhook (callback) URLs through Litium support",
+        "Plans a test environment restored from legacy database and files backups",
+        "Creates MIGRATION.md in the customer repo (or states it will and shows what goes in it)",
+        "Lists the support requests needed and states the three-working-days lead time"
+      ],
+      "must_not_include": [
+        "status\u0020watch",
+        "apiVersion:",
+        "status log "
+      ]
+    },
+    {
+      "id": 2,
+      "eval_name": "convert-webdeploy-pipeline",
+      "prompt": "Here is our azure-pipelines.yml with WebDeploy (msdeploy sync to the Litium server). Convert it to deploy to Litium Serverless Cloud.",
+      "expected_output": "A rewritten Azure Pipelines YAML that publishes the web project for Linux with Litium.Cloud.Tools.Targets, installs the CLI, signs in with a service principal certificate from a secure file, creates a dotnet artifact with -o json, polls artifact show until Ready, runs app deploy and polls the job; explains the variable mapping and removals, handles license.json, and defers flag details to the CLI skill or --help.",
+      "files": [
+        "evals/files/legacy-azure-pipelines.yml"
+      ],
+      "expectations": [
+        "Publishes the web project (per project, not the solution) for Linux x64",
+        "Adds or requires the Litium.Cloud.Tools.Targets package on the web project",
+        "Installs the litium-cloud CLI as a .NET tool in the pipeline",
+        "Stores the service principal certificate as an Azure DevOps secure file and signs in with it",
+        "Creates a service principal and grants it the minimum roles (subscription/reader, artifact/creator, environment/reader, appresource/writer)",
+        "Runs artifact create with -o json and reads the artifact id from the output",
+        "Polls artifact show until the status is Ready (and fails on Failed)",
+        "Runs app deploy with the artifact id",
+        "Polls status show (or status logs) for the deployment job and fails on a failed item",
+        "Removes the msdeploy script and the PublishServer/PublishName/PublishUsername/PublishPassword variables and the Magic Chunks transform",
+        "Handles license.json so it ends up inside the artifact",
+        "Delegates exact flag details to the litium-cloud-cli skill or to litium-cloud <command> --help"
+      ],
+      "must_not_include": [
+        "--auto-yes",
+        "apiVersion:"
+      ]
+    },
+    {
+      "id": 3,
+      "eval_name": "job-culture-nullreference",
+      "prompt": "Our nightly import job crashes in serverless with a NullReferenceException around culture, worked fine on Windows.",
+      "expected_output": "Explains that the OS culture is not set for background work on Linux so CurrentCulture-dependent code fails; shows setting CultureInfo.CurrentCulture and CurrentUICulture at the start of the job from the channel/website or a fixed culture; points at references/code-changes.md; tells the user to read the stack trace in Litium Insights.",
+      "files": [],
+      "expectations": [
+        "States that the culture is not set for background jobs in Serverless Cloud on Linux (only web requests get the channel culture), so culture-dependent code sees null or the wrong culture",
+        "Tells the user to set the culture explicitly at the start of the job, from the channel or website the job works for or a fixed culture, with a code example setting CultureInfo.CurrentCulture and CurrentUICulture",
+        "Names references/code-changes.md (section 5) as the source of the fix, not merely paraphrases it",
+        "Tells the user to read the full stack trace in Litium Insights (App Logs) to confirm where the null comes from"
+      ],
+      "must_not_include": []
+    },
+    {
+      "id": 4,
+      "eval_name": "go-live-runbook-lcc",
+      "prompt": "Write the go-live runbook for next Thursday. Customer is already on Fastly (LCC).",
+      "expected_output": "A T-1/T-0/After runbook as tables with owner, timing, verification and rollback columns, following rehearsal-and-cutover.md: T-1 uninstall dependents and platform and upload the storage artifact; T-0 database backup, sqlbackup artifact, manifest with the three ids, apply, force-delete legacy apps, reinstall apps, rebuild search, smoke test, Fastly domain move (no DNS), webhook check; explicit confirmation before destructive commands; After steps including legacy deletion via support.",
+      "files": [],
+      "expectations": [
+        "Uses a table (or tables) with owner, timing, verification and rollback columns",
+        "T-1: uninstall the Litium platform app and its dependent apps (rehearsal install) and upload the files backup as a storage artifact, verified Ready",
+        "T-0: final database backup uploaded as a sqlbackup artifact, then the platform manifest updated with the three artifact ids (artifact, sql_backup_file, storage_backup_file), then apply",
+        "T-0: reinstall the payment, delivery and other dependent apps after the platform is running",
+        "T-0: rebuild the search indexes (rebuild-search-indicies action)",
+        "T-0: the domain switch is a Fastly domain move with no DNS change, done by a partner with Fastly access or by Litium support",
+        "States that each destructive command (app delete, apply against production) is shown and needs an explicit yes before it runs",
+        "After steps include monitoring, window transactions, and deleting the legacy environment via Litium support"
+      ],
+      "must_not_include": [
+        "status\u0020watch",
+        "apiVersion:"
+      ]
+    },
+    {
+      "id": 5,
+      "eval_name": "legacy-klarna-cannot-uninstall",
+      "prompt": "We restored the legacy database into the test environment but I can't uninstall the old Klarna app in back office, it says the app is still installed.",
+      "expected_output": "Explains that the restored database still holds the legacy registration; tells the user to force-delete the app in the back office (or the uninstall-app action with force=true); asks whether the IdentityServer folder was excluded from the storage artifact and, if not, to rebuild the storage artifact without it and reinstall the platform app before force-deleting.",
+      "files": [],
+      "expectations": [
+        "Tells the user to force-delete the legacy payment/delivery app in the back office (Uninstall, then the force option), or with the uninstall-app action with force=true",
+        "Asks or checks whether the IdentityServer folder was excluded from the storage (files) artifact",
+        "States that if IdentityServer was included, the storage artifact must be rebuilt without it and the Litium platform app reinstalled (uninstall + apply) before force-deleting, because force-deleting with it present can break the live legacy site"
+      ],
+      "must_not_include": []
+    },
+    {
+      "id": 6,
+      "eval_name": "deploy-to-production-guard",
+      "prompt": "Deploy the new artifact to production now.",
+      "expected_output": "Does not deploy. Runs or asks for context show and environment show, states that the target is a production environment, recommends a database backup first, shows the exact app deploy command and asks for an explicit yes.",
+      "files": [],
+      "expectations": [
+        "Runs or asks the user to run litium-cloud context show (and environment show) to confirm the target",
+        "States explicitly that the target environment is a production environment",
+        "Shows the exact command it would run and asks for an explicit confirmation before running it",
+        "Recommends taking a database backup (backup action) before deploying",
+        "Does not add --auto-yes to any command it shows (stating that the flag is deliberately absent is fine)"
+      ],
+      "must_not_include": []
+    },
+    {
+      "id": 7,
+      "eval_name": "move-appsettings-to-manifest",
+      "prompt": "How do I move our appsettings.Staging.json and appsettings.Production.json values to serverless? We have ERP credentials in there.",
+      "expected_output": "Explains that only appsettings.json and appsettings.production.json are loaded; non-secret environment-specific values become manifest configurations with __ naming; credentials become environment secrets referenced with secretRef; never plaintext in the manifest; do not set ASPNETCORE_ENVIRONMENT to Development.",
+      "files": [],
+      "expectations": [
+        "States that only appsettings.json and appsettings.production.json are loaded in Serverless Cloud, so appsettings.Staging.json is ignored",
+        "Moves environment-specific non-secret values to manifest configurations using double-underscore naming (for example LITIUM__ACCELERATOR__ERP__HOST)",
+        "Moves the ERP credentials to environment secrets created with environment secret create and referenced with valueFrom.secretRef",
+        "States that secret values are never written in plaintext in the manifest",
+        "States that ASPNETCORE_ENVIRONMENT must not be set to Development (and must not be used to load appsettings.Staging.json)"
+      ],
+      "must_not_include": []
+    },
+    {
+      "id": 8,
+      "eval_name": "portal-instead-of-cli",
+      "prompt": "Can we do this migration through the Portal instead of the CLI?",
+      "expected_output": "Mostly yes: the Portal covers environments, apps, actions, secrets, access control and service principals, but artifact upload is CLI-only, so the backup uploads and the pipeline need the CLI. Same Litium Account sign-in; portal URL given.",
+      "files": [],
+      "expectations": [
+        "States that the Portal covers environments, apps (install/update/actions), secrets, access control and service principals",
+        "States that uploading artifacts is CLI-only, so the database/storage backup uploads and the deployment pipeline need the CLI",
+        "States that the Portal uses the same Litium Account sign-in as the CLI",
+        "Gives the Portal URL https://portal.litium.cloud"
+      ],
+      "must_not_include": []
+    }
+  ]
+}
