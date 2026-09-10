@@ -1,0 +1,135 @@
+# Litium Serverless Cloud deployment workflow (GitHub Actions)
+#
+# Adapt and test in your own repository before you point it at production.
+# Replace every <placeholder>, adapt the project path, the target framework and the client build steps
+# to your solution, and run it against a test environment first.
+#
+# Save as .github/workflows/deploy.yml
+#
+# Prerequisites
+#   - A service principal with these roles (see the automated-deployments docs):
+#       subscription/reader, artifact/creator, environment/reader (environment), appresource/writer (app)
+#   - Repository or environment secrets (Settings > Secrets and variables > Actions):
+#       LITIUM_NUGET_USER        Litium docs account user name, used for the NuGet feed
+#       LITIUM_NUGET_PASSWORD    its password
+#       LITIUM_SP_ID             the service principal id, service.<name>@cloud
+#       LITIUM_SP_CERTIFICATE    the full content of the .pem file, private key and certificate,
+#                                pasted exactly as it is with its line breaks intact
+
+name: Deploy to Litium Serverless Cloud
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  LITIUM_SUBSCRIPTION: <subscription-id>
+  LITIUM_ENVIRONMENT: <environment-id>
+  LITIUM_APP: <app-id>                    # for example: litium
+  ARTIFACT_TYPE: dotnet                   # nextjs for a Litium Storefront app
+  PUBLISH_PATH: builds/publish/<web-project-name>
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Add Litium NuGet feed
+        run: >
+          dotnet nuget add source https://nuget.litium.com/nuget/
+          -n Litium -u "${{ secrets.LITIUM_NUGET_USER }}" -p "${{ secrets.LITIUM_NUGET_PASSWORD }}"
+          --store-password-in-clear-text
+
+      # Client builds from the legacy pipeline go here, unchanged. For the MVC Accelerator, typically
+      # actions/setup-node followed by yarn install and yarn run prod per client project.
+
+      - name: Publish for Linux
+        run: dotnet publish <path-to-web-project>.csproj -c Release -o builds/publish -f <target-framework> -a x64 --os linux
+
+      # If license.json is not in the repository, write it from a secret into the publish folder here,
+      # before the artifact is created. It must be inside the artifact.
+
+      - name: Install the Cloud CLI
+        run: dotnet tool update -g litium.cloud.cli --no-cache
+
+      - name: Write the service principal certificate
+        run: |
+          printf '%s' "${{ secrets.LITIUM_SP_CERTIFICATE }}" > "$RUNNER_TEMP/cert.pem"
+          chmod 600 "$RUNNER_TEMP/cert.pem"
+
+      - name: Sign in
+        run: litium-cloud auth login --service-principal --username "${{ secrets.LITIUM_SP_ID }}" --certificate "$RUNNER_TEMP/cert.pem"
+
+      - name: Create artifact
+        id: artifact
+        run: |
+          set -euo pipefail
+          echo "litium-cloud artifact create --subscription $LITIUM_SUBSCRIPTION --artifact-type $ARTIFACT_TYPE --file-path $PUBLISH_PATH --no-progress -o json"
+          output=$(litium-cloud artifact create --subscription "$LITIUM_SUBSCRIPTION" --artifact-type "$ARTIFACT_TYPE" --file-path "$PUBLISH_PATH" --no-progress -o json)
+          echo "$output"
+          artifact_id=$(echo "$output" | jq -r '.data.artifactId')
+          echo "artifact_id=$artifact_id" >> "$GITHUB_OUTPUT"
+
+      # dotnet and nextjs artifacts are built after upload, so several minutes in Processing is normal.
+      # Raise the loop count rather than the sleep interval.
+      - name: Wait for the artifact
+        env:
+          ARTIFACT_ID: ${{ steps.artifact.outputs.artifact_id }}
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 500); do
+            status=$(litium-cloud artifact show --artifact "$ARTIFACT_ID" -o json | jq -r '.status')
+            echo "Artifact status: $status"
+            case "$status" in
+              Ready) exit 0 ;;
+              Failed)
+                echo "Artifact build failed."
+                litium-cloud status logs --job "$ARTIFACT_ID"   # the artifact id is its build job id
+                exit 1 ;;
+            esac
+            sleep 5
+          done
+          echo "Timed out waiting for the artifact."
+          exit 1
+
+      - name: Deploy
+        id: deploy
+        env:
+          ARTIFACT_ID: ${{ steps.artifact.outputs.artifact_id }}
+        run: |
+          set -euo pipefail
+          echo "litium-cloud app deploy --subscription $LITIUM_SUBSCRIPTION --environment $LITIUM_ENVIRONMENT --app $LITIUM_APP --artifact $ARTIFACT_ID -o json"
+          output=$(litium-cloud app deploy --subscription "$LITIUM_SUBSCRIPTION" --environment "$LITIUM_ENVIRONMENT" --app "$LITIUM_APP" --artifact "$ARTIFACT_ID" -o json)
+          echo "$output"
+          echo "job_id=$(echo "$output" | jq -r '.jobId')" >> "$GITHUB_OUTPUT"
+
+      # A parent job can report completed while a child item failed, so check items[].failed
+      # as well as completedAt.
+      - name: Wait for the deployment job
+        env:
+          JOB_ID: ${{ steps.deploy.outputs.job_id }}
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 500); do
+            output=$(litium-cloud status show --job "$JOB_ID" -o json)
+            failed=$(echo "$output" | jq -r '[.items[]? | .failed] | any')
+            completed=$(echo "$output" | jq -r '.completedAt // empty')
+            if [ "$failed" = "true" ]; then
+              echo "Deploy failed."
+              litium-cloud status logs --job "$JOB_ID"
+              exit 1
+            fi
+            if [ -n "$completed" ]; then
+              echo "Deploy finished."
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Timed out waiting for the deployment job."
+          exit 1
