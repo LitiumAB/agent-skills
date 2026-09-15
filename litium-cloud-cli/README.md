@@ -24,4 +24,10 @@ npx skills add https://github.com/LitiumAB/agent-skills --skill litium-cloud-cli
 - Restarts, pauses, resumes, re-plans and uninstalls apps, and follows every job to its real result
 - Keeps to the published Litium documentation and verifies flags against the installed CLI's `--help`
 
+## Works together with
+
+- **litium-cloud-migration** — the process for moving a site from Litium legacy cloud to Serverless Cloud; it
+  names the recipes in this skill for every command it needs.
+- **litium-developer** — application code, accelerators, data model, APIs and back office.
+
 ## No configuration required
