@@ -160,13 +160,13 @@ optional MCP server at `https://docs.litium.dev/mcp` for live search — use it 
 | A command from the help text is "not found" | The 2.10.x help text has three known errors | See **Dynamic help first** above |
 | `apply` skips everything / does nothing for a folder | `-f` was given a bare directory | Pass a file or a glob: `-f manifests/*.yaml` |
 | A manifest with `action: delete` and `kind: app` fails | `action: delete` is not implemented for apps | Use `litium-cloud app delete --app <app-id>` |
-| Command succeeded but nothing changed | The command only queued a job, and the job failed | `status show --job <id>` and read **Details** for a *failed* entry |
+| Command succeeded but nothing changed | The command only queued a job, and the job failed | `status show --job <job-id>` and read **Details** for a *failed* entry |
 | `Artifact is type '<x>' but application require type '<y>'` | Wrong artifact type for the app | `dotnet` for platform/.NET web, `nextjs` for the storefront; check `artifact list` |
 | The artifact id is gone | Unreferenced artifacts are deleted: 14 days if never used, 7 days after last use | Rebuild from source; keep releases in your pipeline, not in the cloud |
 | A restored backup did not take effect | `sql_backup_file` and `storage_backup_file` are create-only | Uninstall and reinstall the app with the artifact ids in the manifest |
 | The app does not see a new secret or configuration value | Apps read configuration at startup | `litium-cloud app restart --app <app-id> --wait` |
 | `Aborting destructive operation. Use --auto-yes …` | Non-interactive session (CI detected) | Add `--auto-yes` only in a deliberate pipeline script |
-| `Unauthenticated. Interactive login not possible.` in a pipeline | No browser in CI | `auth login --service-principal --username <id> --certificate <path>` |
+| `Unauthenticated. Interactive login not possible.` in a pipeline | No browser in CI | `auth login --service-principal --username <service-principal-id> --certificate <path>` |
 | Pipeline signs in but every command is denied | A service principal inherits nothing from its creator | Grant it roles explicitly — see the `cicd-service-principal` recipe |
 | `Could not connect to server.` after moving directory | Relative certificate path in `.litium-cloud.config` | Use an absolute certificate path; re-run with `-d` to see the real error |
 | A deploy is rejected: `App is currently paused.` | The app is paused | `litium-cloud app resume --app <app-id>`, wait, then deploy |
