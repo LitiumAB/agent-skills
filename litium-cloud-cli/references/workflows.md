@@ -3,6 +3,23 @@
 Twelve end-to-end recipes. Every command is verified against CLI 2.10.1 and the public documentation.
 Placeholders are written `<like-this>` — never invent a real id, name or domain.
 
+## Recipes
+
+| Recipe | Use it for |
+|---|---|
+| [`new-environment`](#new-environment) | Standing up a brand-new environment in an existing subscription |
+| [`deploy-dotnet`](#deploy-dotnet) | Releasing new .NET code as a `dotnet` artifact |
+| [`deploy-nextjs`](#deploy-nextjs) | Releasing a Next.js storefront |
+| [`cicd-service-principal`](#cicd-service-principal) | Automating deployments from a pipeline |
+| [`install-litium-platform`](#install-litium-platform) | First installation of the Litium platform app |
+| [`install-cdn-insights`](#install-cdn-insights) | Installing Litium CDN (first) and Litium Insights |
+| [`backups`](#backups) | Taking database and storage backups |
+| [`restore`](#restore) | Restoring a database and media backup into an environment |
+| [`access-control`](#access-control) | Granting, listing and removing access; groups |
+| [`copy-environment`](#copy-environment) | Replicating an environment from another one |
+| [`custom-domain`](#custom-domain) | Putting a customer domain in front of an app |
+| [`app-lifecycle`](#app-lifecycle) | Restart, pause, resume, re-plan, uninstall, delete |
+
 All recipes assume a [context](../SKILL.md) is set:
 
 ```bash

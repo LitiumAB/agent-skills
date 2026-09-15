@@ -79,17 +79,12 @@ spec:
 
 ### Configuration naming
 
-`type` is `environment` (default), `file` or `storage`.
-
-| `type` | Where the app finds it |
-|---|---|
-| `environment` | An environment variable, name uppercased |
-| `file` | A file in `/app_secrets/`, name lowercased; a dot in the name is only allowed for this type |
-| `storage` | A directory `/app_storage/<name>/` backed by the storage app's `subPath` |
-
-For .NET apps, a double underscore is the section separator: `LITIUM__ACCELERATOR__SMTP__HOST` is read as
-`Litium:Accelerator:Smtp:Host`. This is how every value from a legacy `appsettings.<Env>.json` or a config
-transform comes back — only `appsettings.json` and `appsettings.production.json` are loaded in the cloud.
+A configuration's `type` (`environment`, `file` or `storage`) decides where the app finds it, and for .NET apps a
+double underscore is the section separator (`LITIUM__ACCELERATOR__SMTP__HOST` is read as
+`Litium:Accelerator:Smtp:Host`) — see "Configurations in the container" in `litium-cloud-cli/references/concepts.md`
+for the types, the name rules and the separator. This is how every value from a legacy `appsettings.<Env>.json`
+or a config transform comes back, because only `appsettings.json` and `appsettings.production.json` are loaded in
+the cloud.
 
 ## File storage
 
@@ -105,7 +100,7 @@ spec:
       value: artifacts/<storage-artifact-id>
 ```
 
-Requires the App Cloud agreement. It exposes `storage_volume`, which is what the platform app and the sFTP apps
+Requires the App Cloud agreement. It exposes `storage_volume`, which is what the platform app and the SFTP apps
 reference. Media is **not** stored here — media comes back through the platform app's `storage_backup_file`.
 
 ## Litium sFTP
@@ -123,7 +118,7 @@ spec:
     - name: ip                                 # comma-separated, or a block with one per line
       value: <ip-address-1>,<ip-address-2>
   configurations:
-    - name: integration                        # the folder name inside the sFTP account
+    - name: integration                        # the folder name inside the SFTP account
       subPath: integration-directory           # the folder inside the File storage app
       type: storage
       valueFrom:

@@ -7,7 +7,7 @@ document and the record the next session starts from.
 > running the `litium-cloud-migration` skill reads it first and updates it at the end of every phase: status,
 > ids, decisions, measured durations, open questions.
 >
-> **Never write secrets here.** No passwords, connection strings, API keys, certificate contents or sFTP
+> **Never write secrets here.** No passwords, connection strings, API keys, certificate contents or SFTP
 > passwords — not even temporarily. Subscription, environment, app, artifact, job and secret **ids** are fine;
 > secret **values** are not.
 
@@ -58,7 +58,7 @@ document and the record the next session starts from.
 - [ ] Legacy files uploaded as a `storage` artifact, without `IdentityServer`
 - [ ] Litium platform installed with `artifact`, `sql_backup_file`, `storage_backup_file`
 - [ ] Legacy payment and delivery apps force-deleted; new ones installed and configured
-- [ ] File storage and one sFTP app per user installed, if sFTP is used
+- [ ] File storage and one SFTP app per user installed, if SFTP is used
 - [ ] SMTP relay installed, if the site sends mail
 - [ ] Storefront app installed, if the site is headless
 - [ ] Other private apps installed
@@ -127,7 +127,7 @@ document and the record the next session starts from.
 | Target framework | | |
 | Storefront type | | |
 | Integrations and scheduled jobs | | |
-| sFTP users, folders, IP addresses | | |
+| SFTP users, folders, IP addresses | | |
 | Email sending (SMTP keys, sender) | | |
 | Payment and delivery apps + versions | | |
 | Inbound webhook URLs | | |
@@ -277,7 +277,7 @@ Filled in live on the day. Actual times, job ids, artifact ids, deviations, who 
 | | | |
 
 - Access: who has which role on the subscription, the environments and the apps.
-- sFTP: host, user and folders per external system, and the IP allow list (passwords are read with the CLI).
+- SFTP: host, user and folders per external system, and the IP allow list (passwords are read with the CLI).
 - Webhook inventory: the table under *Cutover plan*, kept current.
 - Measured durations: the tables under *Rehearsal record* and *Cutover log*.
 - Runbooks the customer needs: backups and restore, deploying a release (database backup first, previous artifact

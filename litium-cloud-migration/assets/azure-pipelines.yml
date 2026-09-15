@@ -4,6 +4,9 @@
 # framework and any client build steps to your solution, and test the pipeline in your
 # own repository against a test environment before you point it at production.
 #
+# Save as azure-pipelines.yml in the repository root (or under pipelines/ and point the
+# pipeline definition at it)
+#
 # Prerequisites
 #   - The web project references the Litium.Cloud.Tools.Targets package, so that
 #     'dotnet publish' writes litiumcloud.manifest.json into the publish folder.

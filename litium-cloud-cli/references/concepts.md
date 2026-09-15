@@ -18,7 +18,7 @@ subscription                     created by Litium; owns artifacts and subscript
 - **Environment** — an isolated space inside a subscription. Id is lowercase letters, digits and
   hyphens, and becomes part of every app's system domain, so keep it short. It has a **location**
   (region, immutable after creation) and a **production** flag.
-- The **production flag** switches on production behaviour: production resources for apps that support
+- The **production flag** switches on production behavior: production resources for apps that support
   it, and search-engine indexing allowed on custom domains. It is also what lets Litium activate a
   dedicated worker node for the platform app's background jobs when they need one (Litium 8.16+, at no
   extra cost, on request — never partner-configurable). Non-production environments, and the `litium.app` system domain in every
@@ -193,7 +193,7 @@ text; never run it in a pipeline whose log is published.
 
 ## Context file
 
-`litium-cloud context set --subscription <id> --environment <id>` writes `.litium-cloud.config`.
+`litium-cloud context set --subscription <subscription-id> --environment <environment-id>` writes `.litium-cloud.config`.
 Without `--global` it lands in the current folder and the CLI searches upwards through parent folders,
 so each project folder deploys to its own environment. With `--global` it goes to the CLI application
 data folder. A local file wins over the global one. Set the
@@ -207,7 +207,7 @@ subscription first or in the same command. The file holds ids, not secrets, but 
   keychain (service *Litium.CloudAPI*) on macOS, and in the desktop keyring on Linux, with an
   unprotected file in `~/.local/share/Litium/Cloud` as fallback.
 - **Service principal**: a non-interactive identity with an id in email form, `service.<name>@cloud`.
-  It signs in with a certificate: `auth login --service-principal --username <id> --certificate <path>`.
+  It signs in with a certificate: `auth login --service-principal --username <service-principal-id> --certificate <path>`.
   The CLI generates the key pair locally and Litium never stores the private key.
   Certificates created with the CLI default to **180 days** and are capped at **365 days**; a
   certificate generated in the Portal is valid for **1, 3 or 6 months** (3 preselected).
@@ -256,7 +256,7 @@ manage the resource but not assign roles.
 takes `--convert` (default `true`), which copies the inherited grants as explicit ones first;
 `--convert false` drops them and can lock you out. `enable-inheritance` puts inheritance back and
 keeps the explicit entries. Some grants are *protected* by Litium and survive inheritance changes.
-`role list` is the authoritative list for your account; `role show --role <id>` lists the assignable
+`role list` is the authoritative list for your account; `role show --role <role-id>` lists the assignable
 scopes and permissions. New roles take effect after the user signs out and in again.
 
 ## Jobs

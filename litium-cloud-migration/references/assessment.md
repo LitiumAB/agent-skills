@@ -166,14 +166,14 @@ With the CLI signed in (`litium-cloud-cli`): note the subscription id, existing 
 
 | Finding | Consequence |
 |---|---|
-| Litium **< 8.1** | Stop. Upgrade to 8.1+ first (`litium-developer`); the migration pages do not apply |
+| Litium **< 8.1** | Stop. Upgrade to 8.1+ first (see the upgrade guide: https://docs.litium.dev/platform/guides/upgrade-to-litium-8/overview); the migration pages do not apply |
 | Litium **< 8.8** | No built-in health endpoints: set the probe paths to `"none"` or implement `/health/startup`, `/health/live`, `/health/ready` before the first artifact, or the app never becomes ready |
 | Litium **< 8.16** | A dedicated worker node is not available, so jobs always share capacity with web requests. From 8.16 in production, Litium can activate one at no extra cost when jobs need it. Recommend upgrading before or soon after migration; plan load accordingly |
 | SFTP, integration folders, private services or an own database needed, but **no App Cloud agreement** | Cannot install File storage or private apps. Customer must sign the agreement before the test environment; do not design around it |
 | **Not on Fastly today** | Certificates for every domain come from support (lead time), DNS records change at go-live, TTL must be lowered to 300 s a day before, and the domain switch cannot be rehearsed with real traffic |
 | **Many custom domains** (more than a handful, or several redirect domains) | One Litium CDN domain app per domain, a certificate check per domain, and a longer domain step on T-0; have support confirm certificate coverage for the full list |
 | **Large media storage** (tens of GB) | The storage upload is the longest step; it is a T-1 step, and the customer must stop media uploads before the backup is taken. Ask support whether they upload the artifact directly |
-| Production database **older than the code's Litium version** | The install upgrades it automatically; measure this in the rehearsal, and confirm the upgrade path with `litium-developer` if it spans several minor versions |
+| Production database **older than the code's Litium version** | The install upgrades it automatically; measure this in the rehearsal, and confirm the upgrade path in the upgrade guide (https://docs.litium.dev/platform/guides/upgrade-to-litium-8/overview) if it spans several minor versions |
 | **Windows-only packages** in core flows (image processing, PDF, barcodes) | Replacement is a real development task; schedule it before the test environment, not after |
 | Code that **reads or rotates log files** | File targets are disabled at startup; remove the dependency, logs go to Litium Insights |
 | **Sales continue** during the window | Order import from the legacy database after go-live is manual work; agree the order prefix and who does the import before setting the date |

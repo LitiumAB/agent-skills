@@ -62,7 +62,7 @@ Cause: `nextjs`, `nodejs` and `nuxtjs` artifacts are built after upload, so minu
 usually means `node_modules`, `.git`, test output or media went along.
 Fix: point `--file-path` at the published output, not the source folder; check the ignore rules; add
 `--no-progress` in a pipeline. In a polling loop, raise the retry count rather than the sleep interval.
-Verify: `litium-cloud artifact show --artifact <id>` reads **Ready**.
+Verify: `litium-cloud artifact show --artifact <artifact-id>` reads **Ready**.
 
 **The artifact status is `Failed`.**
 Cause: the build step after the upload failed.
@@ -122,7 +122,7 @@ files.
 **Integration files are missing after go-live.**
 Cause: the code still reads a legacy disk path, and no File storage folder is mounted.
 Fix: mount the folder with a `type: storage` configuration and read from `/app_storage/<name>`.
-Verify: a file dropped over sFTP is visible to the app.
+Verify: a file dropped over SFTP is visible to the app.
 
 **`apply` reports *unchanged*, or seems to ignore a manifest.**
 Cause: a bare directory was passed to `--file` (a glob is required), or a key was misspelled — unknown keys are
@@ -167,7 +167,7 @@ Fix: certificates come from Litium support. Register the domain with the `add-do
 channel. For the move, confirm the removal and addition order with support.
 Verify: the domain opens the new site over HTTPS and the right channel answers.
 
-## Mail and sFTP
+## Mail and SFTP
 
 **Mail is not sent, or lands in spam.**
 Cause: no SMTP relay app; SMTP keys still point at the legacy server; or SPF was not updated for the new sender.
@@ -177,7 +177,7 @@ domain. That server has no TLS and no DKIM and a shared reputation, so business-
 customer's own service.
 Verify: one real transactional mail arrives from the expected sender.
 
-**The external system cannot connect over sFTP.**
+**The external system cannot connect over SFTP.**
 Cause: its IP address is not in the app's `ip` allow list (five per app, ranges included), or the wrong password
 was handed over.
 Fix: add the address, or install a second `litium-sftp` app. Read the host and user from
@@ -186,6 +186,9 @@ Fix: add the address, or install a second `litium-sftp` app. Read the host and u
 Verify: the client connects and lists the mounted folders.
 
 ## CLI and pipeline
+
+CLI syntax lives in `litium-cloud-cli` (`references/commands.md`, and the `cicd-service-principal` recipe in
+`references/workflows.md`); run `litium-cloud <group> <command> --help` for the exact flags.
 
 **`litium-cloud auth login` fails with "Your connection is not private".**
 Cause: an HSTS rule for `localhost` in the browser blocks the sign-in callback — usually left behind by a local
@@ -196,25 +199,25 @@ Verify: the sign-in completes and the CLI prints the signed-in account.
 **`dotnet tool update` fails with NU1301 or asks for credentials.**
 Cause: the stored credentials for the Litium NuGet feed are missing or stale. They are the *documentation
 account* credentials, not the Litium Account.
-Fix: `dotnet nuget remove source Litium`, add it again with working credentials, then update the tool.
+Fix: remove the Litium NuGet source, add it again with working credentials, then update the tool.
 Verify: `litium-cloud --version` prints a version.
 
 **Every command fails with "Could not connect to server."**
 Cause: the CLI configuration points at the service principal certificate by a **relative** path, so any command
 run from another directory cannot find it — the real error is only visible with `-d`.
-Fix: use an absolute path to the certificate. In Azure DevOps that is `$(<name>.secureFilePath)`.
+Fix: sign in again with an absolute path to the certificate. In Azure DevOps that is `$(<name>.secureFilePath)`.
 Verify: the same command works from another working directory.
 
 **Signing in as a service principal fails in the pipeline.**
 Cause: the certificate expired (180 days by default, 365 at most), was revoked by a renewal, lost its line
 breaks in the secret, or the id does not match the certificate.
-Fix: `litium-cloud service-principal show --service-principal <id>` to check, then
-`litium-cloud service-principal renew` and replace the pipeline secret immediately — renewing revokes every
-other active certificate.
+Fix: check the certificate dates with `service-principal show`, then `service-principal renew` and replace the
+pipeline secret immediately — renewing revokes every other active certificate.
 Verify: the pipeline signs in and `artifact create` succeeds.
 
 **A command says access denied, or a resource you know exists is not found.**
 Cause: no role on that resource. A resource you may not read is reported as missing, so the two look the same. A
 service principal inherits nothing from the person who created it.
-Fix: check `litium-cloud app access-control show --app <app-id>` and have an owner grant the missing role.
+Fix: check the grants with `app access-control show` and have an owner grant the missing role; the four minimum
+pipeline roles are in the `cicd-service-principal` recipe.
 Verify: the command succeeds as that identity.

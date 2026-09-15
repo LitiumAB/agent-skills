@@ -20,11 +20,11 @@ environment variables (secrets are mapped in `env:`, never spliced into the scri
 |---|---|---|---|---|
 | 1 | Build and publish | `dotnet publish <web>.csproj --configuration Release --framework <tfm> --os linux --arch x64 --output <publish>` | — | Fails if `litiumcloud.manifest.json` is missing from the publish folder (`Litium.Cloud.Tools.Targets` not referenced) |
 | 2 | Install the CLI | `dotnet tool update --global litium.cloud.cli --no-cache`, then put `~/.dotnet/tools` on `PATH` | — | — |
-| 3 | Sign in | `litium-cloud auth login --service-principal --username <id> --certificate <absolute path>` | secure file / secret | — |
-| 4 | Create the artifact | `litium-cloud artifact create --subscription <id> --artifact-type dotnet --file-path <publish> --name <build number> --no-progress -o json` | — | `data.artifactId` |
-| 5 | Wait for the artifact | poll `litium-cloud artifact show --artifact <id> -o json` | `status` | stops on `Ready`; on `Failed` prints `status logs --job <failedJobId>` and exits 1; times out |
-| 6 | Deploy | `litium-cloud app deploy --subscription <id> --environment <id> --app <id> --artifact <id> -o json` | — | `jobId` |
-| 7 | Wait for the job | poll `litium-cloud status show --job <id> -o json` | `items[].failed` at every depth, then `completedAt` | prints failed items and their `status logs`; exits 1 on failure; times out |
+| 3 | Sign in | `litium-cloud auth login --service-principal --username <service-principal-id> --certificate <absolute path>` | secure file / secret | — |
+| 4 | Create the artifact | `litium-cloud artifact create --subscription <subscription-id> --artifact-type dotnet --file-path <publish> --name <build number> --no-progress -o json` | — | `data.artifactId` |
+| 5 | Wait for the artifact | poll `litium-cloud artifact show --artifact <artifact-id> -o json` | `status` | stops on `Ready`; on `Failed` prints `status logs --job <failedJobId>` and exits 1; times out |
+| 6 | Deploy | `litium-cloud app deploy --subscription <subscription-id> --environment <environment-id> --app <app-id> --artifact <artifact-id> -o json` | — | `jobId` |
+| 7 | Wait for the job | poll `litium-cloud status show --job <job-id> -o json` | `items[].failed` at every depth, then `completedAt` | prints failed items and their `status logs`; exits 1 on failure; times out |
 | 8 | Optional production stage | steps 6 and 7 in a template (Azure) or reusable workflow (GitHub), behind an environment approval | the artifact id from step 4 | — |
 
 The docs pages explain each step under "How the pipeline works" and show the production stage in full.
@@ -52,10 +52,10 @@ start the app pool.
 | Release stage: **Magic Chunks** transform of `appsettings.json` | Dropped. SQL, search and Redis connection settings are injected by the platform; everything else becomes manifest `configurations` and `secretRef` secrets (`references/manifests.md`) |
 | — | New (step 2): `dotnet tool update --global litium.cloud.cli --no-cache` |
 | — | New (step 3): download the service principal certificate (secure file / repository secret) and `litium-cloud auth login --service-principal --username <service-principal-id> --certificate <absolute path>` |
-| — | New (step 4): `litium-cloud artifact create --subscription <id> --artifact-type dotnet --file-path <publish-folder> --name <build number> --no-progress -o json`, read `data.artifactId` |
-| — | New (step 5): poll `litium-cloud artifact show --artifact <id> -o json` until `status` is `Ready`, with a timeout |
+| — | New (step 4): `litium-cloud artifact create --subscription <subscription-id> --artifact-type dotnet --file-path <publish-folder> --name <build number> --no-progress -o json`, read `data.artifactId` |
+| — | New (step 5): poll `litium-cloud artifact show --artifact <artifact-id> -o json` until `status` is `Ready`, with a timeout |
 | PowerShell: msdeploy `recycleApp` StopAppPool | Dropped. Production deployments are rolling; no downtime step exists |
-| PowerShell: msdeploy `sync` contentPath with `AppOffline` | Step 6: `litium-cloud app deploy --subscription <id> --environment <id> --app <id> --artifact <artifact-id> -o json`, read `jobId` |
+| PowerShell: msdeploy `sync` contentPath with `AppOffline` | Step 6: `litium-cloud app deploy --subscription <subscription-id> --environment <environment-id> --app <app-id> --artifact <artifact-id> -o json`, read `jobId` |
 | PowerShell: msdeploy `recycleApp` StartAppPool | Dropped. Step 7 polls `litium-cloud status show --job <job-id> -o json` instead |
 | Deployment "succeeded" when msdeploy exited 0 | The job is finished when `completedAt` is set, and succeeded when no entry in `items`, at any depth, has `failed` set to `true`. On failure print `litium-cloud status logs --job <job-id>` for each failed item and fail the pipeline |
 
@@ -93,54 +93,45 @@ the change, and note the deletions in `MIGRATION.md`.
 
 ## Service principal
 
+The pipeline signs in as a service principal, never as a person. Follow the `cicd-service-principal` recipe in
+`litium-cloud-cli/references/workflows.md` for the commands; this section is what the migration adds on top.
+
 Create one principal per pipeline, and one per environment if test and production deploy from different
 pipelines or stages — the production principal should never be able to touch anything else.
 
-```bash
-litium-cloud service-principal create --name deploy-pipeline --expires 180 -f deploy-pipeline.pem
-```
-
-The id is in the output, in the form `service.<name>@cloud`; it is what you pass to `--email` when granting
-roles and to `--username` when signing in. The `.pem` file holds the private key followed by the certificate,
-unencrypted — anyone holding it can act as the principal. Put it straight into the pipeline's secret store and
-delete the local copy. Never commit it. A `.pfx` extension produces a PKCS #12 file instead; the CLI signs in
-with either.
-
-Pass `--certificate` as an **absolute path**: the CLI stores the path at sign-in and reads the file again on
-every later command, so a relative path or a deleted file makes later commands fail with `Could not connect to
-server.` Both assets use an absolute path (`$(certificate.secureFilePath)` / `$RUNNER_TEMP/litium-cloud.pem`).
+The principal's id has the form `service.<name>@cloud`; it is what you pass when granting roles and when signing
+in. The certificate file holds the private key followed by the certificate, unencrypted — anyone holding it can
+act as the principal. Put it straight into the pipeline's secret store and delete the local copy. Never commit
+it. Both assets reference the certificate by an **absolute path** (`$(certificate.secureFilePath)` /
+`$RUNNER_TEMP/litium-cloud.pem`), because the CLI stores the path at sign-in and reads the file again on every
+later command: a relative path or a deleted file makes later commands fail with `Could not connect to server.`
 
 ### Minimum roles
 
 A principal starts with no access and inherits nothing from the user who created it. For creating artifacts and
 deploying to one app, the docs list exactly four grants:
 
-| Scope | Role | Command group |
-|---|---|---|
-| Subscription | `subscription/reader` | `litium-cloud subscription access-control add --email <service-principal-id> --role subscription/reader` |
-| Subscription | `artifact/creator` | `litium-cloud subscription access-control add --email <service-principal-id> --role artifact/creator` |
-| Environment | `environment/reader` | `litium-cloud environment access-control add --email <service-principal-id> --role environment/reader` |
-| App | `appresource/writer` | `litium-cloud app access-control add --app <app-id> --email <service-principal-id> --role appresource/writer` |
+| Scope | Role |
+|---|---|
+| Subscription | `subscription/reader` |
+| Subscription | `artifact/creator` |
+| Environment | `environment/reader` |
+| App | `appresource/writer` |
 
-`artifact/creator` lets the principal create artifacts and read the ones it created. Run `litium-cloud role list`
-for the current ids. Grant at the narrowest scope that works: an app and an environment, not the subscription,
-for a production pipeline. The pipeline does **not** need `apps/litium-platform/litium-management` — domain,
-`install-app` and force-delete actions stay manual. Recipe: `cicd-service-principal`.
+`artifact/creator` lets the principal create artifacts and read the ones it created. Grant at the narrowest
+scope that works: an app and an environment, not the subscription, for a production pipeline. The pipeline does
+**not** need `apps/litium-platform/litium-management` — domain, `install-app` and force-delete actions stay
+manual.
 
 ### Certificate expiry and renewal
 
 Certificates are valid for **180 days by default and 365 at most**, so a pipeline that has worked for months
-stops signing in with no change of its own. `litium-cloud service-principal list` shows the expiry date of every
-principal; put it in the team calendar the day you create it.
-
-```bash
-litium-cloud service-principal renew --service-principal <service-principal-id> --expires 180 -f deploy-pipeline.pem
-```
+stops signing in with no change of its own. Put the expiry date in the team calendar the day you create the
+principal, and add the renewal date to the hand-over notes in `MIGRATION.md`.
 
 Renewing issues a new certificate and **revokes every other active certificate on the principal**, so replace
 the pipeline secret in the same sitting or the pipeline breaks immediately. The id and the roles do not change.
-`litium-cloud service-principal show --service-principal <id>` lists each certificate with its not-before,
-not-after and revoked dates. Add the renewal date to the hand-over notes in `MIGRATION.md`.
+See the **Renewal** part of the `cicd-service-principal` recipe.
 
 ## Azure DevOps
 
@@ -190,7 +181,7 @@ so `publishPath` points at the storefront folder and `.gitignore` / `.npmignore`
 step 2 so a broken build fails before the upload. The .NET SDK, the NuGet feed and the tool install stay, because
 the CLI is a .NET tool. Keep the artifact timeout generous; these artifacts are built after upload.
 
-## Pipeline behaviour to keep in mind
+## Pipeline behavior to keep in mind
 
 - **Add `-o json` to every command you parse.** Never parse the table output. Null and default values are left
   out of the JSON (`failed` only appears when `true`, `completedAt` only once the job is done).

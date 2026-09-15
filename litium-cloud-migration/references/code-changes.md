@@ -30,10 +30,11 @@ Do not hand-write the manifest, and do not check a generated one into the repo.
 
 ### Publish flags
 
-Publish per project with the flags from the docs; adjust `-f` to the solution's target framework:
+Publish per project with the flags from the docs, with `-f` set to the solution's target framework (`net8.0` for
+Litium 8 unless the solution targets a newer one):
 
 ```bash
-dotnet publish ./Src/Litium.Accelerator.Mvc/Litium.Accelerator.Mvc.csproj -f net9.0 -c Release -o publish -a x64 --os linux
+dotnet publish ./Src/Litium.Accelerator.Mvc/Litium.Accelerator.Mvc.csproj -f <target-framework> -c Release -o publish -a x64 --os linux
 ```
 
 - Remove any `<RuntimeIdentifier>win-*</RuntimeIdentifier>`, `<PlatformTarget>x86</PlatformTarget>` and `.pubxml` publish profiles found in the assessment; `--os linux -a x64` on the command line is the only runtime selection.

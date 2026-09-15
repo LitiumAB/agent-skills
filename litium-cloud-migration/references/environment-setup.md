@@ -41,7 +41,7 @@ create or connect those. Everything else in the diagram is an app you install fr
   (`deploy/serverless/test/`, `deploy/serverless/production/`). The two folders hold the *same* file names
   and the same content; only artifact ids and the values behind `secretRef` differ. Commit them with the code.
 - **Never author a manifest from memory.** Start from `litium-cloud marketplace manifest --app <type> -f <file>`,
-  or `litium-cloud app show --app <id> -o manifest` for something already installed. See `references/manifests.md`.
+  or `litium-cloud app show --app <app-id> -o manifest` for something already installed. See `references/manifests.md`.
 - **Follow every job.** `apply` prints a job id; run `litium-cloud status logs --job <job-id> --follow`, then
   `litium-cloud status show --job <job-id>` and read **Details**. A parent job can read *completed* while a
   child item is *failed*.
@@ -58,7 +58,7 @@ create or connect those. Everything else in the diagram is an app you install fr
 | 4 | Litium platform | `litium-platform` | `install-litium-platform`, `restore` | Restores the legacy database and media; every dependent app needs it |
 | 5 | Storefront | `litium-nextjs-web` | `deploy-nextjs` | Connects to the platform automatically once both exist |
 | 6 | Payment and delivery apps | one per provider | `app-lifecycle` | Legacy registrations must be force-deleted from the restored database first |
-| 7 | File storage + Litium sFTP | `file-storage`, `litium-sftp` | `app-lifecycle` | sFTP mounts folders of File storage |
+| 7 | File storage + Litium sFTP | `file-storage`, `litium-sftp` | `app-lifecycle` | SFTP mounts folders of File storage |
 | 8 | SMTP relay | `litium-smtp` | `app-lifecycle` | Platform and storefront reference its exposed values |
 | 9 | Litium CDN domain apps | `litium-cdn-domain` | `custom-domain` | Needs the target app's `internal_domain_name` |
 
@@ -180,7 +180,7 @@ The migration step. Three artifacts go into one install.
 Work through the docs' list with the customer: site on the system domain and the test domain on every channel;
 back office sign-in with a legacy administrator account; search results; media; a test order through checkout,
 payment and confirmation with the callback updating the order; delivery options; every integration and
-scheduled job with correctly formatted numbers, dates and currencies; mail delivered; sFTP users connected;
+scheduled job with correctly formatted numbers, dates and currencies; mail delivered; SFTP users connected;
 no *File not found* or path errors in Insights; no configuration value still pointing at a legacy server.
 
 ## Production environment: what differs from test
@@ -195,5 +195,5 @@ final backups.
 ## Record in MIGRATION.md
 
 Environment ids and their production flag, the app id of every installed app, the artifact ids used, the secret
-ids created (never values), the sFTP hosts and users (not passwords), the test domain, and the verification
+ids created (never values), the SFTP hosts and users (not passwords), the test domain, and the verification
 list with a pass or fail per item.

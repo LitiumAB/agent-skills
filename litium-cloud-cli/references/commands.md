@@ -49,7 +49,7 @@ Use `-o json` for anything a script parses; it never prints progress bars or tab
 
 | Command | Required options | Notable options | Starts a job? | Notes |
 |---|---|---|---|---|
-| `auth login` | — | `--service-principal`, `--username <sp-id>`, `--certificate <path>` | No | Without options, opens a browser for the Litium Account. The service-principal sign-in is remembered: the id and certificate path are stored and later commands renew the token by themselves |
+| `auth login` | — | `--service-principal`, `--username <service-principal-id>`, `--certificate <path>` | No | Without options, opens a browser for the Litium Account. The service-principal sign-in is remembered: the id and certificate path are stored and later commands renew the token by themselves |
 | `auth logout` | — | — | No | Clears cached accounts and tokens |
 | `auth show` | — | — | No | Prints `Current user: <email>` or `Current service-principal: <name>`. Prints `Not logged in.` and exits `1` — a good script guard |
 | `auth permission` | — | `--email <email>`, `--filter <text>` | No | Roles of the signed-in account, or of `--email`. Columns: Role id, Role name, Document id |
