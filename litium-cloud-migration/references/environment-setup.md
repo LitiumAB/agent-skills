@@ -114,7 +114,11 @@ The migration step. Three artifacts go into one install.
 ## Step 5 — Storefront
 
 - **Decide**: Litium Storefront (`litium-nextjs-web`, React Accelerator) or a private storefront app for a
-  custom front end. Custom storefronts also need the storefront proxy; confirm the setup with Litium support.
+  custom front end. Litium Storefront has the proxy built in; a custom storefront on a private Next.js, Node.js
+  or Nuxt.js web app also needs a `litium-storefront-proxy` app in front of it (self-service, it needs an app
+  plan; check the products of the subscription in the Portal or ask the Litium contact whether the agreement
+  covers it). See https://docs.litium.dev/cloud/serverless/apps/public-apps/litium-storefront-proxy.md and
+  https://docs.litium.dev/cloud/serverless/guides/configure/private-storefront-app.md.
 - **Manifest properties that matter**: `artifact` pointing at a `nextjs` artifact. Configurations are the
   storefront's own environment variables, including the SMTP ones if it sends mail.
 - **After**: add the storefront's public domain to a channel in the back office, then check that pages render

@@ -1,12 +1,12 @@
 # Support requests
 
-Litium support handles the parts of a migration that are not self-service. Send requests to **support@litium.com** (or open a case via https://docs.litium.com/resources/support). Scheduled help — backups on a date, uploading backups to a subscription, go-live assistance — needs **at least three working days** of lead time. Group requests where you can; one thread per migration keeps the history in one place.
+Litium support handles the parts of a migration that are not self-service. Open a case with Litium support via https://docs.litium.com/resources/support (the channel the docs point to; the Portal's **Issue tracking** button is for reporting problems, not for booking help). Scheduled help — backups on a date, uploading backups to a subscription, go-live assistance — needs **at least three working days** of lead time. Group requests where you can; one case per migration keeps the history in one place.
 
 Rules for the agent: produce the request text, fill in what you know from `MIGRATION.md`, mark the rest `<...>` for the user, and stop. Never send it yourself. Log every request and answer under *Support requests* in `MIGRATION.md`. Never include secrets, passwords or certificate contents in a request.
 
 ## 1. Subscription access
 
-Required: customer name, subscription id (if known), the Litium Account e-mail addresses to grant, the role wanted (`system/owner` for the partner lead, `system/contributor` for developers). Lead time: a few working days. You get back: confirmation; verify with `litium-cloud subscription list` and `subscription access-control show`. After the first owner exists, grant further access yourself (`litium-cloud-cli` recipe `access-control`).
+Required: customer name, subscription id (if known), the Litium Account e-mail addresses to grant, the role wanted (`system/owner` for the partner lead, `system/contributor` for developers). Lead time: the docs state none for access requests; allow the usual three working days. You get back: confirmation; verify with `litium-cloud subscription list` and `subscription access-control show`. After the first owner exists, grant further access yourself (`litium-cloud-cli` recipe `access-control`).
 
 ```text
 Subject: Serverless Cloud subscription access – <customer>
@@ -22,7 +22,7 @@ The accounts already exist as Litium Accounts. Thanks,
 
 ## 2. Fastly access and a test domain
 
-Required: subscription id, environment id, whether the customer's legacy site is on Fastly through Litium today, the test domain and its DNS owner. Lead time: a few working days. You get back: Fastly access for the named accounts (if granted), confirmation that a certificate covers the test domain or that one has been added, and the DNS target. Verify by opening the test domain over HTTPS after you have added it to Litium CDN and the platform app (`litium-cloud-cli` recipe `custom-domain`).
+Required: subscription id, environment id, whether the customer's legacy site is on Fastly through Litium today, the test domain and its DNS owner. Lead time: at least three working days if a certificate has to be added (custom domains guide). You get back: Fastly access for the named accounts (if granted), confirmation that a certificate covers the test domain or that one has been added, and the DNS target. Verify by opening the test domain over HTTPS after you have added it to Litium CDN and the platform app (`litium-cloud-cli` recipe `custom-domain`).
 
 ```text
 Subject: Fastly access and test domain – <customer>, environment <environment-id>
@@ -37,7 +37,7 @@ Thanks, <name, partner company, phone>
 
 ## 3. Legacy database and files backups
 
-Required: legacy site name and environment (production), target subscription id, whether support should upload the backups directly as artifacts, the date and time window, and that the files backup must exclude the `IdentityServer` folder. Lead time: at least three working days for a scheduled date. You get back: a `.bak` file and a files archive (the folder containing `media`), or artifact ids if support uploads them. Verify: `artifact show` reports **Ready** for each id; the files archive contains `media` and no `IdentityServer`. Ask for fresh backups again before the rehearsal and for the final ones at go-live; unreferenced artifacts are removed after a retention period (FAQ: 14 days unused, 7 days after last use — confirm timing with support).
+Required: legacy site name and environment (production), target subscription id, whether support should upload the backups directly as artifacts, the date and time window, and that the files backup must exclude the `IdentityServer` folder. Lead time: at least three working days for a scheduled date. You get back: a `.bak` file and a files archive (the folder containing `media`), or artifact ids if support uploads them. Verify: `artifact show` reports **Ready** for each id; the files archive contains `media` and no `IdentityServer`. Ask for fresh backups again before the rehearsal and for the final ones at go-live; an artifact that no app references is deleted 14 days after creation if it was never used, or 7 days after the last app stopped using it (backups overview), so do not upload a backup long before you plan to use it.
 
 ```text
 Subject: Legacy backups for Serverless Cloud migration – <customer>
@@ -75,7 +75,7 @@ Thanks, <name, partner company>
 
 ## 5. Certificates for domains not in Fastly (non-LCC path)
 
-Required: subscription and environment ids, the full domain list (including redirect domains and the back office domain), the target app for each (Litium platform or storefront), where DNS is managed. Lead time: several working days per certificate; send the list as soon as it is final, before the rehearsal. You get back: confirmation that certificates exist for each domain and the DNS records to set at go-live. Verify: after DNS points at the CDN, every domain opens over HTTPS without warnings.
+Required: subscription and environment ids, the full domain list (including redirect domains and the back office domain), the target app for each (Litium platform or storefront), where DNS is managed. Lead time: at least three working days (custom domains guide); send the list as soon as it is final, before the rehearsal. You get back: confirmation that certificates exist for each domain and the DNS records to set at go-live. Verify: after DNS points at the CDN, every domain opens over HTTPS without warnings.
 
 ```text
 Subject: Certificates for custom domains – <customer>, environment <environment-id>

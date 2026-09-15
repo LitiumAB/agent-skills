@@ -4,8 +4,9 @@ Phase 5. Replaces the legacy Azure DevOps build + Web Deploy release with a pipe
 uploads a `dotnet` artifact and deploys it with the CLI. Sources of truth:
 https://docs.litium.dev/cloud/serverless/guides/automated-deployments/overview.md, `azure-devops.md`,
 `github-actions.md` and https://docs.litium.dev/cloud/serverless/guides/access/service-principals.md.
-Starting points: `assets/azure-pipelines.yml` and `assets/github-actions.yml` — byte-identical to the pipelines on
-those docs pages. Adapt and test them in the customer's own repository before pointing anything at production.
+Starting points: `assets/azure-pipelines.yml` and `assets/github-actions.yml` — the same YAML as the pipelines on
+those docs pages, with a comment header added. Adapt and test them in the customer's own repository before pointing
+anything at production.
 
 The pipeline is **rewritten, not patched**. The build stage survives almost unchanged; the release stage is
 deleted and replaced by separate CLI steps.

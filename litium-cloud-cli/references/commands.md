@@ -168,7 +168,7 @@ sit under a `litium-cloud` key), from the root of the folder or of the ZIP.
 
 | Command | Required options | Notable options | Starts a job? | Notes |
 |---|---|---|---|---|
-| `status show` | `--job` | — | No | Parent status (`pending` / `in progress` / `completed`), Action, Created by, Insights trace id, then **Details** with one block per child (`pending` / `in progress` / `succeeded` / `failed` / `cancelled`). A parent reads `completed` even when a child failed |
+| `status show` | `--job` | — | No | Parent status (`pending` / `in progress` / `completed`), Action, Created by, `Parent job id` when the job has one, then **Details** with one block per child (`pending` / `in progress` / `succeeded` / `failed` / `cancelled`). A parent reads `completed` even when a child failed. Send the job id to Litium support when you report a problem |
 | `status logs` | `--job` | `-f`, `--follow` | No | Prints the job's console output in order, errors in red; `Retry: <n>` marks a retried attempt. `Ctrl+C` stops following. Logs live on the child job that did the work |
 
 ## query
