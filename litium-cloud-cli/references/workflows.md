@@ -174,7 +174,7 @@ collect its own output: `litium-cloud app action --app <app-id> --action console
 the related job with `status logs`.
 
 **Docs.** `/cloud/serverless/guides/artifacts/create-nextjs-artifact`,
-`/cloud/serverless/get-started/install-nextjs-storefront`,
+`/cloud/serverless/apps/public-apps/litium-storefront`,
 `/cloud/serverless/guides/artifacts/using-environment-variables`.
 
 ---
@@ -333,7 +333,7 @@ the artifact. No response on the public domain usually means Litium CDN was miss
 created — install it, then `litium-cloud app restart --app litium --wait`. A license error means the
 artifact lacks a valid `license.json` for the domain.
 
-**Docs.** `/cloud/serverless/get-started/install-litium-platform`,
+**Docs.** `/cloud/serverless/apps/public-apps/litium-platform/overview`,
 `/cloud/serverless/reference/manifest`.
 
 ---
@@ -348,8 +348,8 @@ Insights is normally next.
 **Steps.**
 
 1. Litium CDN. Every app with a public endpoint is registered in it automatically when installed, and
-   gets a system domain `<subscription>-<environment>-<app>.litium.app`. Image Optimizer is switched
-   on automatically.
+   gets a system domain `<subscription>-<environment>-<app>.litium.app`. The Fastly image optimizer
+   is active for all LCC environments.
 
    ```bash
    litium-cloud marketplace manifest --app litium-cdn -f litium-cdn.yaml
@@ -358,7 +358,10 @@ Insights is normally next.
    litium-cloud app show --app litium-cdn
    ```
 
-   If you install the CDN after other apps, their domains are added the next time those apps update.
+   If you install the CDN after other apps, the apps installed earlier are **not** configured in the
+   CDN automatically: add their system domains with the CDN's `add-domain-name` action (see
+   `custom-domain`), or restart them (`litium-cloud app restart --app <app-id> --wait`) as the Litium
+   platform page suggests for a platform app that does not answer on its system domain.
 
 2. Litium Insights — application logs, request logs and metrics for every app in the environment.
 
@@ -368,17 +371,18 @@ Insights is normally next.
    litium-cloud status logs --job <job-id> --follow
    ```
 
-3. Grant people access to Insights. A user needs Reader on the subscription plus a role on the
-   Insights app.
+3. Grant people access to Insights. A user needs read access on the subscription plus one of the
+   Insights roles: `apps/litium-insights/insights-logs` (application logs and request metrics) or
+   `apps/litium-insights/insights-bi` (business intelligence). Grant the Insights role on the
+   subscription to cover every Insights app in it, or on one app only.
 
    ```bash
-   litium-cloud subscription access-control add --email <user-email> --role subscription/reader --subscription <subscription-id>
-   litium-cloud app access-control add --email <user-email> --role system/contributor --app litium-insights --subscription <subscription-id> --environment <environment-id>
+   litium-cloud subscription access-control add --email <user-or-group-email> --role subscription/reader --subscription <subscription-id>
+   litium-cloud subscription access-control add --email <user-or-group-email> --role apps/litium-insights/insights-logs --subscription <subscription-id>
+   litium-cloud app access-control add --email <user-or-group-email> --role apps/litium-insights/insights-logs --app litium-insights --subscription <subscription-id> --environment <environment-id>
    ```
 
-   Instead of Contributor, grant the dedicated roles: `apps/litium-insights/insights-logs` (logs and
-   metrics) or `apps/litium-insights/insights-bi` (business intelligence). Grant them to a group
-   rather than per user — see `access-control`.
+   Grant the roles to a group such as *Insights users* rather than per user — see `access-control`.
 
 4. Sign in at https://insights.litium.cloud with the same Litium Account.
 
@@ -389,9 +393,9 @@ Insights is normally next.
 self-service. Contact Litium support only for a certificate that is not already in Fastly, or to move
 a domain between Fastly services you do not control.
 
-**Docs.** `/cloud/serverless/get-started/install-litium-cdn`,
-`/cloud/serverless/get-started/install-litium-insights`,
-`/cloud/serverless/apps/public-apps/litium-cdn`.
+**Docs.** `/cloud/serverless/apps/public-apps/litium-cdn`,
+`/cloud/serverless/apps/public-apps/litium-insights`,
+`/cloud/serverless/guides/operate/monitoring-with-litium-insights`.
 
 ---
 

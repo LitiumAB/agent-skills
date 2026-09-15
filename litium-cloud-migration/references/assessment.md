@@ -109,7 +109,7 @@ There is no IIS in Serverless Cloud; `web.config` is not read. Map each item:
 
 | web.config item | Serverless Cloud equivalent |
 |---|---|
-| `<rewrite>` rules (www redirect, https redirect, trailing slash, legacy URLs) | ASP.NET Core rewrite/redirect middleware in the app, or a Litium redirect in the back office; CDN-level rules are not self-service (ask support) |
+| `<rewrite>` rules (www redirect, https redirect, trailing slash, legacy URLs) | ASP.NET Core rewrite/redirect middleware in the app, or a Litium redirect in the back office; rules in the CDN itself need access to the environment's Fastly service (ask support for access, see the Litium CDN page) |
 | `maxAllowedContentLength` / `maxRequestLength` | Request bodies are capped at 100 MB and not configurable per environment; chunk larger uploads in the app |
 | `requestTimeout`, `processPath`, `hostingModel`, `stdoutLogEnabled` | Not applicable; the platform runs the app directly |
 | `customHeaders`, HSTS, security headers | Middleware in the app; verify behind the CDN that HTTPS redirects do not loop (TLS terminates at Litium CDN) |

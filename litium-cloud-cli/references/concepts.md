@@ -203,12 +203,14 @@ subscription first or in the same command. The file holds ids, not secrets, but 
 
 - **Interactive**: `litium-cloud auth login` opens a browser for a **Litium Account** — the same
   account used for the Portal and Litium Insights, separate from the docs account, requires 2FA.
-  Tokens are cached in the Windows credential store, the macOS keychain (service *Litium.CloudAPI*)
-  or the Linux keyring.
+  Tokens are cached in an encrypted file under `%LOCALAPPDATA%\Litium\Cloud` on Windows, in the login
+  keychain (service *Litium.CloudAPI*) on macOS, and in the desktop keyring on Linux, with an
+  unprotected file in `~/.local/share/Litium/Cloud` as fallback.
 - **Service principal**: a non-interactive identity with an id in email form, `service.<name>@cloud`.
   It signs in with a certificate: `auth login --service-principal --username <id> --certificate <path>`.
   The CLI generates the key pair locally and Litium never stores the private key.
-  Certificates default to **180 days** and are capped at **365 days**.
+  Certificates created with the CLI default to **180 days** and are capped at **365 days**; a
+  certificate generated in the Portal is valid for **1, 3 or 6 months** (3 preselected).
   **`service-principal renew` revokes every other active certificate on the principal**, so update the
   pipeline secret in the same maintenance window. The id and the roles are unchanged.
   A service principal inherits **nothing** from the person who created it.
@@ -231,7 +233,7 @@ A **role** is granted to a **principal** (user, group or service principal) on a
 | `system/acl-manager` | User access manager — manage access without access to the resource |
 
 **Resource roles** follow the pattern `creator` / `reader` / `writer` / `contributor` on one resource
-type: `subscription/*` (no creator), `environment/*`, `appresource/*`, `artifact/*`, `secret/*`,
+type: `subscription/*` (subscriptions are created by Litium, so `subscription/creator` is not a partner role), `environment/*`, `appresource/*`, `artifact/*`, `secret/*`,
 `group/*`, `serviceprincipal/*`. Use them for narrow pipeline access. Read access on a resource does
 not imply read access on its parent: an app-scoped principal also needs `environment/reader` and
 `subscription/reader`.
@@ -268,9 +270,9 @@ The parent line reads `pending`, `in progress` or `completed`. Each entry under 
 a child failed**, so always read Details. Logs live on the child job that did the work, so run
 `status logs` on the child job id when the parent log is empty.
 
-`status show` also prints an **Insights trace id** to search for in Litium Insights, and
-`Parent job id` / `Waiting on job` when they apply. For an artifact build job, the artifact id doubles
-as the job id.
+`status show` also prints `Parent job id` and `Waiting on job` when they apply. When you contact
+Litium support about a job, send the job id or the URL of its page in the Portal. For an artifact
+build job, the artifact id doubles as the job id.
 
 ## Portal vs CLI
 

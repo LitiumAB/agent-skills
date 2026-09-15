@@ -57,7 +57,8 @@ Verify: `environment show` reads production, and response times during job runs 
 ## Artifacts and backups
 
 **An artifact stays in `Processing` for a long time, or the upload crawls.**
-Cause: `dotnet` and `nextjs` artifacts are built after upload, so minutes are normal — but a huge package
+Cause: `nextjs`, `nodejs` and `nuxtjs` artifacts are built after upload, so minutes in `Processing` are normal
+(a `dotnet` artifact is built locally before the upload and is only validated afterwards) — but a huge package
 usually means `node_modules`, `.git`, test output or media went along.
 Fix: point `--file-path` at the published output, not the source folder; check the ignore rules; add
 `--no-progress` in a pipeline. In a polling loop, raise the retry count rather than the sleep interval.
@@ -76,8 +77,8 @@ then apply the manifest again so the app is *created* with the backup ids (`liti
 Verify: the back office shows the restored orders and content; `app show` lists the expected artifact.
 
 **The storage artifact is gone on go-live day.**
-Cause: it was uploaded far ahead and never referenced; unreferenced artifacts are removed by retention (the FAQ
-states 14 days if never used, 7 days after last use — confirm with Litium support when timing is tight).
+Cause: it was uploaded far ahead and never referenced; an artifact that no app references is deleted 14 days
+after creation if it was never used, or 7 days after the last app stopped using it (artifacts overview, FAQ).
 Fix: upload on T-1, confirm **Ready**, note the id, and download a copy of anything you must keep.
 Verify: `litium-cloud artifact show` still resolves the id on the morning of go-live.
 
@@ -90,9 +91,10 @@ Rebuild and deploy.
 Verify: the code path runs, and Insights shows no path errors.
 
 **A file that must be in the artifact is missing.**
-Cause: an ignore rule excluded it. The CLI reads `.gitignore`, `.npmignore` and `.litiumcloudignore` from the
-root of the uploaded folder only, applies them as one ordered list, and the **last** matching rule wins; files
-matching no rule at all are excluded.
+Cause: an ignore rule excluded it. The CLI starts from everything under the uploaded folder, always drops
+`.git/**`, then applies the lines of `.gitignore`, `.npmignore` and `.litiumcloudignore` — read from the root
+of that folder only — as one ordered list where the **last** matching rule wins. A `.gitignore` in a subfolder
+has no effect, and nothing is applied to a zip file passed to `--file-path`.
 Fix: re-include it with `!<pattern>` in a root `.litiumcloudignore`. Inspect the package with
 `litium-cloud artifact download`.
 Verify: the file is present in the downloaded artifact and the app finds it.
