@@ -196,11 +196,8 @@ text; never run it in a pipeline whose log is published.
 `litium-cloud context set --subscription <id> --environment <id>` writes `.litium-cloud.config`.
 Without `--global` it lands in the current folder and the CLI searches upwards through parent folders,
 so each project folder deploys to its own environment. With `--global` it goes to the CLI application
-data folder (relocatable with `LC_CLI_CACHE_DIR`). A local file wins over the global one. Set the
+data folder. A local file wins over the global one. Set the
 subscription first or in the same command. The file holds ids, not secrets, but gitignore it anyway.
-
-The **workspace** is the cloud instance the CLI talks to; partners use `prod`, which is the default.
-Leave `LC_CLI_WORKSPACE` and `LC_CLI_URL` unset.
 
 ## Authentication
 

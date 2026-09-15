@@ -15,7 +15,7 @@ Accepted by every command:
 | Option | Meaning |
 |---|---|
 | `-o`, `--output <DEFAULT\|JSON\|MANIFEST>` | Output format. `DEFAULT` = human tables, `JSON` = machine-readable, `MANIFEST` = YAML manifest |
-| `-d`, `--diagnostics` | Diagnostic output including full exception details |
+| `-d`, `--diagnostics` | Print full exception details when a command fails |
 | `-?`, `-h`, `--help` | Help for the command or group |
 
 Only directly after `litium-cloud`:
@@ -31,23 +31,7 @@ Only directly after `litium-cloud`:
 
 Use `-o json` for anything a script parses; it never prints progress bars or table borders.
 
-## Directives, environment variables, exit codes, CI
-
-A directive goes in square brackets before the command name:
-
-```bash
-litium-cloud [workspace:prod] subscription list
-```
-
-`workspace` picks the cloud instance. **Partners use `prod`, which is also the default**, so the
-directive is effectively never needed.
-
-| Variable | Meaning |
-|---|---|
-| `LC_CLI_WORKSPACE` | Workspace when no directive is given. Partners: leave unset (`prod`) |
-| `LC_CLI_URL` | Full Cloud API endpoint URL, overrides `LC_CLI_WORKSPACE`. Partners never set it |
-| `LC_CLI_VERBOSE` | `true` = verbose output, same as `-d` |
-| `LC_CLI_CACHE_DIR` | Folder for the token cache and the global context file. Set it to give a build agent its own isolated cache |
+## Exit codes and CI
 
 | Exit code | Meaning |
 |---|---|

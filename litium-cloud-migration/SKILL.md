@@ -88,7 +88,7 @@ Fetch a page as Markdown by appending `.md` to its URL (for example `https://doc
 
 ## How to use documentation
 
-1. **Live tool output for volatile facts.** Versions, flags, artifact type ids, app type ids and manifest properties change. Use `litium-cloud <command> --help`, `litium-cloud marketplace manifest`, `litium-cloud marketplace list --details` and `litium-cloud artifact artifact-type list` instead of memory. Do not rely on anything the CLI help marks as power-user only.
+1. **Live tool output for volatile facts.** Versions, flags, artifact type ids, app type ids and manifest properties change. Use `litium-cloud <command> --help`, `litium-cloud marketplace manifest`, `litium-cloud marketplace list --details` and `litium-cloud artifact artifact-type list` instead of memory.
 2. **Bundled references for process knowledge.** The files under `references/` are the migration procedure; load the one for the current phase. When an answer comes from a reference, name the file and section (for example `references/code-changes.md`, section 5) so the user can read the full text.
 3. **Live docs for detail.** Fetch the page from the Docs index (with `.md` appended) when a reference points to it or when the user asks about something the references do not cover. Some pages are still being written; when a page is a stub, fall back to the bundled reference and say so.
 4. **Litium docs MCP server, if configured.** Prefer its search tool over fetching URLs. It is not required.

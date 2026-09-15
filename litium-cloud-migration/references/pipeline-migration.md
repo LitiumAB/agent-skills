@@ -194,7 +194,7 @@ the CLI is a .NET tool. Keep the artifact timeout generous; these artifacts are 
 - **Add `-o json` to every command you parse.** Never parse the table output. Null and default values are left
   out of the JSON (`failed` only appears when `true`, `completedAt` only once the job is done).
 - **Sign in at the start of every run.** The sign-in is cached on the agent; re-signing in keeps a stale cache
-  from surprising you. `LC_CLI_CACHE_DIR` gives a shared agent its own cache.
+  from surprising you.
 - **Exit codes are 0 or 1, and a queued job returns 0.** That is why steps 5 and 7 exist; never treat a
   successful `app deploy` as a successful deployment.
 - **`--auto-yes`** is what makes destructive commands work non-interactively. A deployment pipeline does not

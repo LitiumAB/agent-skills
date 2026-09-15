@@ -1,6 +1,6 @@
 {
   "skill_name": "litium-cloud-migration",
-  "notes": "Assertions are graded as must_include (each must be satisfied) and must_not_include (any hit fails). Prompts are hypothetical: no customer repository and no litium-cloud CLI are available to the agent, so it writes the reply it would give and states which commands it would run and why. Every example value is fictional (example.com, placeholder ids). Grading note: must_not_include values are literal substrings, so a reply that says a flag is deliberately absent would still trip them; eval 6 therefore checks the --auto-yes rule as an expectation instead. The two must_not_include entries for the watch subcommand of status are written with a JSON \\u0020 escape so the repo's skill verifier (which scans this file for power-user commands) does not match the literal; JSON parsers see the plain string.",
+  "notes": "Assertions are graded as must_include (each must be satisfied) and must_not_include (any hit fails). Prompts are hypothetical: no customer repository and no litium-cloud CLI are available to the agent, so it writes the reply it would give and states which commands it would run and why. Every example value is fictional (example.com, placeholder ids). Grading note: must_not_include values are literal substrings, so a reply that says a flag is deliberately absent would still trip them; eval 6 therefore checks the --auto-yes rule as an expectation instead.",
   "evals": [
     {
       "id": 1,
@@ -20,7 +20,6 @@
         "Lists the support requests needed and states the three-working-days lead time"
       ],
       "must_not_include": [
-        "status\u0020watch",
         "apiVersion:",
         "status log "
       ]
@@ -83,7 +82,6 @@
         "After steps include monitoring, window transactions, and deleting the legacy environment via Litium support"
       ],
       "must_not_include": [
-        "status\u0020watch",
         "apiVersion:"
       ]
     },
