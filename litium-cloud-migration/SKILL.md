@@ -1,6 +1,6 @@
 ---
 name: litium-cloud-migration
-description: "Guide Litium partner developers through migrating a customer's Litium 8 site from Litium legacy cloud (Windows/IIS, Web Deploy or SFTP) to Litium Serverless Cloud: assess and inventory the solution, make the code Linux-ready, build a test environment from legacy backups, replace the Web Deploy pipeline, rehearse with production data, run the cutover, and decommission the legacy site. Tracks progress in MIGRATION.md in the customer repo. Triggers: migrate to serverless, legacy cloud, move site, cutover, go-live runbook, WebDeploy, msdeploy, publishsettings, appsettings.Staging.json or config transforms to serverless, IdentityServer folder, cannot uninstall legacy Klarna or payment app after restore, job NullReferenceException around culture that worked on Windows, sql_backup_file, storage_backup_file, Linux-ready, Windows-only package, Fastly or LCC switch, old payment webhook URLs, Portal instead of CLI, MIGRATION.md. Delegates all litium-cloud CLI syntax to the litium-cloud-cli skill."
+description: "Guide Litium partner developers through migrating a customer's Litium 8 site from Litium legacy cloud (Windows/IIS, Web Deploy or SFTP) to Litium Serverless Cloud: assess and inventory the solution, make the code Linux-ready, build a test environment from legacy backups, replace the Web Deploy pipeline, rehearse with production data, run the cutover, and decommission the legacy site. Tracks progress in MIGRATION.md in the repo. Triggers: migrate to serverless, legacy cloud, move site, cutover, go-live runbook, WebDeploy, msdeploy, appsettings.Staging.json or config transforms to serverless, IdentityServer folder, legacy Klarna or payment app cannot be uninstalled after restore, job NullReferenceException around culture that worked on Windows, Linux-ready, Windows-only package, Fastly or LCC domain switch, old payment webhook URLs, Portal instead of CLI, MIGRATION.md. Process only: every CLI command comes from the litium-cloud-cli skill. Not for a fresh setup or routine deploy with no legacy site."
 ---
 
 # Litium Cloud Migration
@@ -12,7 +12,7 @@ Partner developers use this skill to move a customer's Litium 8 site from **lega
 Scope:
 
 - **Litium 8.1 or later**; **8.16 or later recommended** (it is what a dedicated worker node for background jobs requires, which Litium activates on request for a production app at no extra cost; 8.8+ ships the health check endpoints Serverless Cloud probes).
-- **Legacy cloud only** as the source. A site on **Litium 7** must be upgraded to Litium 8 first (`litium-developer` covers that). A **self-hosted** site follows the same steps, but backups and domain moves are planned with Litium support rather than requested as legacy-cloud backups.
+- **Legacy cloud only** as the source. A site on **Litium 7** must be upgraded to Litium 8 first; that is a separate project (https://docs.litium.dev/platform/guides/upgrade-to-litium-8/overview), not covered by these skills. A **self-hosted** site follows the same steps, but backups and domain moves are planned with Litium support rather than requested as legacy-cloud backups.
 - MVC Accelerator, React Accelerator (Next.js storefront) and custom storefronts.
 
 Public docs for the process live at https://docs.litium.dev/cloud/serverless/migration/overview; this skill follows those pages and says "confirm with Litium support" wherever they do.
@@ -24,11 +24,21 @@ For these areas, delegate entirely to the named skill — do not duplicate its c
 | Topic | Skill to use |
 |-------|-------------|
 | Any `litium-cloud` command syntax, flags and output; service principals; secrets; manifest mechanics (`apply`, `marketplace manifest`, `app show -o manifest`); jobs, status and logs; access control | `litium-cloud-cli` (recipes: `new-environment`, `deploy-dotnet`, `deploy-nextjs`, `cicd-service-principal`, `install-litium-platform`, `install-cdn-insights`, `backups`, `restore`, `access-control`, `copy-environment`, `custom-domain`, `app-lifecycle`) |
-| General Litium development: accelerator code, data model, APIs, upgrading Litium 7 to 8, back office | `litium-developer` |
+| General Litium development: accelerator code, data model, APIs, back office | `litium-developer` |
 
-When a step needs a command, say **what** to run and **why**, name the `litium-cloud-cli` recipe, and check `litium-cloud <command> --help` before claiming any flag exists.
+When a step needs a command, say **what** to run and **why** and name the `litium-cloud-cli` recipe; flags come from that skill or from `--help`, never from memory (Hard rules).
 
 The Litium Cloud Portal (https://portal.litium.cloud, same Litium Account sign-in as the CLI) covers every migration step **except uploading artifacts** and running the pipeline: environments, app installs and actions, secrets, access control and service principals can all be done there. The `dotnet`, `sqlbackup` and `storage` uploads always need `litium-cloud artifact create`, so the backup uploads on T-1 and T-0 and the deployment pipeline stay on the CLI. After a change made in the Portal, export the manifest with `app show -o manifest` and commit it.
+
+## Session flow and MIGRATION.md
+
+`MIGRATION.md` in the root of the customer repo is the migration's state file and hand-over document (template: `assets/MIGRATION.md`). A migration spans many sessions and often several people; the file is how the next one continues instead of re-assessing.
+
+1. **Resume first.** If the customer repo contains `MIGRATION.md`, read it before anything else and continue from its *Status* section. If it does not exist and the user is past the first question, run the assessment and create it from `assets/MIGRATION.md`.
+2. **One phase at a time.** Load only the reference for the current phase. Update `MIGRATION.md` at the end of every phase (status, ids, decisions, measured durations, open questions).
+3. **Gates.** Do not start the test environment without a completed inventory. Do not start the cutover without a rehearsal record with measured durations, a confirmed webhook mapping, a written domain plan and a booked support window. If a gate is missing, say which one and go back.
+4. **Stop and produce a support request** (from `references/support-requests.md`) whenever a step needs Litium support: subscription access, Fastly access, legacy backups, certificates for domains not in Fastly, old webhook URL mapping, go-live day help, deleting the legacy environment. Support needs at least three working days for scheduled help.
+5. **Stop and ask** before every destructive or production action (Hard rules), and whenever a red flag from `references/assessment.md` changes the plan.
 
 ## Phases
 
@@ -57,8 +67,8 @@ Read these files **only** when the user's task requires that area:
 | `references/rehearsal-and-cutover.md` | rehearsal, runbook, T-1 and T-0 steps, LCC vs non-LCC domain switch, checkout toggle, order prefix, rollback, after go-live, decommissioning |
 | `references/support-requests.md` | what to ask support@litium.com for, lead times, request templates, what you get back |
 | `references/troubleshooting.md` | app does not start, `console-output`, job failed, file not found, payment app cannot be installed, mail not sent, Insights empty, SFTP cannot connect |
-| `assets/MIGRATION.md` | the state file template to copy into the customer repo |
-| `assets/azure-pipelines.yml`, `assets/github-actions.yml` | starting points for the replacement pipeline |
+| `assets/MIGRATION.md` | the state-file template: copy it to the root of the customer repo as `MIGRATION.md` during the assessment, fill in *Status* and *Inventory*, commit it with the code |
+| `assets/azure-pipelines.yml`, `assets/github-actions.yml` | replacement-pipeline starting points: copy to `azure-pipelines.yml` in the repo root or to `.github/workflows/deploy.yml`, replace every `<placeholder>`, add the solution's client builds, keep the certificate and NuGet credentials in the pipeline's secret store; `references/pipeline-migration.md` explains each step |
 
 ## Docs index
 
@@ -73,18 +83,15 @@ Fetch a page as Markdown by appending `.md` to its URL (for example `https://doc
 | Go-live runbook and rollback | https://docs.litium.dev/cloud/serverless/migration/go-live |
 | After go-live, decommissioning, hand-over | https://docs.litium.dev/cloud/serverless/migration/after-go-live |
 | Migration checklist | https://docs.litium.dev/cloud/serverless/migration/checklist |
-| Concepts (subscription, environment, app, artifact, manifest, job, secret, appRef) | https://docs.litium.dev/cloud/serverless/concepts |
-| Manifest reference | https://docs.litium.dev/cloud/serverless/reference/manifest |
 | App actions reference (backup, uninstall-app, add-domain, rebuild-search-indicies, console-output) | https://docs.litium.dev/cloud/serverless/reference/app-actions |
-| Roles and permissions | https://docs.litium.dev/cloud/serverless/reference/roles-and-permissions |
-| Backups overview, database backup, storage backup, restore | https://docs.litium.dev/cloud/serverless/guides/backups/overview |
 | App configuration and secrets | https://docs.litium.dev/cloud/serverless/guides/configure/app-configuration-and-secrets |
 | Create a .NET artifact (Targets package, probes, publish for Linux) | https://docs.litium.dev/cloud/serverless/guides/artifacts/create-dotnet-artifact |
 | .litiumcloudignore | https://docs.litium.dev/cloud/serverless/guides/artifacts/litium-cloud-ignore |
 | Litium platform app (properties, exposed values, actions, worker node) | https://docs.litium.dev/cloud/serverless/apps/public-apps/litium-platform/overview |
 | Litium CDN domain app | https://docs.litium.dev/cloud/serverless/apps/public-apps/litium-cdn-domain |
-| FAQ and troubleshooting | https://docs.litium.dev/cloud/serverless/faq |
 | Legacy deployment (Web Deploy, SFTP, Azure DevOps release) | https://docs.litium.dev/platform/guides/deployment/overview |
+| Upgrade to Litium 8 (required before a Litium 7 site can migrate) | https://docs.litium.dev/platform/guides/upgrade-to-litium-8/overview |
+| Everything else — concepts, CLI commands, manifest reference, roles, backups, FAQ | the Docs index in the `litium-cloud-cli` skill |
 
 ## How to use documentation
 
@@ -100,9 +107,8 @@ Fetch a page as Markdown by appending `.md` to its URL (for example `https://doc
 - **Before any production action** run `litium-cloud context show` and `litium-cloud environment show`, and state the target subscription, environment and its production flag in your reply.
 - **Back up before a production deploy.** Before `app deploy` or `apply` against a production environment, run the `backup-database` action (`litium-cloud-cli` recipe `backups`), wait for the `sqlbackup` artifact to be **Ready**, and note the currently deployed artifact id from `app show` as the rollback target. A newer Litium version in the artifact upgrades the database on deploy, and redeploying the old artifact does not undo that.
 - **Never put secrets** in manifests, in `MIGRATION.md`, in pipeline YAML or in chat. Secrets go into environment or subscription secrets and are referenced with `secretRef`.
-- **Never set `ASPNETCORE_ENVIRONMENT` to `Development`**, and never use it to load an extra `appsettings.<Env>.json`: only `appsettings.json` and `appsettings.production.json` are read. Everything else becomes manifest configurations and secrets.
+- **Never set `ASPNETCORE_ENVIRONMENT` to `Development`** (the app does not start), and never use the variable to load an extra `appsettings.<Env>.json`: only `appsettings.json` and `appsettings.production.json` are read. Everything else becomes manifest configurations and secrets.
 - **Never author a manifest from memory.** Start from `litium-cloud marketplace manifest` (or `app show -o manifest` for an installed app) and edit.
-- **Never set `ASPNETCORE_ENVIRONMENT=Development`**; the app does not start.
 - **Never copy the legacy `IdentityServer` folder** into a storage artifact. It holds the legacy app registrations and can break the live legacy site when the apps are force-deleted in the new one.
 - **Never change DNS or Fastly, delete the legacy environment, or send email** on the user's behalf. Produce the exact instructions or the support request text (see `references/support-requests.md`) and stop.
 - **Do not upload backup artifacts long before go-live** without checking retention: unreferenced artifacts are removed after a retention period (the FAQ states 14 days if never used, 7 days after last use; confirm with Litium support when timing is tight).
@@ -122,25 +128,17 @@ Fetch a page as Markdown by appending `.md` to its URL (for example `https://doc
 | Subscription and environment ids, installed apps, marketplace versions (`subscription list`, `environment list`, `app list`, `marketplace list --details`) | Go-live date and window, code freeze date, who approves the change freeze |
 | Which artifacts exist and their status (`artifact list`, `artifact show`) | Stop sales during the cutover (checkout toggle) or import legacy orders afterwards? New order number prefix? |
 
-## Session flow
-
-1. **Resume first.** If the customer repo contains `MIGRATION.md`, read it before anything else and continue from its *Status* section. If it does not exist and the user is past the first question, run the assessment and create it from `assets/MIGRATION.md`.
-2. **One phase at a time.** Load only the reference for the current phase. Update `MIGRATION.md` at the end of every phase (status, ids, decisions, measured durations, open questions) — it is the hand-over document and the record for the next session.
-3. **Gates.** Do not start the test environment without a completed inventory. Do not start the cutover without a rehearsal record with measured durations, a confirmed webhook mapping, a written domain plan and a booked support window. If a gate is missing, say which one and go back.
-4. **Stop and produce a support request** (from `references/support-requests.md`) whenever a step needs Litium support: subscription access, Fastly access, legacy backups, certificates for domains not in Fastly, old webhook URL mapping, go-live day help, deleting the legacy environment. Support needs at least three working days for scheduled help.
-5. **Stop and ask** before every destructive or production action (Hard rules), and whenever a red flag from `references/assessment.md` changes the plan.
-
 ## Common mistakes
 
 | Symptom | Root cause | Fix |
 |---------|-----------|-----|
 | Build or startup fails on Linux with a `PlatformNotSupportedException` or missing native library | A Windows-only package (`System.Drawing.Common`, `Microsoft.Web.Administration`, `System.DirectoryServices*`, `System.Management`, ...) is still referenced | Replace it (see `references/code-changes.md`) and rebuild the artifact |
-| Wrong number, date or currency formats in scheduled job output, or a `NullReferenceException` in a job that worked on Windows (a channel, website or format looked up from `CultureInfo.CurrentCulture` comes back null) | The OS culture is not set in Serverless Cloud; only web requests get the channel culture | Set `CultureInfo.CurrentCulture` and `CurrentUICulture` explicitly at the start of every job, from the channel or website it works for or a fixed culture (`references/code-changes.md`, section 5); read the stack trace in Litium Insights (Analytics > Dashboard > App Logs) |
-| A legacy payment or delivery app cannot be uninstalled in the back office after a restore ("the app is still installed") | The restored database still holds the legacy registration; the app does not exist in this environment | Force-delete it in the back office (Uninstall, then the force option) or with the `uninstall-app` action with `force=true`, after checking that `IdentityServer` was excluded from the storage artifact; if it was included, rebuild the storage artifact without it and reinstall the platform app first (`references/troubleshooting.md`) |
+| Wrong number, date or currency formats in a scheduled job, or a `NullReferenceException` in a job that worked on Windows | The OS culture is not set in Serverless Cloud; only web requests get the channel culture, so a channel, website or format looked up from `CultureInfo.CurrentCulture` is null | Set `CurrentCulture` and `CurrentUICulture` at the start of every job (`references/code-changes.md`, section 5); read the stack trace in Litium Insights (Analytics > Dashboard > App Logs) |
+| A legacy payment or delivery app cannot be uninstalled in the back office after a restore ("the app is still installed") | The restored database still holds the legacy registration; the app does not exist in this environment | Check that `IdentityServer` was excluded from the storage artifact (if not, rebuild it without that folder and reinstall the platform app first), then force-delete: back office **Uninstall** with the force option, or the `uninstall-app` action with `force=true` (`references/troubleshooting.md`) |
 | The still-live legacy site's payment app breaks after a force-delete | The `IdentityServer` folder was copied into the storage artifact | Rebuild the storage artifact without it and reinstall; never copy that folder |
 | A new `sql_backup_file` or `storage_backup_file` in the manifest has no effect | The properties are create-only; `apply` ignores them on an existing app | Uninstall the Litium platform app (and its dependents) and reinstall from the manifest (`litium-cloud-cli` recipe `restore`) |
 | Litium < 8.8 app never becomes ready after install or deploy | No built-in health endpoints; the probes never succeed | Set the probe paths to `"none"` or implement the endpoints, see `references/code-changes.md` |
-| Values from `appsettings.Staging.json` (or any other environment file) are missing | Only `appsettings.json` and `appsettings.production.json` are loaded | Move the values to manifest configurations (`LITIUM__SECTION__KEY` naming) and environment secrets referenced with `secretRef`; do not set `ASPNETCORE_ENVIRONMENT` to load the file, and never to `Development` |
+| Values from `appsettings.Staging.json` (or any other environment file) are missing | Only `appsettings.json` and `appsettings.production.json` are loaded | Move them to manifest configurations (`LITIUM__SECTION__KEY`) and environment secrets with `secretRef`; never set `ASPNETCORE_ENVIRONMENT` to load the file, and never to `Development` |
 | A production deploy has no rollback path | No database backup was taken before `app deploy`, and the database upgrade is one-way | Run the `backup-database` action and note the running artifact id before every production deploy (Hard rules) |
 | `File not found` for a file that is in the artifact | Linux paths are case-sensitive | Match folder and file name case exactly in code and configuration |
 | Payment callbacks for orders placed before go-live return 404 | The old webhook URLs were not mapped in the new Fastly service | Send the old URL list to support before go-live (`references/support-requests.md`) and verify on T-0 |

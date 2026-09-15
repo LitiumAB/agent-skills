@@ -1,12 +1,12 @@
 # Litium Agent Skills
 
-A collection of AI agent skills for building on the Litium platform. Works with GitHub Copilot, Cursor, Windsurf, and any other agent that supports the skills standard.
+A collection of AI agent skills for building on the Litium platform. Works with GitHub Copilot, Cursor, Windsurf, Claude Code, and any other agent that supports the skills standard.
 
 ## Available Skills
 
 | Skill | Description |
 |-------|-------------|
-| [litium-developer](./litium-developer/README.md) | Comprehensive development skill for Litium partner developers — covers React Accelerator (Next.js), MVC Accelerator (.NET), backoffice UI extensions (React, Vue, Angular, Vanilla JS via `@litiumab/platform-extension-sdk`), data modelling, APIs, local setup, and troubleshooting. |
+| [litium-developer](./litium-developer/README.md) | Comprehensive development skill for Litium partner developers — covers React Accelerator (Next.js), MVC Accelerator (.NET), back office UI extensions (React, Vue, Angular, Vanilla JS via `@litiumab/platform-extension-sdk`), data modelling, APIs, local setup, and troubleshooting. |
 | [litium-cloud-cli](./litium-cloud-cli/README.md) | Manage Litium Serverless Cloud with the `litium-cloud` CLI — environments, apps and manifests, artifacts and deployments, secrets, access control, backups and restore, custom domains, and CI/CD pipelines with service principals. |
 | [litium-cloud-migration](./litium-cloud-migration/README.md) | Guide a migration of an existing Litium 8 site from Litium legacy cloud to Serverless Cloud — assessment, code changes for Linux, environment setup, pipeline conversion, rehearsal, go-live runbook and support requests. Works together with `litium-cloud-cli`. |
 
@@ -38,7 +38,7 @@ npx skills add https://github.com/LitiumAB/agent-skills --skill litium-cloud-cli
 npx skills add https://github.com/LitiumAB/agent-skills --skill litium-cloud-migration
 ```
 
-Install `litium-cloud-cli` as well: the migration skill delegates all command syntax to it.
+Install `litium-cloud-cli` as well: the migration skill owns the process and delegates every command to it.
 
 ## Sample Usage
 
@@ -59,7 +59,7 @@ Add a custom field type and field template for products.
 ```
 
 ```
-Create a new Litium backoffice extension called "product-labels" using React.
+Create a new Litium back office extension called "product-labels" using React.
 ```
 
 **litium-cloud-cli:**

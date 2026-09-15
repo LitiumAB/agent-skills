@@ -7,7 +7,7 @@ description: "Help Litium partner developers build, configure, and deploy e-comm
 
 ## Overview
 
-Partner developers building on Litium platform use this skill for implementation guidance. This skill delegates to the `litium-cloud-cli` sub-skill for cloud deployment and to `litium-cloud-migration` for moving a site from Litium legacy cloud to Serverless Cloud. For all other Litium topics — including React Accelerator, MVC, data modelling, and APIs — it loads reference files on demand.
+Partner developers building on Litium platform use this skill for implementation guidance. This skill delegates to the `litium-cloud-cli` skill for cloud deployment and to `litium-cloud-migration` for moving a site from Litium legacy cloud to Serverless Cloud. For all other Litium topics — including React Accelerator, MVC, data modelling, and APIs — it loads reference files on demand.
 
 Always read `references/partner-guidance.md` first before helping modify Litium platform files.
 
@@ -17,8 +17,8 @@ For this area, delegate entirely to the named skill — do not duplicate its con
 
 | Topic | Skill to use |
 |-------|-------------|
-| Deploy to Litium Cloud, create/manage environments, artifacts, CI/CD, YAML apply manifests, service principals | `litium-cloud-cli` |
-| Migrate an existing site from Litium legacy cloud (Windows/IIS, Web Deploy) to Serverless Cloud: assessment, Linux-ready code changes, go-live runbook | `litium-cloud-migration` |
+| Litium Serverless Cloud operations: deploy, environments, apps and YAML manifests, artifacts, secrets, access control, backups and restore, custom domains, CI/CD with service principals | `litium-cloud-cli` |
+| Migrate an existing site from Litium legacy cloud (Windows/IIS, Web Deploy) to Serverless Cloud: assessment, Linux-ready code changes, test environment from legacy backups, pipeline conversion, rehearsal and go-live runbook, `MIGRATION.md` | `litium-cloud-migration` |
 
 ## Reference map
 

@@ -10,7 +10,10 @@ repository, so the next session, or the next person, picks up exactly where the 
 
 ```bash
 npx skills add https://github.com/LitiumAB/agent-skills --skill litium-cloud-migration
+npx skills add https://github.com/LitiumAB/agent-skills --skill litium-cloud-cli
 ```
+
+Install `litium-cloud-cli` as well: this skill never restates CLI syntax and names its recipes for every command.
 
 ## What it does
 
@@ -18,7 +21,7 @@ npx skills add https://github.com/LitiumAB/agent-skills --skill litium-cloud-mig
 - Makes the solution Linux-ready: Windows-only packages, case-sensitive paths, culture in background jobs,
   configuration out of `appsettings` files, the license and the first `dotnet` artifact
 - Builds a test environment from the legacy database and files backups, in install order, with every app the
-  site needs — CDN, Insights, platform, storefront, payment and delivery, File storage, sFTP, SMTP relay,
+  site needs — CDN, Insights, platform, storefront, payment and delivery, File storage, SFTP, SMTP relay,
   domains
 - Replaces the Azure DevOps Web Deploy release with an artifact pipeline, with ready-to-adapt Azure DevOps and
   GitHub Actions templates, service principal roles and certificate renewal
@@ -33,7 +36,6 @@ npx skills add https://github.com/LitiumAB/agent-skills --skill litium-cloud-mig
 
 - **litium-cloud-cli** — every `litium-cloud` command, flag and output. This skill names the recipe to follow
   and never duplicates CLI syntax.
-- **litium-developer** — accelerator code, data model, APIs, back office, and upgrading Litium 7 to 8 before a
-  migration can start.
+- **litium-developer** — accelerator code, data model, APIs and back office.
 
 ## No configuration required

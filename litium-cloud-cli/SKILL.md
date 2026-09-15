@@ -1,6 +1,6 @@
 ---
 name: litium-cloud-cli
-description: "Manage Litium Serverless Cloud with the litium-cloud CLI: environments, apps, artifacts, manifests, secrets, access control and pipeline deployments. Use for deploy to Litium Cloud or Serverless Cloud, create environment, install Litium platform, Litium CDN, Litium Insights, storefront, payment or delivery apps, create or upload an artifact, write or apply a YAML manifest, app deploy, app action, service principal, CI/CD pipeline deployment, access control, roles, groups, subscription and environment secrets, database and storage backups, restore, copy environment, custom domain, job status and logs, and the Litium Cloud Portal. Triggers: litium-cloud, cloud CLI, deploy to Litium Cloud, create environment, install Litium platform, artifact, manifest, apply, service principal, pipeline deployment, access control, group, secret, backup, restore, copy environment, custom domain, app action, job status, Portal."
+description: "Manage Litium Serverless Cloud with the litium-cloud CLI: environments, apps, artifacts, YAML manifests, secrets, access control, backups, custom domains and CI/CD pipeline deployments. Use for: CLI install or sign-in, deploy to Litium Cloud or Serverless Cloud, create environment, install Litium platform, Litium CDN, Litium Insights, Litium Storefront, payment or delivery apps, create or upload an artifact, write or apply a manifest, app deploy, app action, service principal, pipeline deployment (Azure DevOps, GitHub Actions), subscription and environment secrets, database and storage backup, restore, copy environment, custom domain, job status and logs, the Litium Cloud Portal. Triggers: litium-cloud, cloud CLI, deploy to Litium Cloud, environment, artifact, manifest, apply, service principal, secret, backup, restore, custom domain, app action, job failed, Portal. Not for moving a site off Litium legacy cloud: that is litium-cloud-migration, which takes its commands from here."
 ---
 
 # Litium Cloud CLI
@@ -14,6 +14,13 @@ front end for all of it, and the only way to upload artifacts.
 Use this skill for every Litium Cloud task: creating environments, installing and updating apps from
 YAML manifests, packaging and deploying code artifacts, secrets, access control, backups, custom
 domains and CI/CD pipelines. Load the reference files below on demand — do not guess a command.
+
+## Delegation
+
+| Topic | Skill to use |
+|-------|-------------|
+| Moving a site from Litium legacy cloud (Windows/IIS, Web Deploy) to Serverless Cloud: assessment, Linux-ready code, backups from the legacy site, rehearsal, cutover | `litium-cloud-migration` — it owns the process and names the recipes in this skill for every command |
+| Litium application code, accelerators, data model, APIs, back office | `litium-developer` |
 
 ## Prerequisites
 
@@ -66,7 +73,7 @@ Read `references/concepts.md` for the detail. In brief:
 | Reference file | Load when the task involves |
 |---|---|
 | `references/concepts.md` | Hierarchy, app types and versions, plans, artifact types, manifest grammar, configurations and `valueFrom`, context file, auth, roles and inheritance, job states, artifact retention, Portal vs CLI |
-| `references/commands.md` | Exact syntax of any `litium-cloud` command group, required and notable options, which commands start jobs, global options, exit codes, environment variables, CI behaviour |
+| `references/commands.md` | Exact syntax of any `litium-cloud` command group, required and notable options, which commands start jobs, global options, exit codes, environment variables, CI behavior |
 | `references/workflows.md` | A complete end-to-end task — the twelve recipes listed under Workflow routing |
 
 ## Workflow routing
@@ -119,11 +126,14 @@ optional MCP server at `https://docs.litium.dev/mcp` for live search — use it 
 ## Rules
 
 1. **Confirm the target before any mutating command.** Run `litium-cloud context show` (and
-   `litium-cloud auth show`) and state out loud which subscription and environment the command will
-   hit, and **whether that environment is a production environment** — check with
-   `litium-cloud environment show`, which prints `Production: Yes|No`.
-2. **Never add `--auto-yes` to a destructive command** (`app delete`, `app pause`) unless you are
-   writing a pipeline script the user asked for. It suppresses the safety prompt.
+   `litium-cloud auth show`) and state which subscription and environment the command will hit, and
+   **whether that environment is a production environment** — `litium-cloud environment show` prints
+   `Production: Yes|No`.
+2. **Destructive and production changes need an explicit yes.** Show the exact command and wait for
+   the user to confirm it before `app delete`, `app pause`, `environment delete`, `artifact delete`,
+   the `uninstall-app` action, or `apply` / `app deploy` against a production environment. Never add
+   `--auto-yes` to a destructive command unless you are writing a pipeline script the user asked
+   for — it suppresses the safety prompt.
 3. **`environment delete` has no confirmation prompt at all.** It starts immediately. Read the ids
    back to the user before running it.
 4. **Never put a secret in a manifest.** Create it with `subscription secret create` or
@@ -147,8 +157,7 @@ optional MCP server at `https://docs.litium.dev/mcp` for live search — use it 
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| `litium-cloud artifact-type list` → command not found | `artifact-type` is nested under `artifact` | `litium-cloud artifact artifact-type list` |
-| `app search` → command not found | The command does not exist; the help text is wrong | `litium-cloud marketplace list --details` |
+| A command from the help text is "not found" | The 2.10.x help text has three known errors | See **Dynamic help first** above |
 | `apply` skips everything / does nothing for a folder | `-f` was given a bare directory | Pass a file or a glob: `-f manifests/*.yaml` |
 | A manifest with `action: delete` and `kind: app` fails | `action: delete` is not implemented for apps | Use `litium-cloud app delete --app <app-id>` |
 | Command succeeded but nothing changed | The command only queued a job, and the job failed | `status show --job <id>` and read **Details** for a *failed* entry |
