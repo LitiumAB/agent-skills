@@ -181,8 +181,9 @@ no *File not found* or path errors in Insights; no configuration value still poi
 
 ## Production environment: what differs from test
 
-Same manifests, different values. Create it with `--production` (worker node on 8.16+, production-sized plans,
-custom domains indexable). Restrict access and grant the service principal only the deployment roles. Create
+Same manifests, different values. Create it with `--production` (production-sized plans, custom domains
+indexable, and the prerequisite for a dedicated worker node on 8.16+ if background jobs later need one —
+Litium activates that on request, at no extra cost). Restrict access and grant the service principal only the deployment roles. Create
 every production secret with the same ids as in test. Install Litium CDN and Litium Insights from the test
 manifests. The platform app itself is not installed until the rehearsal, and then again at go-live from the
 final backups.

@@ -11,7 +11,7 @@ Partner developers use this skill to move a customer's Litium 8 site from **lega
 
 Scope:
 
-- **Litium 8.1 or later**; **8.16 or later recommended** (background jobs move to the production worker node; 8.8+ ships the health check endpoints Serverless Cloud probes).
+- **Litium 8.1 or later**; **8.16 or later recommended** (it is what a dedicated worker node for background jobs requires, which Litium activates on request for a production app at no extra cost; 8.8+ ships the health check endpoints Serverless Cloud probes).
 - **Legacy cloud only** as the source. A site on **Litium 7** must be upgraded to Litium 8 first (`litium-developer` covers that). A **self-hosted** site follows the same steps, but backups and domain moves are planned with Litium support rather than requested as legacy-cloud backups.
 - MVC Accelerator, React Accelerator (Next.js storefront) and custom storefronts.
 

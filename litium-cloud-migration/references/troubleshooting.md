@@ -44,12 +44,15 @@ Cause: the app never started, so no application logs exist yet.
 Fix: use `console-output` as above. Insights only has logs from a running app.
 Verify: startup lines appear under **Analytics > Dashboard > App Logs** for the environment.
 
-**Background jobs still compete with web requests in production.**
-Cause: the dedicated worker node needs Litium 8.16 or later *and* the production flag; or the flag was set after
-the apps were installed.
-Fix: check `litium-cloud environment show` for the production flag. If it was set later, restart or redeploy the
-platform and storefront apps.
-Verify: `environment show` reads production, and the job runs are logged in Insights after a deploy.
+**Background jobs compete with web requests in production.**
+Cause: background jobs run in the web app by default. A dedicated worker node is not part of every production
+environment — Litium activates one when it is needed, at no extra cost, and it requires Litium 8.16 or later
+*and* the production flag.
+Fix: contact Litium support, describe which jobs slow the site down and when, and give the subscription id,
+environment id and Litium version. Check `litium-cloud environment show` for the production flag first; if the
+flag was set after the apps were installed, restart or redeploy the platform and storefront apps. There is no
+manifest property, app action or Portal setting that turns a worker node on.
+Verify: `environment show` reads production, and response times during job runs no longer rise in Insights.
 
 ## Artifacts and backups
 

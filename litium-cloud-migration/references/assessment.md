@@ -123,7 +123,7 @@ grep -rln --include=*.cs -E 'ScheduledTask|IScheduledTask|Cron|BackgroundService
 grep -rn --include=*.cs -E 'CultureInfo\.(CurrentCulture|CurrentUICulture|InvariantCulture)|\.ToString\("[a-zA-Z]"\)|decimal\.Parse|DateTime\.Parse|double\.Parse' . | grep -v /obj/ | grep -v /Tests/ | wc -l
 ```
 
-The exact job registration differs between Litium versions; find where the solution lists its jobs (appsettings scheduler section and classes implementing the scheduled task interface). For every job that formats or parses numbers, dates or currencies, record that it needs `CultureInfo.CurrentCulture` set explicitly; web requests are unaffected. On Litium 8.16+ in production, jobs run on the worker node.
+The exact job registration differs between Litium versions; find where the solution lists its jobs (appsettings scheduler section and classes implementing the scheduled task interface). For every job that formats or parses numbers, dates or currencies, record that it needs `CultureInfo.CurrentCulture` set explicitly; web requests are unaffected. On Litium 8.16+ in production, Litium can move jobs to a dedicated worker node if they compete with web traffic.
 
 ### SMTP
 
@@ -168,7 +168,7 @@ With the CLI signed in (`litium-cloud-cli`): note the subscription id, existing 
 |---|---|
 | Litium **< 8.1** | Stop. Upgrade to 8.1+ first (`litium-developer`); the migration pages do not apply |
 | Litium **< 8.8** | No built-in health endpoints: set the probe paths to `"none"` or implement `/health/startup`, `/health/live`, `/health/ready` before the first artifact, or the app never becomes ready |
-| Litium **< 8.16** | No worker node in production; jobs share capacity with web requests. Recommend upgrading before or soon after migration; plan load accordingly |
+| Litium **< 8.16** | A dedicated worker node is not available, so jobs always share capacity with web requests. From 8.16 in production, Litium can activate one at no extra cost when jobs need it. Recommend upgrading before or soon after migration; plan load accordingly |
 | SFTP, integration folders, private services or an own database needed, but **no App Cloud agreement** | Cannot install File storage or private apps. Customer must sign the agreement before the test environment; do not design around it |
 | **Not on Fastly today** | Certificates for every domain come from support (lead time), DNS records change at go-live, TTL must be lowered to 300 s a day before, and the domain switch cannot be rehearsed with real traffic |
 | **Many custom domains** (more than a handful, or several redirect domains) | One Litium CDN domain app per domain, a certificate check per domain, and a longer domain step on T-0; have support confirm certificate coverage for the full list |

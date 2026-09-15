@@ -19,8 +19,9 @@ subscription                     created by Litium; owns artifacts and subscript
   hyphens, and becomes part of every app's system domain, so keep it short. It has a **location**
   (region, immutable after creation) and a **production** flag.
 - The **production flag** switches on production behaviour: production resources for apps that support
-  it, platform background jobs on a dedicated worker node, and search-engine indexing allowed on
-  custom domains. Non-production environments, and the `litium.app` system domain in every
+  it, and search-engine indexing allowed on custom domains. It is also what lets Litium activate a
+  dedicated worker node for the platform app's background jobs when they need one (Litium 8.16+, at no
+  extra cost, on request — never partner-configurable). Non-production environments, and the `litium.app` system domain in every
   environment, always answer `noindex, nofollow`. Changing the flag requires restarting installed apps.
 
 ## Apps
@@ -240,8 +241,7 @@ not imply read access on its parent: an app-scoped principal also needs `environ
 
 **App-specific roles** for actions and Insights:
 `apps/litium-platform/backup-operator`, `apps/litium-platform/database-script-execution`,
-`apps/litium-platform/litium-management`, `apps/litium-platform/system-signin`,
-`apps/mssql-db/backup-operator`, `apps/mssql-db/script-execution`,
+`apps/litium-platform/litium-management`, `apps/mssql-db/backup-operator`, `apps/mssql-db/script-execution`,
 `apps/mssql-db/migration-execution`, `apps/file-storage/backup-operator`,
 `apps/litium-insights/insights-logs`, `apps/litium-insights/insights-bi`.
 

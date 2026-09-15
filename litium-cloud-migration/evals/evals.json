@@ -12,7 +12,7 @@
         "Asks whether the customer is on Fastly through Litium today (LCC) and whether the App Cloud agreement is in place",
         "Asks for the go-live date (or window / code freeze date)",
         "Runs, or asks for, the repository inventory (Litium version, Windows-only packages, paths, config files, jobs, pipeline)",
-        "Flags that 8.14 is below 8.16 (no worker node in production, recommends the upgrade as its own step) and notes that health probes are fine because 8.14 is at or above 8.8",
+        "Flags that 8.14 is below 8.16 (the dedicated worker node is only available from 8.16 and only when Litium activates it, and recommends the upgrade as its own step) and notes that health probes are fine because 8.14 is at or above 8.8",
         "Plans File storage plus a Litium SFTP app for the ERP, with the folder mapped into the app under /app_storage",
         "Plans reinstalling Klarna in the new environment and mapping the old webhook (callback) URLs through Litium support",
         "Plans a test environment restored from legacy database and files backups",

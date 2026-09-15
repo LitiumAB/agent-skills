@@ -164,7 +164,7 @@ Cron expressions use UTC unless `CronTimeZone` is set on the policy (documented 
 - Case-sensitive paths everywhere (section 3); include configuration values and CSS/JS references.
 - Temp files: use `Path.GetTempPath()`; do not assume the temp folder survives a restart or is shared between instances. Anything that must persist or be shared goes to File storage.
 - File locks: Linux does not lock files on open; a job that relied on "the file is locked while the ERP writes it" must use a done-marker or rename-on-complete convention instead. Verify integration file handling with the ERP in the test environment.
-- Multiple instances: production runs more than one replica and, on Litium 8.16 or later, jobs run on the worker node. Code that uses a local file or a static as a lock must use Litium's distributed lock (`DisallowConcurrentDistributedExecution` on the job) instead.
+- Multiple instances: production runs more than one replica, and on Litium 8.16 or later Litium can move jobs to a dedicated worker node when they need one. Code that uses a local file or a static as a lock must use Litium's distributed lock (`DisallowConcurrentDistributedExecution` on the job) instead.
 
 ## 6. What the platform provides, do not add it
 
