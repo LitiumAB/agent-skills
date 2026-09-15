@@ -8,7 +8,7 @@ Litium uses a **Field Framework** to define data structures:
 - **Field definition** — a typed data field (e.g., `SystemFieldTypeConstants.Text`, `SystemFieldTypeConstants.MultiField`)
 - **Field template** — a named schema that groups field definitions and is assigned to entities (products, pages, blocks, media folders, etc.)
 
-Docs: https://docs.litium.dev/platform/guides/data-modelling
+Docs: https://docs.litium.dev/platform/guides/data-modelling/overview
 
 ---
 
@@ -16,7 +16,7 @@ Docs: https://docs.litium.dev/platform/guides/data-modelling
 
 ### Create a Folder Field Template (Media)
 
-Docs: https://docs.litium.dev/platform/guides/data-modelling-how-to-create-a-folder-field-template
+Docs: https://docs.litium.dev/platform/guides/data-modelling/how-to-create-a-folder-field-template
 
 ```csharp
 using Litium.Media;
@@ -148,7 +148,7 @@ _fieldTemplateService.Create(template);
 
 Use `SystemFieldTypeConstants.MultiField` to create composite fields that group multiple field types — useful for sliders, repeating content (e.g., image + link + text per item).
 
-Docs: https://docs.litium.dev/platform/guides/data-modelling-how-to-set-up-a-multi-field
+Docs: https://docs.litium.dev/platform/guides/data-modelling/how-to-set-up-a-multi-field
 
 ### Define and Create a Multi-Field
 
@@ -213,7 +213,7 @@ internal class MultiFieldValidation : ValidationRuleBase<BaseProduct>
 
 Use custom field types when the built-in types (Text, Int, Decimal, MediaPointer, etc.) are insufficient.
 
-Docs: https://docs.litium.dev/platform/guides/data-modelling-how-to-create-custom-field-types
+Docs: https://docs.litium.dev/platform/guides/data-modelling/how-to-create-custom-field-types
 
 ### Steps to Create a Custom Field Type
 
@@ -341,7 +341,7 @@ yarn run build
 
 Fields can be set programmatically on entities even if they are not declared in a field template. This is done via the `Fields` collection:
 
-Docs: https://docs.litium.dev/platform/guides/data-modelling-how-to-work-with-a-field-that-is-not-in-a-field-template
+Docs: https://docs.litium.dev/platform/guides/data-modelling/how-to-work-with-a-field-that-is-not-in-a-field-template
 
 ```csharp
 // Setting a value on a field not in any template
@@ -378,8 +378,8 @@ This is useful for system-level fields or fields set via import/integration that
 
 ## Useful Links
 
-- Data modelling overview: https://docs.litium.dev/platform/guides/data-modelling
-- Folder field template: https://docs.litium.dev/platform/guides/data-modelling-how-to-create-a-folder-field-template
-- Multi-field: https://docs.litium.dev/platform/guides/data-modelling-how-to-set-up-a-multi-field
-- Custom field types: https://docs.litium.dev/platform/guides/data-modelling-how-to-create-custom-field-types
-- Field not in template: https://docs.litium.dev/platform/guides/data-modelling-how-to-work-with-a-field-that-is-not-in-a-field-template
+- Data modelling overview: https://docs.litium.dev/platform/guides/data-modelling/overview
+- Folder field template: https://docs.litium.dev/platform/guides/data-modelling/how-to-create-a-folder-field-template
+- Multi-field: https://docs.litium.dev/platform/guides/data-modelling/how-to-set-up-a-multi-field
+- Custom field types: https://docs.litium.dev/platform/guides/data-modelling/how-to-create-custom-field-types
+- Field not in template: https://docs.litium.dev/platform/guides/data-modelling/how-to-work-with-a-field-that-is-not-in-a-field-template

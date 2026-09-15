@@ -30,7 +30,7 @@ Then retry installation.
 
 ### "A network-related or instance-specific error" — SQL Server unreachable
 
-Use Docker Compose for easy service management: https://docs.litium.dev/platform/get-started/shared-dependencies
+Use Docker Compose for easy service management: https://docs.litium.dev/platform/get-started/shared-dependencies/overview
 
 ```powershell
 # Check Docker SQL container
@@ -215,7 +215,7 @@ Verify `wwwroot/ui/` exists with `js/` and `css/` subfolders.
 
 ### "Elasticsearch cluster not available"
 
-Use Docker Compose: https://docs.litium.dev/platform/get-started/shared-dependencies
+Use Docker Compose: https://docs.litium.dev/platform/get-started/shared-dependencies/overview
 
 ```powershell
 curl http://localhost:9200    # Should return cluster health JSON
@@ -260,6 +260,6 @@ dotnet new uninstall Litium.Accelerator.React.Templates
 ## Documentation References
 
 - Empty Project setup: https://docs.litium.dev/platform/get-started/install-empty-litium
-- MVC Accelerator setup: https://docs.litium.dev/accelerators/mvc/install-litium-accelerator
-- React Accelerator setup: https://docs.litium.dev/accelerators/react/get-started
-- Shared dependencies (Docker Compose): https://docs.litium.dev/platform/get-started/shared-dependencies
+- MVC Accelerator setup: https://docs.litium.dev/accelerators/mvc-accelerator/install-litium-accelerator
+- React Accelerator setup: https://docs.litium.dev/accelerators/react-accelerator/get-started
+- Shared dependencies (Docker Compose): https://docs.litium.dev/platform/get-started/shared-dependencies/overview

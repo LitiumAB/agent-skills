@@ -228,7 +228,7 @@ mutation {
 
 ## Cart — React Accelerator
 
-Docs: https://docs.litium.dev/accelerators/react/working-with-shopping-cart-and-checkout
+Docs: https://docs.litium.dev/accelerators/react-accelerator/working-with-shopping-cart-and-checkout
 
 ### How It Works
 
@@ -376,14 +376,14 @@ enum WishlistSortOrder { ASCENDING  DESCENDING }
 
 ### React wishlist integration
 
-See: https://docs.litium.dev/accelerators/react/working-with-wishlists
+See: https://docs.litium.dev/accelerators/react-accelerator/working-with-wishlists
 
 ---
 
 ## Useful Links
 
 - Cart & Checkout (Storefront API): https://docs.litium.dev/platform/guides/how-to-work-with-cart-and-checkout-using-the-storefront-api
-- Cart & Checkout (React Accelerator): https://docs.litium.dev/accelerators/react/working-with-shopping-cart-and-checkout
+- Cart & Checkout (React Accelerator): https://docs.litium.dev/accelerators/react-accelerator/working-with-shopping-cart-and-checkout
 - Wishlists (Storefront API): https://docs.litium.dev/platform/guides/how-to-work-with-wishlists-using-the-storefront-api
-- Wishlists (React Accelerator): https://docs.litium.dev/accelerators/react/working-with-wishlists
+- Wishlists (React Accelerator): https://docs.litium.dev/accelerators/react-accelerator/working-with-wishlists
 - Storefront API overview: https://docs.litium.dev/apis/storefront/overview

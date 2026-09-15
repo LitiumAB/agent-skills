@@ -19,7 +19,7 @@ dotnet --version      # .NET SDK 8.0+
 node --version        # Node.js 20+ (if using React)
 ```
 
-Required services (use Docker Compose — see https://docs.litium.dev/platform/get-started/shared-dependencies):
+Required services (use Docker Compose — see https://docs.litium.dev/platform/get-started/shared-dependencies/overview):
 - SQL Server on localhost:1433 (sa / Pass@word)
 - Elasticsearch on http://localhost:9200
 

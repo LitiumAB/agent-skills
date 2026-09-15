@@ -149,6 +149,6 @@ Features:
 
 Full Storefront API documentation:
 - [Overview](https://docs.litium.dev/apis/storefront/overview)
-- [Queries](https://docs.litium.dev/apis/storefront/queries)
-- [Mutations](https://docs.litium.dev/apis/storefront/mutations)
-- [Types](https://docs.litium.dev/apis/storefront/types)
+- [Cart and checkout guide](https://docs.litium.dev/platform/guides/how-to-work-with-cart-and-checkout-using-the-storefront-api)
+- [Wishlists guide](https://docs.litium.dev/platform/guides/how-to-work-with-wishlists-using-the-storefront-api)
+- Queries, mutations and types are documented in the schema browser of your installation's `/storefront.graphql` playground (see above)
