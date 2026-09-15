@@ -111,7 +111,7 @@ Fetch a page as Markdown by appending `.md` to its URL (for example `https://doc
 - **Never author a manifest from memory.** Start from `litium-cloud marketplace manifest` (or `app show -o manifest` for an installed app) and edit.
 - **Never copy the legacy `IdentityServer` folder** into a storage artifact. It holds the legacy app registrations and can break the live legacy site when the apps are force-deleted in the new one.
 - **Never change DNS or Fastly, delete the legacy environment, or send email** on the user's behalf. Produce the exact instructions or the support request text (see `references/support-requests.md`) and stop.
-- **Do not upload backup artifacts long before go-live** without checking retention: unreferenced artifacts are removed after a retention period (the FAQ states 14 days if never used, 7 days after last use; confirm with Litium support when timing is tight).
+- **Do not upload backup artifacts long before go-live** without checking retention: artifacts are deleted 14 days after creation if never used, or 7 days after the last app stopped using them (see the artifacts overview, the backups overview and the FAQ).
 - **Check `--help` before claiming a flag exists.** Reference `litium-cloud-cli` for syntax; never invent options.
 
 ## Ask vs infer
