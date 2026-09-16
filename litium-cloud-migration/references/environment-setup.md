@@ -143,7 +143,8 @@ The migration step. Three artifacts go into one install.
 
 - **Requires the App Cloud agreement.** If the customer does not have it, stop and say so; do not design around it.
 - **Decide**: which folders the integrations read and write (from the assessment), and one `litium-sftp` app
-  **per external user** — separate credentials, separate folders, and at most five IP addresses per app.
+  **per external user** — separate credentials, separate folders, and up to ten allow-list entries per app
+  (single IPs, `a-b` ranges or CIDR networks up to /24).
 - **Manifest properties that matter**: on `litium-sftp`, the `ip` property (comma- or newline-separated allow
   list) and one `type: storage` configuration per folder with `subPath` and an `appRef` to the File storage
   app's `storage_volume`. The same configuration shape mounts the folder in the platform app, where the code

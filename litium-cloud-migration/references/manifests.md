@@ -105,7 +105,8 @@ reference. Media is **not** stored here — media comes back through the platfor
 
 ## Litium sFTP
 
-One app per external user: separate credentials, separate folders, at most five IP addresses each.
+One app per external user: separate credentials, separate folders, up to ten allow-list entries each (a single
+IP, an `a-b` range or a CIDR network up to /24 per entry).
 
 ```yaml sftp-erp.yaml
 kind: app

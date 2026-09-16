@@ -30,7 +30,7 @@ Ask these; they cannot be read from the repo. Record the answers under *Inventor
 
 ### Integrations, SFTP and mail
 
-- Which external systems use **SFTP**: user names, their public IP addresses (at most five per Litium SFTP app), folders read and written.
+- Which external systems use **SFTP**: user names, their public IP addresses (up to ten entries per Litium SFTP app; a range or CIDR network counts as one entry), folders read and written.
 - Which SMTP server sends mail today, and whether the customer will use their own SMTP service or Litium's relay; who updates SPF/DKIM for the new sender.
 - Which scheduled jobs and integrations exist that the repo does not show (agents or scripts on the legacy servers, external schedulers).
 

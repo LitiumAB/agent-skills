@@ -178,7 +178,8 @@ customer's own service.
 Verify: one real transactional mail arrives from the expected sender.
 
 **The external system cannot connect over SFTP.**
-Cause: its IP address is not in the app's `ip` allow list (five per app, ranges included), or the wrong password
+Cause: its IP address is not in the app's `ip` allow list (ten entries per app; a single IP, an `a-b` range or a
+CIDR network up to /24 each count as one entry), or the wrong password
 was handed over.
 Fix: add the address, or install a second `litium-sftp` app. Read the host and user from
 `litium-cloud app show --app <sftp-app-id>` under **Exposes**, and the password with
