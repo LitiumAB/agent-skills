@@ -7,7 +7,7 @@ description: "Help Litium partner developers build, configure, and deploy e-comm
 
 ## Overview
 
-Partner developers building on Litium platform use this skill for implementation guidance. This skill delegates to the `litium-cloud-cli` sub-skill for cloud deployment. For all other Litium topics — including React Accelerator, MVC, data modelling, and APIs — it loads reference files on demand.
+Partner developers building on Litium platform use this skill for implementation guidance. This skill delegates to the `litium-cloud-cli` skill for cloud deployment and to `litium-cloud-migration` for moving a site from Litium legacy cloud to Serverless Cloud. For all other Litium topics — including React Accelerator, MVC, data modelling, and APIs — it loads reference files on demand.
 
 Always read `references/partner-guidance.md` first before helping modify Litium platform files.
 
@@ -17,7 +17,8 @@ For this area, delegate entirely to the named skill — do not duplicate its con
 
 | Topic | Skill to use |
 |-------|-------------|
-| Deploy to Litium Cloud, create/manage environments, artifacts, CI/CD, YAML apply manifests, service principals | `litium-cloud-cli` |
+| Litium Serverless Cloud operations: deploy, environments, apps and YAML manifests, artifacts, secrets, access control, backups and restore, custom domains, CI/CD with service principals | `litium-cloud-cli` |
+| Migrate an existing site from Litium legacy cloud (Windows/IIS, Web Deploy) to Serverless Cloud: assessment, Linux-ready code changes, test environment from legacy backups, pipeline conversion, rehearsal and go-live runbook, `MIGRATION.md` | `litium-cloud-migration` |
 
 ## Reference map
 
@@ -59,6 +60,7 @@ Read these files **only** when the user's task requires that area:
 
 - **"How do I work on the React storefront?"** → read `references/react-accelerator/overview.md` first, then load specific references as needed (template-routing, code-patterns, etc.).
 - **"How do I deploy/manage Litium Cloud environments?"** → delegate to `litium-cloud-cli`.
+- **"How do we move our site from legacy cloud to Serverless Cloud?"** → delegate to `litium-cloud-migration`.
 - **"How do I set up Litium locally?"** → load the matching setup reference (empty / MVC / React).
 - **"How do I add cart or wishlist functionality?"** → load `references/cart-and-wishlist.md`.
 - **"How do I create a custom field type or field template?"** → load `references/data-modelling.md`.

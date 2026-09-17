@@ -1,0 +1,225 @@
+# Litium Serverless Cloud deployment pipeline (Azure DevOps)
+#
+# Starting point only. Replace every <placeholder>, adapt the project path, the target
+# framework and any client build steps to your solution, and test the pipeline in your
+# own repository against a test environment before you point it at production.
+#
+# Save as azure-pipelines.yml in the repository root (or under pipelines/ and point the
+# pipeline definition at it)
+#
+# Prerequisites
+#   - The web project references the Litium.Cloud.Tools.Targets package, so that
+#     'dotnet publish' writes litiumcloud.manifest.json into the publish folder.
+#   - A service principal with the minimum deployment roles: subscription/reader and
+#     artifact/creator on the subscription, environment/reader on the environment and
+#     appresource/writer on the app.
+#   - Its certificate uploaded as a secure file named litium-cloud.pem under
+#     Pipelines > Library > Secure files.
+#   - A variable group named litium-cloud-deploy with three secret variables:
+#       LitiumNuGetUser          docs account user name for the Litium NuGet feed
+#       LitiumNuGetPassword      its password
+#       LitiumServicePrincipal   the service principal id, service.<name>@cloud
+#
+# Every step is a bash script on a Linux agent. Each step does one thing, reads its
+# input from environment variables, and fails the pipeline on the first error.
+
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: litium-cloud-deploy
+  - name: subscription
+    value: <subscription-id>
+  - name: environment
+    value: <environment-id>
+  - name: app
+    value: <app-id>                        # for example litium
+  - name: artifactType
+    value: dotnet                          # nextjs, nodejs or nuxtjs for a storefront
+  - name: project
+    value: Src/<web-project>/<web-project>.csproj
+  - name: targetFramework
+    value: net8.0                          # match the web project
+  - name: publishPath
+    value: $(Build.SourcesDirectory)/publish
+  - name: pollSeconds
+    value: 15                              # time between two status checks
+  - name: artifactTimeoutMinutes
+    value: 30                              # nextjs, nodejs and nuxtjs artifacts are built after upload
+  - name: deployTimeoutMinutes
+    value: 30
+
+steps:
+  # 1. Build and publish -------------------------------------------------------------
+  - task: UseDotNet@2
+    displayName: Install the .NET SDK
+    inputs:
+      packageType: sdk
+      version: 8.0.x                       # the CLI needs .NET 8; add a second task for your app's SDK if it differs
+
+  - bash: |
+      set -euo pipefail
+      dotnet nuget add source https://nuget.litium.com/nuget/ --name Litium \
+        --username "$NUGET_USER" --password "$NUGET_PASSWORD" --store-password-in-clear-text
+    displayName: Add the Litium NuGet feed
+    env:
+      NUGET_USER: $(LitiumNuGetUser)
+      NUGET_PASSWORD: $(LitiumNuGetPassword)
+
+  # Add the client builds of your solution here, for example npm or yarn steps,
+  # before the publish step.
+
+  - bash: |
+      set -euo pipefail
+      dotnet publish "$PROJECT" --configuration Release --framework "$TARGET_FRAMEWORK" \
+        --os linux --arch x64 --output "$PUBLISH_PATH"
+      # Litium.Cloud.Tools.Targets writes the manifest that the dotnet artifact type requires.
+      if [ ! -f "$PUBLISH_PATH/litiumcloud.manifest.json" ]; then
+        echo "litiumcloud.manifest.json is missing from $PUBLISH_PATH."
+        echo "Add the Litium.Cloud.Tools.Targets package to the web project."
+        exit 1
+      fi
+    displayName: Publish for Linux
+    env:
+      PROJECT: $(project)
+      TARGET_FRAMEWORK: $(targetFramework)
+      PUBLISH_PATH: $(publishPath)
+
+  # 2. Install the Litium Cloud CLI ----------------------------------------------------
+  - bash: |
+      set -euo pipefail
+      dotnet tool update --global litium.cloud.cli --no-cache
+      # Make the tool available to this step and to every step after it.
+      export PATH="$HOME/.dotnet/tools:$PATH"
+      echo "##vso[task.prependpath]$HOME/.dotnet/tools"
+      litium-cloud --version
+    displayName: Install the Litium Cloud CLI
+
+  # 3. Sign in with the service principal ---------------------------------------------
+  - task: DownloadSecureFile@1
+    name: certificate
+    displayName: Download the service principal certificate
+    inputs:
+      secureFile: litium-cloud.pem
+
+  - bash: |
+      set -euo pipefail
+      # The CLI stores the certificate path and reads the file again on every later
+      # command, so pass the absolute path that the download task reports.
+      litium-cloud auth login --service-principal \
+        --username "$SERVICE_PRINCIPAL_ID" --certificate "$CERTIFICATE_PATH"
+    displayName: Sign in with the service principal
+    env:
+      SERVICE_PRINCIPAL_ID: $(LitiumServicePrincipal)
+      CERTIFICATE_PATH: $(certificate.secureFilePath)
+
+  # 4. Create the artifact -------------------------------------------------------------
+  - bash: |
+      set -euo pipefail
+      output=$(litium-cloud artifact create --subscription "$SUBSCRIPTION" \
+        --artifact-type "$ARTIFACT_TYPE" --file-path "$PUBLISH_PATH" \
+        --name "$ARTIFACT_NAME" --no-progress -o json)
+      artifact_id=$(jq -r '.data.artifactId // empty' <<< "$output")
+      if [ -z "$artifact_id" ]; then
+        echo "$output"
+        echo "Could not read data.artifactId from the artifact create output."
+        exit 1
+      fi
+      echo "Artifact id: $artifact_id"
+      echo "##vso[task.setvariable variable=artifactId]$artifact_id"
+    displayName: Create the artifact
+    env:
+      SUBSCRIPTION: $(subscription)
+      ARTIFACT_TYPE: $(artifactType)
+      PUBLISH_PATH: $(publishPath)
+      ARTIFACT_NAME: $(Build.BuildNumber)
+
+  # 5. Wait until the artifact is ready -----------------------------------------------
+  - bash: |
+      set -euo pipefail
+      deadline=$((SECONDS + TIMEOUT_MINUTES * 60))
+      while [ "$SECONDS" -lt "$deadline" ]; do
+        artifact=$(litium-cloud artifact show --artifact "$ARTIFACT_ID" -o json) \
+          || { echo "artifact show failed, retrying in $POLL_SECONDS seconds."; sleep "$POLL_SECONDS"; continue; }
+        status=$(jq -r '.status' <<< "$artifact")
+        echo "Artifact status: $status"
+        case "$status" in
+          Ready)
+            exit 0 ;;
+          Failed)
+            # The build log is on the failed job; fall back to the artifact id, which
+            # doubles as the id of the job that processed the artifact.
+            failed_job=$(jq -r '.failedJobId // empty' <<< "$artifact")
+            echo "The artifact failed to build. Build log:"
+            litium-cloud status logs --job "${failed_job:-$ARTIFACT_ID}" || true
+            exit 1 ;;
+        esac
+        sleep "$POLL_SECONDS"
+      done
+      echo "Timed out after $TIMEOUT_MINUTES minutes waiting for the artifact to become Ready."
+      exit 1
+    displayName: Wait for the artifact
+    env:
+      ARTIFACT_ID: $(artifactId)
+      POLL_SECONDS: $(pollSeconds)
+      TIMEOUT_MINUTES: $(artifactTimeoutMinutes)
+
+  # 6. Deploy the artifact -------------------------------------------------------------
+  - bash: |
+      set -euo pipefail
+      output=$(litium-cloud app deploy --subscription "$SUBSCRIPTION" \
+        --environment "$ENVIRONMENT" --app "$APP" --artifact "$ARTIFACT_ID" -o json)
+      job_id=$(jq -r '.jobId // empty' <<< "$output")
+      if [ -z "$job_id" ]; then
+        echo "$output"
+        echo "Could not read jobId from the app deploy output."
+        exit 1
+      fi
+      echo "Deployment job id: $job_id"
+      echo "##vso[task.setvariable variable=jobId]$job_id"
+    displayName: Deploy the artifact
+    env:
+      SUBSCRIPTION: $(subscription)
+      ENVIRONMENT: $(environment)
+      APP: $(app)
+      ARTIFACT_ID: $(artifactId)
+
+  # 7. Wait for the deployment job ----------------------------------------------------
+  - bash: |
+      set -euo pipefail
+      deadline=$((SECONDS + TIMEOUT_MINUTES * 60))
+      while [ "$SECONDS" -lt "$deadline" ]; do
+        job=$(litium-cloud status show --job "$JOB_ID" -o json) \
+          || { echo "status show failed, retrying in $POLL_SECONDS seconds."; sleep "$POLL_SECONDS"; continue; }
+        # A job is completed when completedAt is set, but a completed job can still
+        # contain a failed item at any depth. Look for failed items first.
+        failed_jobs=$(jq -r '[.. | objects | select(.failed == true) | .jobId] | unique[]' <<< "$job")
+        if [ -n "$failed_jobs" ]; then
+          echo "The deployment failed. Failed items:"
+          jq -r '.. | objects | select(.failed == true)
+                 | "  \(.jobId)  \(.action // "-")  \(.documentId // "-")  \(.message // "")"' <<< "$job"
+          for id in $failed_jobs; do
+            echo "--- Log of job $id"
+            litium-cloud status logs --job "$id" || true
+          done
+          exit 1
+        fi
+        if [ -n "$(jq -r '.completedAt // empty' <<< "$job")" ]; then
+          echo "Deployment completed."
+          exit 0
+        fi
+        echo "Deployment in progress."
+        sleep "$POLL_SECONDS"
+      done
+      echo "Timed out after $TIMEOUT_MINUTES minutes waiting for job $JOB_ID."
+      exit 1
+    displayName: Wait for the deployment job
+    env:
+      JOB_ID: $(jobId)
+      POLL_SECONDS: $(pollSeconds)
+      TIMEOUT_MINUTES: $(deployTimeoutMinutes)
