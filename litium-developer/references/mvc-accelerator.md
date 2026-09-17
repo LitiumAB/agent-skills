@@ -6,7 +6,7 @@ Development reference for the Litium MVC Accelerator — a .NET/ASP.NET Core e-c
 
 The MVC Accelerator is a full-featured ASP.NET Core web application with server-rendered views and optional headless React integration.
 
-- Official docs: https://docs.litium.dev/accelerators/mvc/install-litium-accelerator
+- Official docs: https://docs.litium.dev/accelerators/mvc-accelerator/install-litium-accelerator
 - For local setup: see `references/setup-mvc-accelerator.md`
 
 ## Project Structure
@@ -193,8 +193,8 @@ See `references/data-modelling.md` for full data modelling guidance.
 
 ## Useful Links
 
-- MVC install guide: https://docs.litium.dev/accelerators/mvc/install-litium-accelerator
+- MVC install guide: https://docs.litium.dev/accelerators/mvc-accelerator/install-litium-accelerator
 - Creating custom blocks in MVC: https://docs.litium.dev/platform/guides/how-to-create-custom-blocks-in-mvc-accelerator
 - Back office UI extensions: https://docs.litium.dev/platform/guides/back-office-ui-extensions
-- Data modelling: https://docs.litium.dev/platform/guides/data-modelling
-- Elasticsearch: https://docs.litium.dev/platform/features/search
+- Data modelling: https://docs.litium.dev/platform/guides/data-modelling/overview
+- Elasticsearch: https://docs.litium.dev/platform/guides/litiumsearch/overview

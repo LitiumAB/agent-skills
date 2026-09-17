@@ -169,8 +169,8 @@ Always add `data-testid` for e2e selection:
 
 ## Documentation
 
-- [React Accelerator Docs](https://docs.litium.dev/accelerators/react/overview)
+- [React Accelerator Docs](https://docs.litium.dev/accelerators/react-accelerator/overview)
 - [Storefront API Docs](https://docs.litium.dev/apis/storefront/overview)
-- [Routing Fundamentals](https://docs.litium.dev/accelerators/react/routing-fundamentals)
+- [Routing Fundamentals](https://docs.litium.dev/accelerators/react-accelerator/routing-fundamentals)
 - [How to create pages](https://docs.litium.dev/platform/guides/how-to-create-pages-in-react-accelerator)
 - [How to create blocks](https://docs.litium.dev/platform/guides/how-to-create-blocks-in-react-accelerator)

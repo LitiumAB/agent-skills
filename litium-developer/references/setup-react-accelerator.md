@@ -27,7 +27,7 @@ dotnet tool list -g | grep storefront  # Litium.Storefront.Cli
 
 ## Quick Start
 
-Official docs: https://docs.litium.dev/accelerators/react/get-started
+Official docs: https://docs.litium.dev/accelerators/react-accelerator/get-started
 
 ### Step 1: Add Litium NuGet Source (if not already done)
 

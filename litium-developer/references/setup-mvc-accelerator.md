@@ -20,13 +20,13 @@ node --version        # Node.js 20+
 yarn --version        # Yarn (for client builds)
 ```
 
-Required services (use Docker Compose — see https://docs.litium.dev/platform/get-started/shared-dependencies):
+Required services (use Docker Compose — see https://docs.litium.dev/platform/get-started/shared-dependencies/overview):
 - SQL Server on localhost:1433 (sa / Pass@word)
 - Elasticsearch on http://localhost:9200
 
 ## Quick Start
 
-Official docs: https://docs.litium.dev/accelerators/mvc/install-litium-accelerator
+Official docs: https://docs.litium.dev/accelerators/mvc-accelerator/install-litium-accelerator
 
 ### Step 1: Add Litium NuGet Source
 
