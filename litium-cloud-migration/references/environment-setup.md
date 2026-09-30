@@ -71,8 +71,10 @@ update job and a restart. Re-applying the platform manifest later is safe: `sql_
 ## Step 1 — Environment
 
 - **Decide**: environment id and name (`test`, `production`), location (`litium-cloud location list`), and the
-  production flag. Test gets **no** `--production`; production gets it at creation, because setting it later
-  requires a restart or redeploy of the platform and storefront apps.
+  production flag. Test gets no `--tier` (it defaults to `non-production`); production gets `--tier production`
+  at creation. Changing it later with `environment set-tier` (CLI 2.11.0+) needs **Owner** or
+  `environment/tier-operator` on the environment, can move resources with a short downtime, and redeploys every
+  installed app.
 - **After**: set the context so later commands do not need `--subscription`/`--environment`. In production,
   restrict access: grant the production environment explicitly instead of inheriting from the subscription, and
   give the pipeline's service principal only the deployment roles (recipe `access-control`,
@@ -186,7 +188,7 @@ no *File not found* or path errors in Insights; no configuration value still poi
 
 ## Production environment: what differs from test
 
-Same manifests, different values. Create it with `--production` (production-sized plans, custom domains
+Same manifests, different values. Create it with `--tier production` (production-sized plans, custom domains
 indexable, and the prerequisite for a dedicated worker node on 8.16+ if background jobs later need one —
 Litium activates that on request, at no extra cost). Restrict access and grant the service principal only the deployment roles. Create
 every production secret with the same ids as in test. Install Litium CDN and Litium Insights from the test

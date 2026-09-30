@@ -1,6 +1,6 @@
 # Litium Cloud workflows
 
-Twelve end-to-end recipes. Every command is verified against CLI 2.10.1 and the public documentation.
+Twelve end-to-end recipes. Every command is verified against CLI 2.11.0 and the public documentation.
 Placeholders are written `<like-this>` — never invent a real id, name or domain.
 
 ## Recipes
@@ -51,11 +51,19 @@ accepts them. Before any mutating command, confirm the target and say whether it
    ```
 
 2. Create the environment. Keep the id short — it becomes part of every app's system domain
-   `<subscription>-<environment>-<app>.litium.app`. Add `--production` for a production environment.
+   `<subscription>-<environment>-<app>.litium.app`. Add `--tier production` for a production environment.
 
    ```bash
    litium-cloud environment create --subscription <subscription-id> --name <name> --location <location-id> --set-context
-   litium-cloud environment create --subscription <subscription-id> --name prod --location <location-id> --production --set-context
+   litium-cloud environment create --subscription <subscription-id> --name prod --location <location-id> --tier production --set-context
+   ```
+
+   Set the tier here. Changing it later needs **Owner** or `environment/tier-operator` on the
+   environment, and CLI 2.11.0 or later; it runs a job that can move resources with a short downtime,
+   then redeploys every installed app itself:
+
+   ```bash
+   litium-cloud environment set-tier --environment <environment-id> --tier production
    ```
 
 3. Wait for the job, then verify.
@@ -69,7 +77,7 @@ accepts them. Before any mutating command, confirm the target and say whether it
 4. Install the apps, **in this order**: Litium CDN (`install-cdn-insights`), Litium Insights,
    Litium platform (`install-litium-platform`), then the storefront and the payment and delivery apps.
 
-**Verify.** `environment show` prints the name, location, the production flag and an empty app list.
+**Verify.** `environment show` prints the name, location, `Production: Yes|No` and an empty app list.
 
 **Docs.** `/cloud/serverless/get-started/create-environment`, `/cloud/serverless/cli/environment`,
 `/cloud/serverless/guides/configure/production-environments`.
@@ -590,7 +598,8 @@ resource. Contributor can manage a resource but **cannot** assign roles.
 2. Pick the role. `role list` is authoritative for your account; `role show` lists where it may be
    granted. Common choices: `system/reader`, `system/contributor`, `system/owner`,
    `system/acl-manager`, and the narrow `subscription/reader`, `environment/reader`,
-   `appresource/writer`, `artifact/creator`.
+   `appresource/writer`, `artifact/creator`. `environment/tier-operator`, paired with
+   `environment/reader`, lets someone change the environment's tier without Owner.
 
    ```bash
    litium-cloud role list
@@ -819,8 +828,8 @@ environment.
 **Prerequisites.** Write access on the app (`appresource/writer`); Contributor on the environment to
 delete apps or the environment. Get ids with `litium-cloud app list`.
 
-**Restart.** After a configuration or secret change, after changing the production flag, or when the
-app is unresponsive. Keeps the artifact, properties and data.
+**Restart.** After a configuration or secret change, or when the app is unresponsive. Keeps the
+artifact, properties and data.
 
 ```bash
 litium-cloud app restart --app <app-id> --wait

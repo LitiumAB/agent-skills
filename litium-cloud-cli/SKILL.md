@@ -29,7 +29,7 @@ domains and CI/CD pipelines. Load the reference files below on demand — do not
 | .NET 8 SDK | https://dotnet.microsoft.com/download/dotnet/8.0 (needed even with newer SDKs installed) |
 | Litium NuGet feed | `dotnet nuget add source https://nuget.litium.com/nuget/ -n Litium -u <docs-username> -p <docs-password>` (add `--store-password-in-clear-text` on macOS/Linux) |
 | Install or update the CLI | `dotnet tool update -g litium.cloud.cli --no-cache` |
-| Verify | `litium-cloud --version` (prints e.g. `2.10.1`) |
+| Verify | `litium-cloud --version` (prints e.g. `2.11.0`). `environment set-tier` and `--tier` need 2.11.0 or later |
 | Sign in | `litium-cloud auth login` — opens a browser for the **Litium Account** (not the docs account) |
 
 The tool lands in `~/.dotnet/tools` (macOS/Linux) or `%USERPROFILE%\.dotnet\tools` (Windows); add it
@@ -45,13 +45,15 @@ litium-cloud <group> --help
 litium-cloud <group> <command> --help
 ```
 
-Three known mistakes in the 2.10.x help text — do not copy them:
+Two known mistakes in the 2.11.0 help text — do not copy them:
 
 | Help text says | Reality |
 |---|---|
 | `artifact-type list` | The real path is `litium-cloud artifact artifact-type list` (nested under `artifact`) |
 | `app search`, `app search --detail` | No such command. Use `litium-cloud marketplace list --details` |
-| `service-principal --help` omits `renew` | `litium-cloud service-principal renew` exists and works; `update` is a deprecated alias |
+
+CLI 2.10.x also leaves `renew` out of `service-principal --help`; `litium-cloud service-principal renew`
+exists and works there too. `update` is a deprecated alias.
 
 ## Key concepts
 
@@ -130,10 +132,10 @@ optional MCP server at `https://docs.litium.dev/mcp` for live search — use it 
    **whether that environment is a production environment** — `litium-cloud environment show` prints
    `Production: Yes|No`.
 2. **Destructive and production changes need an explicit yes.** Show the exact command and wait for
-   the user to confirm it before `app delete`, `app pause`, `environment delete`, `artifact delete`,
-   the `uninstall-app` action, or `apply` / `app deploy` against a production environment. Never add
-   `--auto-yes` to a destructive command unless you are writing a pipeline script the user asked
-   for — it suppresses the safety prompt.
+   the user to confirm it before `app delete`, `app pause`, `environment delete`, `environment set-tier`,
+   `artifact delete`, the `uninstall-app` action, or `apply` / `app deploy` against a production
+   environment. Never add `--auto-yes` to a destructive command unless you are writing a pipeline
+   script the user asked for — it suppresses the safety prompt.
 3. **`environment delete` has no confirmation prompt at all.** It starts immediately. Read the ids
    back to the user before running it.
 4. **Never put a secret in a manifest.** Create it with `subscription secret create` or
@@ -151,13 +153,14 @@ optional MCP server at `https://docs.litium.dev/mcp` for live search — use it 
    user prefers a browser: https://portal.litium.cloud.
 9. Prefer setting a context per project folder over repeating `--subscription` and `--environment`.
 10. Do not use commands or options that the installed `--help` does not list, other than
-    `service-principal renew` (see Dynamic help first).
+    `service-principal renew` on CLI 2.10.x (see Dynamic help first).
 
 ## Common mistakes
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| A command from the help text is "not found" | The 2.10.x help text has three known errors | See **Dynamic help first** above |
+| A command from the help text is "not found" | The help text has two known errors | See **Dynamic help first** above |
+| `environment set-tier` or `--tier` is not recognized | CLI older than 2.11.0 | `dotnet tool update -g litium.cloud.cli --no-cache` |
 | `apply` skips everything / does nothing for a folder | `-f` was given a bare directory | Pass a file or a glob: `-f manifests/*.yaml` |
 | A manifest with `action: delete` and `kind: app` fails | `action: delete` is not implemented for apps | Use `litium-cloud app delete --app <app-id>` |
 | Command succeeded but nothing changed | The command only queued a job, and the job failed | `status show --job <job-id>` and read **Details** for a *failed* entry |
