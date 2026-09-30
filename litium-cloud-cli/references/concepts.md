@@ -8,7 +8,7 @@ Condensed from the public documentation. Docs: `/cloud/serverless/concepts`,
 
 ```
 subscription                     created by Litium; owns artifacts and subscription secrets
-└── environment                  e.g. test, qa, prod; has a location and a production flag
+└── environment                  e.g. test, qa, prod; has a location and a tier (production or non-production)
     └── app                      everything that runs: platform, CDN, Insights, storefront, DB, your code
 ```
 
@@ -17,12 +17,15 @@ subscription                     created by Litium; owns artifacts and subscript
   be installed (for example whether private apps are allowed). There is no command to create one.
 - **Environment** — an isolated space inside a subscription. Id is lowercase letters, digits and
   hyphens, and becomes part of every app's system domain, so keep it short. It has a **location**
-  (region, immutable after creation) and a **production** flag.
-- The **production flag** switches on production behavior: production resources for apps that support
+  (region, immutable after creation) and a **tier**: production or non-production (default).
+- The **production tier** switches on production behavior: production resources for apps that support
   it, and search-engine indexing allowed on custom domains. It is also what lets Litium activate a
   dedicated worker node for the platform app's background jobs when they need one (Litium 8.16+, at no
   extra cost, on request — never partner-configurable). Non-production environments, and the `litium.app` system domain in every
-  environment, always answer `noindex, nofollow`. Changing the flag requires restarting installed apps.
+  environment, always answer `noindex, nofollow`. `environment show` prints `Production: Yes|No`.
+  Set the tier at creation (`environment create --tier production`). Changing it later with
+  `environment set-tier` (CLI 2.11.0+) runs a job that can move resources, with a short downtime, and
+  then redeploys every installed app itself — no separate restart.
 
 ## Apps
 
@@ -248,6 +251,10 @@ Owner and Contributor cover backups, database migrations and CDN domain changes,
 script execution and **not** the Litium platform management actions (`install-app`, `uninstall-app`,
 `configure-app`, `add-domain`, `remove-domain`, `replace-domain`, `rebuild-search-indicies`) — those
 always need the app-specific role.
+
+`environment/tier-operator` holds only the permission to change an environment's tier. Grant it on the
+subscription or the environment and pair it with `environment/reader` so its holders can also view the
+environment. Changing the tier needs **Owner** or this role; Contributor does not cover it.
 
 To change access on a resource you need **Owner** or **User access manager** on it; Contributor can
 manage the resource but not assign roles.

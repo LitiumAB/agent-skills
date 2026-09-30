@@ -49,10 +49,11 @@ Cause: background jobs run in the web app by default. A dedicated worker node is
 environment — Litium activates one when it is needed, at no extra cost, and it requires Litium 8.16 or later
 *and* the production flag.
 Fix: contact Litium support, describe which jobs slow the site down and when, and give the subscription id,
-environment id and Litium version. Check `litium-cloud environment show` for the production flag first; if the
-flag was set after the apps were installed, restart or redeploy the platform and storefront apps. There is no
+environment id and Litium version. Check `litium-cloud environment show` for the production flag first; if it
+reads `Production: No`, run `litium-cloud environment set-tier --tier production` (needs **Owner** or
+`environment/tier-operator`; it redeploys the apps itself and can cause a short downtime). There is no
 manifest property, app action or Portal setting that turns a worker node on.
-Verify: `environment show` reads production, and response times during job runs no longer rise in Insights.
+Verify: `environment show` reads `Production: Yes`, and response times during job runs no longer rise in Insights.
 
 ## Artifacts and backups
 

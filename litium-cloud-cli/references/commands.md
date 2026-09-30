@@ -1,6 +1,6 @@
 # `litium-cloud` command reference
 
-Every command below exists in CLI 2.10.1. Verified against `--help`; the installed `--help` is always
+Every command below exists in CLI 2.11.0. Verified against `--help`; the installed `--help` is always
 the final authority on flags. Docs: `/cloud/serverless/cli/overview` and the per-group pages.
 
 **Convention in this file.** "Starts a job?" means the command returns a job id and exits 0 while the
@@ -84,8 +84,9 @@ Subscriptions are created by Litium; there is no create command.
 |---|---|---|---|---|
 | `environment list` | `--subscription` | `--filter <text>` | No | Columns: Id, Production, Environment name, Location |
 | `environment show` | — | `--environment` | No | Summary plus an Apps table. Supports `-o manifest` |
-| `environment create` | `--name`, `--location`, `--subscription` | `--environment` (explicit id), `--description`, `--production`, `--set-context` | **Yes** | Id is generated from `--name` unless `--environment` is given. Location cannot be changed later |
-| `environment update` | `--environment`, `--subscription` | `--name`, `--description`, `--production`, `--non-production` | **Yes** | Restart the installed apps after changing the production flag |
+| `environment create` | `--name`, `--location`, `--subscription` | `--environment` (explicit id), `--description`, `--tier (production\|non-production)` (default `non-production`), `--set-context` | **Yes** | Id is generated from `--name` unless `--environment` is given. Location cannot be changed later. Create production environments with `--tier production` |
+| `environment update` | `--environment`, `--subscription` | `--name`, `--description` | **Yes** | Changes only the name and description. Change the tier with `set-tier` |
+| `environment set-tier` | `--environment`, `--subscription`, `--tier (production\|non-production)` | `--wait`, `--auto-yes` | **Yes** | CLI 2.11.0 or later. Prompts `This moves the environment's resources to the <tier> tier and can cause a short downtime. Do you want to continue?` Can move resources, with a short downtime, then redeploys every installed app itself — no separate restart. Needs **Owner** or `environment/tier-operator` on the environment. Fails up front when an installed app has no valid plan for the target tier |
 | `environment delete` | `--environment`, `--subscription` | — | **Yes** | **No confirmation prompt.** Deletes every app, database, storage, domain and secret in the environment |
 | `environment secret …` | see [secrets](#secret-subcommands) | | | Environment secrets override subscription secrets with the same id |
 | `environment access-control …` | see [access control](#access-control-subcommands) | | | The usual scope for giving a developer or a pipeline access |
@@ -99,7 +100,7 @@ There is **no `app create` / `app install`** — install with `apply`.
 | `app list` | — | `--filter <text>` | No | Columns: Id, Name, Description (+ State when paused, + Deprecated for a deprecated version) |
 | `app show` | `--app` | — | No | State, type, version, plan, plus Configurations, Exposes and Properties tables. The *artifact* property is what is deployed. Supports `-o manifest` |
 | `app deploy` | `--app`, `--artifact` | — | **Yes** | Sets the app's artifact-reference property and rolls out. Repeat `--artifact` as `<property-name>=<artifact-id>` for extra references; `--artifact backup=` clears one. Artifact type must match the app |
-| `app restart` | `--app` | `--wait` | **Yes** | `--wait` blocks until the job finishes and is unique to this command |
+| `app restart` | `--app` | `--wait` | **Yes** | `--wait` blocks until the job finishes |
 | `app pause` | `--app` | `--auto-yes` | **Yes** | Prompts `Pausing an app will make the app inaccessable. Do you want to continue?` A paused app is unreachable; runtime is not billed, persistent resources still are; deploys are rejected |
 | `app resume` | `--app` | — | **Yes** | Starts the app again with the same resources |
 | `app plan` | `--app`, and one of `--plan` / `--unset` | — | **Yes** | Plan ids from `marketplace show --app <app-type>`. Changing a plan restarts the app. Public apps answer that plans are not used |
@@ -178,7 +179,7 @@ Searches across every subscription you can see.
 | Command | Required options | Notable options | Starts a job? | Notes |
 |---|---|---|---|---|
 | `query app` | — | `--app <app-type>[@<version>][#plan=<plan-id>]` | No | Answers "which environments still run the old version?". Prints `No search result` when nothing matches |
-| `query environment` | — | `--name`, `--location`, `--production`, `--non-production` | No | Columns: Subscription, Id, Production, Environment name, Location |
+| `query environment` | — | `--name`, `--location`, `--tier (production\|non-production)` | No | Columns: Subscription, Id, Production, Environment name, Location |
 | `query jobs` | — | `-co`/`--completed`, `-ca`/`--cancelled`, `-c`/`--child`, `-i`/`--interval <interval>`, `--subscription`, `--environment` | No | Only queued and running jobs by default. `--completed`/`--cancelled` limit to today unless `--interval` is given |
 
 `--interval` takes plain language: `today`, `yesterday`, `this month`, `last 3 days`, `last week`,
@@ -215,7 +216,7 @@ sign out and in again for a new membership to take effect.
 | `service-principal list` | — | `--filter <text>` | No | Columns: Id, Name, Description, Expires at (`N/A` when there is no certificate). Check it before a release |
 | `service-principal show` | `--service-principal` | — | No | Name, description and a Certificates table: Id, Not before, Not after, Revoked on |
 | `service-principal create` | `--name` | `--expires <days>` (default `180`, max `365`), `-f`/`--file <path>` | No | The private key is shown **once** and never stored by Litium. A `.pfx` name writes PKCS #12; any other name writes PEM. Without `-f` it prints to the terminal |
-| `service-principal renew` | `--service-principal` | `--expires <days>` (default `180`, max `365`), `-f`/`--file <path>` | No | **Missing from `service-principal --help` in 2.10.x but it works.** Issues a new certificate and **revokes every other active certificate**. Id and roles are unchanged. `update` is a deprecated alias |
+| `service-principal renew` | `--service-principal` | `--expires <days>` (default `180`, max `365`), `-f`/`--file <path>` | No | Issues a new certificate and **revokes every other active certificate**. Id and roles are unchanged. `update` is a deprecated alias, hidden from `--help` |
 | `service-principal delete` | `--service-principal` | — | No | Every certificate stops working |
 | `service-principal access-control …` | see [access control](#access-control-subcommands) | | | Who may administer the principal, for example renew its certificate |
 
