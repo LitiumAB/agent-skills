@@ -22,6 +22,7 @@ npx skills add https://github.com/LitiumAB/agent-skills --skill litium-cloud-cli
 - Takes database and storage backups, downloads them, and restores an environment from them
 - Adds, replaces and removes custom domains through Litium CDN and the platform domain actions
 - Restarts, pauses, resumes, re-plans and uninstalls apps, and follows every job to its real result
+- Views and sets the environment's maintenance window, schedules app restarts for it, and lists maintenance runs
 - Keeps to the published Litium documentation and verifies flags against the installed CLI's `--help`
 
 ## Works together with

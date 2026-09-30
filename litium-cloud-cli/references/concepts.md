@@ -281,6 +281,33 @@ a child failed**, so always read Details. Logs live on the child job that did th
 Litium support about a job, send the job id or the URL of its page in the Portal. For an artifact
 build job, the artifact id doubles as the job id.
 
+## Maintenance windows
+
+Some platform-triggered changes, such as restarting apps after a plan change, are not applied at once
+but queued as **maintenance runs** and executed inside the environment's daily **maintenance window**.
+This is separate from the platform-wide scheduled maintenance policy.
+
+- The **effective window** is the explicit window set with `environment maintenance-window set`, or
+  otherwise the location's default for the environment's tier (production or non-production).
+- Maintenance only **starts** inside the window, up to 15 minutes before it ends (the *start
+  deadline*). Work still running when the window closes is not interrupted.
+- Runs are idempotent: if the app already matches the desired state when the window opens, for example
+  because it was redeployed in the meantime, the run completes with no job (`No-op: Yes`).
+- `app restart --maintenance` puts your own restart on the maintenance list.
+- Setting or clearing the window does not restart anything; it only changes when future maintenance
+  may start.
+
+| Run status | Meaning |
+|---|---|
+| `Pending` | Waiting for the window to open |
+| `Queued` | The window opened and a job is running |
+| `Completed` | The job finished, or the run was already satisfied and needed no job |
+| `Failed` | The job failed |
+| `Cancelled` | Superseded by a newer run for the same app, or the app or environment was deleted |
+
+Maintenance windows are rolled out gradually. When a command reports that they are not enabled for
+the environment, contact Litium support. Docs: `/cloud/serverless/guides/operate/maintenance-windows`.
+
 ## Portal vs CLI
 
 The Portal (https://portal.litium.cloud) and the CLI are two front ends to the same platform, signed
