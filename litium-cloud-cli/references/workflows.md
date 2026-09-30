@@ -1,6 +1,6 @@
 # Litium Cloud workflows
 
-Twelve end-to-end recipes. Every command is verified against CLI 2.11.0 and the public documentation.
+Thirteen end-to-end recipes. Every command is verified against CLI 2.11.0 and the public documentation.
 Placeholders are written `<like-this>` — never invent a real id, name or domain.
 
 ## Recipes
@@ -19,6 +19,7 @@ Placeholders are written `<like-this>` — never invent a real id, name or domai
 | [`copy-environment`](#copy-environment) | Replicating an environment from another one |
 | [`custom-domain`](#custom-domain) | Putting a customer domain in front of an app |
 | [`app-lifecycle`](#app-lifecycle) | Restart, pause, resume, re-plan, uninstall, delete |
+| [`maintenance-window`](#maintenance-window) | View, set and clear the maintenance window; schedule a restart for it; view runs |
 
 All recipes assume a [context](../SKILL.md) is set:
 
@@ -897,3 +898,62 @@ litium-cloud query jobs --completed --cancelled --interval 'last 3 days'
 
 **Docs.** `/cloud/serverless/guides/operate/manage-app-lifecycle`,
 `/cloud/serverless/guides/operate/jobs-status-and-logs`, `/cloud/serverless/cli/app`.
+
+---
+
+## `maintenance-window`
+
+**When to use.** Choosing when Litium may run platform-triggered maintenance on an environment's apps,
+scheduling your own app restart for that time, or checking what is queued or has run.
+
+**Prerequisites.** CLI 2.11.0 or later. Write access on the environment (for example Contributor) to
+change the window; write access on the app (`appresource/writer`) to schedule a restart. Maintenance
+windows are rolled out gradually — if a command prints
+`Maintenance windows are not enabled for this environment…`, contact Litium support.
+
+**Steps.**
+
+1. View the configured and the effective window. **Start deadline** is 15 minutes before **End**, the
+   latest time maintenance may start.
+
+   ```bash
+   litium-cloud environment maintenance-window show
+   ```
+
+2. Set an explicit window, or clear it to go back to the location default. Times are 24-hour `HH:mm`,
+   at least 30 minutes and less than 24 hours apart, and may cross midnight. The time zone defaults to
+   `UTC` and must be an IANA id from `timezones list`.
+
+   ```bash
+   litium-cloud timezones list --filter <text>
+   litium-cloud environment maintenance-window set --begin <HH:mm> --end <HH:mm> --time-zone <time-zone-id> --wait
+   litium-cloud environment maintenance-window clear --wait
+   ```
+
+   Neither restarts anything; they only change when future maintenance may start.
+
+3. Schedule an app restart for the next window instead of restarting now, for example after changing
+   a value the app reads only at startup. `--wait` has no effect here — no job starts until the window
+   opens.
+
+   ```bash
+   litium-cloud app restart --app <app-id> --maintenance
+   ```
+
+4. View the runs: every app in the environment, one app, or one run.
+
+   ```bash
+   litium-cloud environment maintenance list --status pending
+   litium-cloud app maintenance list --app <app-id>
+   litium-cloud app maintenance show --app <app-id> --run <run-id>
+   ```
+
+   A run that has executed shows its job id; follow it with `status logs --job <job-id> --follow`. A
+   completed run with `No-op: Yes` and no job means the app already matched the desired state.
+
+**Verify.** `environment maintenance-window show` lists the new values under **Configured window**, or
+`Window: Location default` after `clear`. `app maintenance list --app <app-id> --status pending` shows
+the scheduled restart with the trigger *Restart requested*.
+
+**Docs.** `/cloud/serverless/guides/operate/maintenance-windows`, `/cloud/serverless/cli/environment`,
+`/cloud/serverless/cli/app`, `/cloud/serverless/cli/timezones`.

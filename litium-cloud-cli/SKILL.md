@@ -74,9 +74,9 @@ Read `references/concepts.md` for the detail. In brief:
 
 | Reference file | Load when the task involves |
 |---|---|
-| `references/concepts.md` | Hierarchy, app types and versions, plans, artifact types, manifest grammar, configurations and `valueFrom`, context file, auth, roles and inheritance, job states, artifact retention, Portal vs CLI |
+| `references/concepts.md` | Hierarchy, app types and versions, plans, artifact types, manifest grammar, configurations and `valueFrom`, context file, auth, roles and inheritance, job states, maintenance windows, artifact retention, Portal vs CLI |
 | `references/commands.md` | Exact syntax of any `litium-cloud` command group, required and notable options, which commands start jobs, global options, exit codes, environment variables, CI behavior |
-| `references/workflows.md` | A complete end-to-end task — the twelve recipes listed under Workflow routing |
+| `references/workflows.md` | A complete end-to-end task — the thirteen recipes listed under Workflow routing |
 
 ## Workflow routing
 
@@ -96,6 +96,7 @@ Load `references/workflows.md` and follow the named recipe.
 | Replicate one environment into another | `copy-environment` |
 | Put a customer domain in front of an app | `custom-domain` |
 | Restart, pause, resume, re-plan, uninstall an app; delete an environment | `app-lifecycle` |
+| View, set or clear the maintenance window; schedule a restart for it; view maintenance runs | `maintenance-window` |
 
 ## Docs index
 
@@ -107,7 +108,7 @@ optional MCP server at `https://docs.litium.dev/mcp` for live search — use it 
 |---|---|
 | Concepts and vocabulary | `/cloud/serverless/concepts` |
 | CLI overview, global options, exit codes | `/cloud/serverless/cli/overview` |
-| Command references | `/cloud/serverless/cli/{app,apply,artifact,auth,context,environment,group,location,marketplace,query,role,service-principal,status,subscription}` |
+| Command references | `/cloud/serverless/cli/{app,apply,artifact,auth,context,environment,group,location,marketplace,query,role,service-principal,status,subscription,timezones}` |
 | Manifest reference | `/cloud/serverless/reference/manifest` |
 | App actions per app type | `/cloud/serverless/reference/app-actions` |
 | Roles and permissions | `/cloud/serverless/reference/roles-and-permissions` |
@@ -121,6 +122,7 @@ optional MCP server at `https://docs.litium.dev/mcp` for live search — use it 
 | Backups and restore | `/cloud/serverless/guides/backups/overview`, `…/database-backup`, `…/storage-backup`, `…/restore-database-and-storage` |
 | Access control, groups, service principals | `/cloud/serverless/guides/access/overview`, `…/access-control`, `…/groups`, `…/service-principals` |
 | Jobs, app lifecycle, copy environment, SQL scripts, console output | `/cloud/serverless/guides/operate/jobs-status-and-logs`, `…/manage-app-lifecycle`, `…/copy-environment`, `…/execute-sql-script`, `…/console-output` |
+| Maintenance windows and runs | `/cloud/serverless/guides/operate/maintenance-windows` |
 | Get started, step by step | `/cloud/serverless/get-started/overview` |
 | FAQ and troubleshooting | `/cloud/serverless/faq` |
 | Portal | `/cloud/serverless/portal/overview` |

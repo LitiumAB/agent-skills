@@ -88,8 +88,19 @@ Subscriptions are created by Litium; there is no create command.
 | `environment update` | `--environment`, `--subscription` | `--name`, `--description` | **Yes** | Changes only the name and description. Change the tier with `set-tier` |
 | `environment set-tier` | `--environment`, `--subscription`, `--tier (production\|non-production)` | `--wait`, `--auto-yes` | **Yes** | CLI 2.11.0 or later. Prompts `This moves the environment's resources to the <tier> tier and can cause a short downtime. Do you want to continue?` Can move resources, with a short downtime, then redeploys every installed app itself — no separate restart. Needs **Owner** or `environment/tier-operator` on the environment. Fails up front when an installed app has no valid plan for the target tier |
 | `environment delete` | `--environment`, `--subscription` | — | **Yes** | **No confirmation prompt.** Deletes every app, database, storage, domain and secret in the environment |
+| `environment maintenance-window show` | — | `--environment` | No | **Configured window** (Begin, End, Time zone, or `Window: Location default`) and **Effective window**: Begin, End, Time zone, Start deadline (15 minutes before End), Source, Next opening |
+| `environment maintenance-window set` | `--begin <HH:mm>`, `--end <HH:mm>` | `--time-zone <time-zone-id>` (default `UTC`), `--wait` | **Yes** | 24-hour `HH:mm`. At least 30 minutes and less than 24 hours long; may cross midnight (`--begin 22:00 --end 06:00`). IANA ids only, such as `Europe/Stockholm`, from `timezones list` — not Windows ids or fixed offsets. An unknown id prints `Unknown time zone '<time-zone-id>'.`, up to five suggestions, and exits `1` |
+| `environment maintenance-window clear` | — | `--wait` | **Yes** | Removes the explicit window; the location default for the environment's tier applies again |
+| `environment maintenance list` | — | `--status <pending\|queued\|completed\|failed\|cancelled>`, `--limit <n>` (default `10`), `--reverse` | No | Maintenance runs of every app in the environment that you can read, newest first. Columns: Id, App, Status, Action, Trigger, Triggered, Window start, Window end, Job. Prints `No maintenance runs found.` when there are none |
 | `environment secret …` | see [secrets](#secret-subcommands) | | | Environment secrets override subscription secrets with the same id |
 | `environment access-control …` | see [access control](#access-control-subcommands) | | | The usual scope for giving a developer or a pipeline access |
+
+The maintenance commands need CLI 2.11.0 or later. Maintenance windows are rolled out gradually; when
+they are not enabled for the environment, `maintenance-window show` prints
+`Maintenance windows are not enabled for this environment.` and exits `0`, `maintenance-window set` and
+`clear` print the same line and exit `1`, and `environment maintenance list` prints
+`Maintenance windows are not enabled for this environment, or the environment was not found.` and
+exits `1`. Contact Litium support to have them enabled.
 
 ## app
 
@@ -100,14 +111,21 @@ There is **no `app create` / `app install`** — install with `apply`.
 | `app list` | — | `--filter <text>` | No | Columns: Id, Name, Description (+ State when paused, + Deprecated for a deprecated version) |
 | `app show` | `--app` | — | No | State, type, version, plan, plus Configurations, Exposes and Properties tables. The *artifact* property is what is deployed. Supports `-o manifest` |
 | `app deploy` | `--app`, `--artifact` | — | **Yes** | Sets the app's artifact-reference property and rolls out. Repeat `--artifact` as `<property-name>=<artifact-id>` for extra references; `--artifact backup=` clears one. Artifact type must match the app |
-| `app restart` | `--app` | `--wait` | **Yes** | `--wait` blocks until the job finishes |
+| `app restart` | `--app` | `--maintenance`, `--wait` | **Yes**, unless `--maintenance` | `--wait` blocks until the job finishes. `--maintenance` adds the restart to the environment's maintenance list instead and prints `Restart for app '<app-id>' added to the environment's maintenance list, will run during its next maintenance window.` — `--wait` has no effect with it, because no job starts until the window opens |
 | `app pause` | `--app` | `--auto-yes` | **Yes** | Prompts `Pausing an app will make the app inaccessable. Do you want to continue?` A paused app is unreachable; runtime is not billed, persistent resources still are; deploys are rejected |
 | `app resume` | `--app` | — | **Yes** | Starts the app again with the same resources |
 | `app plan` | `--app`, and one of `--plan` / `--unset` | — | **Yes** | Plan ids from `marketplace show --app <app-type>`. Changing a plan restarts the app. Public apps answer that plans are not used |
 | `app action` | `--app`, `--action` | `--property <name>=<value>` (repeatable) | **Yes** | Prefix a value with `@` to read it from a file: `--property script=@migration.sql`. Booleans are `true`/`false`. Actions and their properties come from `marketplace show --app <app-type> --version <v>` |
 | `app job` | `--app` | `--limit <n>` (default `5`, `-1` = all), `--reverse` | No | Columns: Job id, Action, Created by, Created at, Started at (+ Completed/Cancelled at). Oldest first unless `--reverse` |
+| `app maintenance list` | `--app` | `--status <pending\|queued\|completed\|failed\|cancelled>`, `--limit <n>` (default `10`), `--reverse` | No | The app's maintenance runs, newest first. Columns: Id, Status, Action, Trigger, Triggered, Window start, Window end, Job. Prints `No maintenance runs found.` when there are none |
+| `app maintenance show` | `--app`, `--run <run-id>` | — | No | Status, action, trigger, window, `No-op: Yes\|No` and, once it has run, the job id. `No-op: Yes` with no job means the app already matched the desired state. A pending run has no job yet |
 | `app delete` | `--app` | `--auto-yes` | **Yes** | Prompts `Deleting an app is a destructive operation…`. Deletes the app **and its data**, including databases and storage. Delete dependent apps first |
 | `app access-control …` | see [access control](#access-control-subcommands) | | | Access to one app only |
+
+When maintenance windows are not enabled for the environment, `app maintenance list`,
+`app maintenance show` and `app restart --maintenance` print
+`Maintenance windows are not enabled for this environment, or the app was not found.`, exit `1` and
+schedule nothing. Needs CLI 2.11.0 or later.
 
 ## apply
 
@@ -231,6 +249,12 @@ passing the principal id as `--email`.
 | `location show` | `--location` | — | No | Name, description, type. Supports `-o manifest` |
 
 An environment stays in the location it was created in. Use the same location for test and production.
+
+## timezones
+
+| Command | Required options | Notable options | Starts a job? | Notes |
+|---|---|---|---|---|
+| `timezones list` | — | `--filter <text>` | No | Columns: Id, Display name, Base offset, Current offset. `--filter` matches the id or the display name; prints `No time zones found.` when nothing matches. The Id is `--time-zone` for `environment maintenance-window set`. Needs CLI 2.11.0 or later |
 
 ## Secret subcommands
 
