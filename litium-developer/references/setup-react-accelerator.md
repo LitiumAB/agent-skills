@@ -20,7 +20,7 @@ Modern headless storefront for Litium. Used for:
 Backend must be running at https://localhost:5001.
 
 ```bash
-node --version    # 20+
+node --version    # 22.13+ or 24 (React Accelerator 1.20.0+); 20.x for 1.13.0–1.19.x
 npm --version     # 9+
 dotnet tool list -g | grep storefront  # Litium.Storefront.Cli
 ```
@@ -203,7 +203,8 @@ For more troubleshooting, see `references/setup-troubleshooting.md`.
 
 | Litium Platform | React Accelerator | Node.js |
 |-----------------|-------------------|---------|
-| 8.28.0+ | 1.13.0+ | 20+ |
+| 8.28.0+ | 1.20.0+ | 22.13+ or 24 |
+| 8.28.0+ | 1.13.0–1.19.x | 20.x |
 | 8.27.0  | 1.12.0  | 20+ |
 
 ## Next Steps

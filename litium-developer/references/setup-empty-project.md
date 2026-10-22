@@ -16,7 +16,7 @@ Bare Litium installation without accelerator UI. Useful for:
 ```bash
 pwsh --version        # PowerShell Core 7.0+
 dotnet --version      # .NET SDK 8.0+
-node --version        # Node.js 20+ (if using React)
+node --version        # Node.js 22.13+ or 24 (if using React Accelerator 1.20.0+)
 ```
 
 Required services (use Docker Compose — see https://docs.litium.dev/platform/get-started/shared-dependencies/overview):
